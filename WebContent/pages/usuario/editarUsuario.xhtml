@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />
+
+		<p:panel header="Editar Usuário" id="panel" style="height:500px;">
+		
+		<p:focus context="panel"/>
+		
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuario.usuario}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuario.nome}" maxlength="45" size="45" />
+					
+			</h:panelGrid>
+				
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
+						action="#{usuarioBean.editarAtual}" ajax="false" update="growl" />
+				</h:panelGrid>
+			</div>
+			
+		</p:panel>
+		
+	</ui:define>
+
+</ui:composition>

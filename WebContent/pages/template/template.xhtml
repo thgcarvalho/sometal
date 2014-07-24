@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+	<title><h:outputText value="#{msg.titulo_sistema} - #{msg.slogan_sistema}" /></title>
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css" />
+	<link rel="icon" href="#{request.contextPath}/resources/images/ical-16.png" />
+	<link rel="shortcut icon" href="#{request.contextPath}/resources/images/ical-46.png" />
+	<h:outputScript library="js" name="util.js"/>
+	<h:outputScript name="locale-primefaces.js" library="js" /> 
+	<ui:insert name="script" />
+</h:head>
+
+<h:body style="background-image:url(#{request.contextPath}/resources/images/background_prata.gif); background-size: 100%;" >
+
+	<f:view contentType="text/html">
+		<h:form id="form">
+			<div id="conteiner">
+				<!-- Cabecalho -->
+				<div id="div_header" class="ui-widget-header">
+					<ui:include src="header.xhtml" />
+				</div>
+				<div id="div_menu">
+					<ui:include src="menu.xhtml" />
+				</div>
+				<!-- Corpo -->
+				<div id="conteudo" style="font-size:12pt;font-family:Arial">
+					<ui:insert name="corpo" />
+				</div>
+				<br />
+				<!-- Rodape -->
+				<div id="rodape" style="text-align:center">
+					<hr /> 
+					<h:graphicImage library="images" name="gd_icon.png" />
+				</div>
+			</div>
+		</h:form>
+	</f:view>
+
+</h:body>
+
+</html>

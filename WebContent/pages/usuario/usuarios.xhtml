@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />  
+		<center>
+			<p:dataTable id="usuarios" var="usuario"
+				emptyMessage="Nenhuma usuário cadastrado" 
+				value="#{usuarioBean.listaUsuarios}" rowKey="#{usuario.usuario}"
+				filteredValue="#{usuarioBean.filteredUsuarios}"
+				selection="#{usuarioBean.usuarioSelecionado}" selectionMode="single"
+				resizableColumns="true" paginator="true" rows="14"
+				rendered="#{usuarioBean != null}" style="width:100%">
+				
+				<p:ajax event="rowSelect" update=":form:usuarios:viewButton, :form:usuarios:editButton, :form:usuarios:deleteButton" />
+				<p:ajax event="rowUnselect" update=":form:usuarios:viewButton, :form:usuarios:editButton, :form:usuarios:deleteButton"/>
+				
+				<f:facet name="header">
+					<h:outputText value="Usuários" />
+				</f:facet>
+				
+				<p:column headerText="Usuário" style="width:80px"
+					filterBy="#{usuario.nome}" filterMatchMode="usuarioins">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton id="newButton" value="Novo"
+						title="Novo" icon="ui-icon-plus" action="cadastrarEvento" actionListener="#{usuarioBean.preparaNovoUsuario}" ajax="false"/>  
+						&nbsp;
+					<p:commandButton id="viewButton" value="Visualizar" disabled="#{usuarioBean.usuarioSelecionado == null}"
+						title="Visualizar" icon="ui-icon-search" update=":form:display"
+						oncomplete="viewDialog.show()" />  
+						&nbsp;
+	                <p:commandButton id="editButton" value="Editar" disabled="#{usuarioBean.usuarioSelecionado == null}"
+						title="Editar" icon="ui-icon-document" action="editarUsuario" 
+						ajax="false" readonly="#{usuarioBean.usuarioSelecionado == null}" />
+	              		&nbsp;
+                    <p:commandButton id="deleteButton" value="Excluir" disabled="#{usuarioBean.usuarioSelecionado == null}"
+						title="Excluir" icon="ui-icon-trash" onclick="confirmation.show()" />
+				</f:facet>
+			</p:dataTable>
+		</center>
+
+		<!-- VIEW Dialog -->
+		<p:dialog header="Detalhes do usuario." widgetVar="viewDialog"
+			resizable="true" id="dialog" modal="true">
+			
+			<h:panelGrid id="display" columns="2" style="margin:0 auto;">
+				<h:outputText value="Usuário:" style="font-weight:bold" />
+				<h:outputText value="#{usuarioBean.usuarioSelecionado.nome}" />
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- DELETE Dialog -->
+		<p:confirmDialog id="confirmDialog"
+			message="Tem certeza que deseja excluir este usuario?"
+			header="Excluir Evento" severity="alert" widgetVar="confirmation">
+
+			<p:commandButton id="confirm" value="Sim" update="messages"
+				oncomplete="confirmation.hide()"
+				actionListener="#{usuarioBean.excluir}" ajax="false">
+				<f:setPropertyActionListener value="#{usuario}"
+					target="#{usuarioBean.usuarioSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="Não"
+				onclick="confirmation.hide()" type="button" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

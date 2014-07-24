@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />  
+	<div align="center">
+	
+	    <p:panel header="Cadastro de Evento" id="panel" style="height:450px;">
+	     
+	    <p:focus context="panel"/>
+	     
+		<table>
+			<tr>
+				<td><h:outputLabel for="evento" value="Evento:" /></td>
+				<td colspan="3"><p:inputText id="evento" value="#{eventoBean.evento.nome}" 
+						match="evento" label="Evento" required="true" maxlength="60" size="45" 
+						validator="#{eventoBean.validaEvento}"/></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel for="frequencia" value="Frequência:" /></td>
+				<td colspan="3">
+				<p:selectOneRadio id="frequencia" value="#{eventoBean.evento.frequencia}">  
+		            <f:selectItem itemLabel="Mensal" itemValue="MENSAL" />  
+		            <f:selectItem itemLabel="Trimestral" itemValue="TRIMESTRAL" />  
+		            <f:selectItem itemLabel="Semestral" itemValue="SEMESTRAL" />  
+		            <f:selectItem itemLabel="Anual" itemValue="ANUAL" />  
+		            <f:selectItem itemLabel="Única" itemValue="" />  
+		        </p:selectOneRadio>  
+				</td>
+				<td><p:spacer width="12" /></td>
+				<td><h:outputLabel for="data" value="Data*:" /></td>
+				<td><p:calendar id="data" label="Data" value="#{eventoBean.evento.data}" required="true"  showButtonPanel="true"
+					  maxlength="8" size="10" locale="pt"/></td>
+				<td><p:spacer width="12" /></td>
+				<td><h:outputLabel for="alerta" value="Alerta:" /></td>
+				<td>
+				    <p:selectBooleanButton value="#{eventoBean.evento.receberAlerta}" onLabel="Sim" offLabel="Não" />
+					<p:spinner id="alerta" value="#{eventoBean.evento.alerta}" size="1" maxlength="4" max="0"/>
+				</td>
+				<td><p:spacer width="12" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel for="obs" value="Descrição:" /></td>
+				<td colspan="9">
+					<p:inputTextarea rows="3" maxlength="250" cols="110" id="obs"
+						value="#{eventoBean.evento.descricao}" autoResize="false" >
+					</p:inputTextarea>
+				</td>
+			</tr>
+		</table>
+		
+		<br />
+		<table>
+			<tr>
+				<td><p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
+						action="#{eventoBean.salvar}"  ajax="false" update="growl">
+						<f:setPropertyActionListener target="#{eventoBean.evento.usuario}" value="#{facesContext.externalContext.userPrincipal.name}" />
+ 					</p:commandButton>
+				</td>
+						
+				<td><p:commandButton immediate="true" id="btnLimpar" icon="ui-icon-arrowreturnthick-1-w"
+						type="reset" value="Limpar" /></td>
+			</tr>
+		</table>
+			
+		</p:panel> 
+	</div>
+	</ui:define>
+	
+</ui:composition>

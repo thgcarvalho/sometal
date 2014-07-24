@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><h:outputText value="Sometal" /></title>
+	<link rel="icon" href="#{request.contextPath}/resources/images/ical-16.png" />
+	<link rel="shortcut icon" href="#{request.contextPath}/resources/images/ical-48.png" />
+</h:head>
+
+<h:body style="background-image: url(#{request.contextPath}/resources/images/background_login.jpg); background-size: 100%;" >
+	<center>
+		<form id="formlogin" method="post" action="j_security_check">
+			
+			<br /><br /><br />
+			<h:graphicImage library="images" name="logo.png" />
+			<br /><br /><br />
+			
+			<div style="height:400px;font-size: 12pt; font-family: Arial; color: #000080;">
+				<p:panel header="Login" id="panel" style="height: 200px; width: 280px;">
+				
+					<p:focus context="panel"/>
+				
+					<h:messages showDetail="true" autoUpdate="true" />
+
+					<h:panelGrid columns="2" id="loginGrid">
+						<h:outputLabel value="Usuário:" />
+						<h:inputText id="j_username" name="j_username" size="10" maxlength="16" />
+						<h:outputLabel value="Senha:" />
+						<h:inputSecret id="j_password" name="j_password" size="10" maxlength="16" />
+					</h:panelGrid>
+					<h:commandButton id="submit" ajax="false" value="Login" />
+				</p:panel>
+			</div>
+
+			<div id="rodape" style="text-align:center">
+				<hr /> 
+				<a href='http://www.grandev.com.br'>
+					<h:graphicImage library="images" name="gd_icon.png" />
+				</a>
+			</div>
+		</form>
+	</center>
+</h:body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />  
+		<fieldset style="height: 350px;">
+			<legend>Home</legend>
+			<center>
+				<table cellpadding="1" cellspacing="1" width="50%" align="center"
+					border="0" style="text-align: center;">
+					<tr>
+						<td>
+							<h:outputText
+								value="Seja Bem Vindo #{usuarioBean.usuario.nome}!"
+								style="font-weight:bold;font-size:14pt;font-family:Arial" />
+								<br/>
+						</td>
+					</tr>
+					<tr>
+						<td><h:graphicImage library="images" name="logo_empresa.png" /></td>
+					</tr>
+				</table>
+			</center>
+		</fieldset>
+	</ui:define>
+</ui:composition>
