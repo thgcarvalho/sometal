@@ -1,0 +1,8 @@
+	<!-- <p:commandButton value="Destroy the World" actionListener="#{usuarioBean.logout}" > -->
+    <!--     <p:confirm header="Sair do Sistema?" message="#{facesContext.externalContext.userPrincipal.name}, você deseja sair do sistema?" icon="ui-icon-alert" /> -->
+    <!-- </p:commandButton> -->
+	
+	<!-- <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" id="confirmationExit" message="#{facesContext.externalContext.userPrincipal.name}, você deseja sair do sistema?" header="Sair do Sistema?" severity="alert" widgetVar="confirmExit">  --> 
+	<!-- 		<p:commandButton id="confirmExit" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" type="button" oncomplete="cconfirmExit.hide()" actionListener="#{usuarioBean.logout}" immediate="true" />  -->
+	<!-- 		<p:commandButton id="declineExit" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" type="button" onclick="confirmExit.hide()" />    -->
+	<!-- </p:confirmDialog> -->

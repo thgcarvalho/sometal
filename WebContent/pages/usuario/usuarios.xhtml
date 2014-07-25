@@ -8,7 +8,10 @@
 	template="/pages/template/template.xhtml">
 
 	<ui:define name="corpo">
-	<p:growl id="growl" showDetail="true" />  
+	<p:growl id="growl" showDetail="true" />
+	
+	<p:commandButton actionListener="#{usuarioBean.preparaNovoUsuario}" icon="ui-icon-plus"  value="Novo" type="button" onclick="PF('add').show();" />
+	  
 		<center>
 			<p:dataTable id="usuarios" var="usuario"
 				emptyMessage="Nenhuma usuário cadastrado" 
@@ -32,7 +35,7 @@
 
 				<f:facet name="footer">
 					<p:commandButton id="newButton" value="Novo"
-						title="Novo" icon="ui-icon-plus" action="cadastrarEvento" actionListener="#{usuarioBean.preparaNovoUsuario}" ajax="false"/>  
+						title="Novo" icon="ui-icon-plus" action="criarUsuario" actionListener="#{usuarioBean.preparaNovoUsuario}" ajax="false"/>  
 						&nbsp;
 					<p:commandButton id="viewButton" value="Visualizar" disabled="#{usuarioBean.usuarioSelecionado == null}"
 						title="Visualizar" icon="ui-icon-search" update=":form:display"
@@ -47,6 +50,43 @@
 				</f:facet>
 			</p:dataTable>
 		</center>
+		
+		<!-- ADD Dialog -->
+		<p:dialog header="Modal Dialog" widgetVar="add" modal="true" height="300px">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.usuario}" />
+					
+				<h:outputText value="Senha: *" />
+				<p:inputText required="true" label="Senha" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.senha}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
+					
+				<h:outputText value="Cargo:" />
+				<p:inputText required="true" label="Cargo"
+					value="#{usuarioBean.usuarioNovo.cargo}" maxlength="45" size="45" />
+					
+				<h:outputText value="Email:" />
+				<p:inputText required="true" label="Email"
+					value="#{usuarioBean.usuarioNovo.email}" maxlength="45" size="45" />
+					
+			</h:panelGrid>
+				
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
+						action="#{usuarioBean.criar}" ajax="false" update="growl" />
+				</h:panelGrid>
+			</div>
+				
+		</p:dialog>
 
 		<!-- VIEW Dialog -->
 		<p:dialog header="Detalhes do usuario." widgetVar="viewDialog"

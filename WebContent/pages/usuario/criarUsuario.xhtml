@@ -11,68 +11,43 @@
 	<p:growl id="growl" showDetail="true" />  
 	<div align="center">
 	
-	    <p:panel header="Cadastro de Evento" id="panel" style="height:450px;">
-	     
-	    <p:focus context="panel"/>
-	     
-		<table>
-			<tr>
-				<td><h:outputLabel for="evento" value="Evento:" /></td>
-				<td colspan="3"><p:inputText id="evento" value="#{eventoBean.evento.nome}" 
-						match="evento" label="Evento" required="true" maxlength="60" size="45" 
-						validator="#{eventoBean.validaEvento}"/></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel for="frequencia" value="Frequência:" /></td>
-				<td colspan="3">
-				<p:selectOneRadio id="frequencia" value="#{eventoBean.evento.frequencia}">  
-		            <f:selectItem itemLabel="Mensal" itemValue="MENSAL" />  
-		            <f:selectItem itemLabel="Trimestral" itemValue="TRIMESTRAL" />  
-		            <f:selectItem itemLabel="Semestral" itemValue="SEMESTRAL" />  
-		            <f:selectItem itemLabel="Anual" itemValue="ANUAL" />  
-		            <f:selectItem itemLabel="Única" itemValue="" />  
-		        </p:selectOneRadio>  
-				</td>
-				<td><p:spacer width="12" /></td>
-				<td><h:outputLabel for="data" value="Data*:" /></td>
-				<td><p:calendar id="data" label="Data" value="#{eventoBean.evento.data}" required="true"  showButtonPanel="true"
-					  maxlength="8" size="10" locale="pt"/></td>
-				<td><p:spacer width="12" /></td>
-				<td><h:outputLabel for="alerta" value="Alerta:" /></td>
-				<td>
-				    <p:selectBooleanButton value="#{eventoBean.evento.receberAlerta}" onLabel="Sim" offLabel="Não" />
-					<p:spinner id="alerta" value="#{eventoBean.evento.alerta}" size="1" maxlength="4" max="0"/>
-				</td>
-				<td><p:spacer width="12" /></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel for="obs" value="Descrição:" /></td>
-				<td colspan="9">
-					<p:inputTextarea rows="3" maxlength="250" cols="110" id="obs"
-						value="#{eventoBean.evento.descricao}" autoResize="false" >
-					</p:inputTextarea>
-				</td>
-			</tr>
-		</table>
+	   <p:panel header="Novo Usuário" id="panel" style="height:500px;">
 		
-		<br />
-		<table>
-			<tr>
-				<td><p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
-						action="#{eventoBean.salvar}"  ajax="false" update="growl">
-						<f:setPropertyActionListener target="#{eventoBean.evento.usuario}" value="#{facesContext.externalContext.userPrincipal.name}" />
- 					</p:commandButton>
-				</td>
-						
-				<td><p:commandButton immediate="true" id="btnLimpar" icon="ui-icon-arrowreturnthick-1-w"
-						type="reset" value="Limpar" /></td>
-			</tr>
-		</table>
+		<p:focus context="panel"/>
+		
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 			
-		</p:panel> 
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.usuario}" />
+					
+				<h:outputText value="Senha: *" />
+				<p:inputText required="true" label="Senha" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.senha}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
+					
+				<h:outputText value="Cargo:" />
+				<p:inputText required="true" label="Cargo"
+					value="#{usuarioBean.usuarioNovo.cargo}" maxlength="45" size="45" />
+					
+				<h:outputText value="Email:" />
+				<p:inputText required="true" label="Email"
+					value="#{usuarioBean.usuarioNovo.email}" maxlength="45" size="45" />
+					
+			</h:panelGrid>
+				
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
+						action="#{usuarioBean.criar}" ajax="false" update="growl" />
+				</h:panelGrid>
+			</div>
+			
+		</p:panel>
 	</div>
 	</ui:define>
 	

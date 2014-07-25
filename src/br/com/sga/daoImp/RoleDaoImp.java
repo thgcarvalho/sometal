@@ -2,21 +2,22 @@ package br.com.sga.daoImp;
 
 import java.util.List;
 
-import br.com.sga.dao.UserDao;
-import br.com.sometal.model.User;
+import br.com.sga.dao.RoleDao;
+import br.com.sometal.model.Role;
 
 /**
  * @author Thiago Carvalho
  * 
  */
-public class RoleDaoImp extends DaoGenericoUsersImp<User, String> implements UserDao {
+public class RoleDaoImp extends DaoGenericoUsersImp<Role, String> implements RoleDao {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public List<User> todos(String ordem) throws Exception {
+	public List<Role> todos(String ordem) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

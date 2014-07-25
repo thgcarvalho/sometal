@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author Thiago Carvalho
@@ -19,11 +20,17 @@ public class Usuario implements Serializable {
 	@Id
 	private String usuario;
 	
+	@Transient
+	private String senha;
+	
 	private String nome;
 
-	private String funcao;
+	private String cargo;
 
 	private String email;
+	
+//	@OneToOne
+//	private User user;
 	
 	public String getUsuario() {
 		return usuario;
@@ -31,6 +38,14 @@ public class Usuario implements Serializable {
 
 	public void setUsuario(String login) {
 		this.usuario = login;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 	
 	public String getNome() {
@@ -41,12 +56,12 @@ public class Usuario implements Serializable {
 		this.nome = nome;
 	}
 
-	public String getFuncao() {
-		return funcao;
+	public String getCargo() {
+		return cargo;
 	}
 
-	public void setFuncao(String funcao) {
-		this.funcao = funcao;
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
 	}
 
 	public String getEmail() {
@@ -56,6 +71,14 @@ public class Usuario implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+//	public User getUser() {
+//		return user;
+//	}
+//
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 
 	@Override
 	public String toString() {

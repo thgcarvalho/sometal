@@ -55,9 +55,6 @@
 	</p:dialog>
 	
 	<!-- EXIT Dialog -->
-	<p:confirmDialog id="confirmationExit" message="#{facesContext.externalContext.userPrincipal.name}, você deseja sair do sistema?" header="Sair do Sistema?" severity="alert" widgetVar="confirmExit">  
-    			<p:commandButton id="confirmExit" value="Sim" oncomplete="cconfirmExit.hide()" update="form" actionListener="#{usuarioBean.logout}" immediate="true" /> 
-    			<p:commandButton id="declineExit" value="Não" onclick="confirmExit.hide()" type="button" />   
-	</p:confirmDialog>
+
 	
 </ui:composition>
