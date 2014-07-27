@@ -6,38 +6,39 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-
-	<table>
-		<tr>
-			<td width="95%" valign="top">
-				<table>
-					<tr>
-						<td colspan="1"><p:spacer height="1"/></td>
-					</tr>
-					<tr>
-						<td width="14%" valign="middle" nowrap="nowrap"><p:spacer width="15"/>
-							<h:graphicImage library="images" name="sm.png" />
-						</td>
-					</tr>
-					<tr>
-						<td colspan="1"><p:spacer height="1"/></td>
-					</tr>
-				</table>
-			</td>
-				
-			<td width="5%" valign="bottom" nowrap="nowrap">
-				<table>
-					<tr>
-						<td class="header" width="100%" nowrap="nowrap">
-						<h:outputText value="Usuário: "/>
-							<p:commandLink id="user" action="editarUsuario" ajax="false">
-						        <h:outputText value="#{usuarioBean.usuario.nome}"/>
-						    </p:commandLink>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
 	
+	<h:form id="formHeader">
+		<table>
+			<tr>
+				<td width="95%" valign="top">
+					<table>
+						<tr>
+							<td colspan="1"><p:spacer height="1"/></td>
+						</tr>
+						<tr>
+							<td width="14%" valign="middle" nowrap="nowrap"><p:spacer width="15"/>
+								<h:graphicImage library="images" name="sm.png" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1"><p:spacer height="1"/></td>
+						</tr>
+					</table>
+				</td>
+					
+				<td width="5%" valign="bottom" nowrap="nowrap">
+					<table>
+						<tr>
+							<td class="header" nowrap="nowrap">
+							<h:outputText value="Usuário: "/>
+								<p:commandLink id="user" action="editarUsuario" ajax="false" immediate="true" >
+							        <h:outputText value="#{usuarioBean.usuario.nome}"/>
+							    </p:commandLink>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</h:form>
 </ui:composition>

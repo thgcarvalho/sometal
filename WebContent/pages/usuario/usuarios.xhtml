@@ -8,51 +8,59 @@
 	template="/pages/template/template.xhtml">
 
 	<ui:define name="corpo">
-	<p:growl id="growl" showDetail="true" />
 	
-	<p:commandButton actionListener="#{usuarioBean.preparaNovoUsuario}" icon="ui-icon-plus"  value="Novo" type="button" onclick="PF('add').show();" />
-	  
-		<center>
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="right">
+			<p:commandButton title="Criar" actionListener="#{usuarioBean.preparaNovoUsuario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
+		
+		<div align="center">
+		
 			<p:dataTable id="usuarios" var="usuario"
 				emptyMessage="Nenhuma usuário cadastrado" 
 				value="#{usuarioBean.listaUsuarios}" rowKey="#{usuario.usuario}"
 				filteredValue="#{usuarioBean.filteredUsuarios}"
-				selection="#{usuarioBean.usuarioSelecionado}" selectionMode="single"
-				resizableColumns="true" paginator="true" rows="14"
-				rendered="#{usuarioBean != null}" style="width:100%">
-				
-				<p:ajax event="rowSelect" update=":form:usuarios:viewButton, :form:usuarios:editButton, :form:usuarios:deleteButton" />
-				<p:ajax event="rowUnselect" update=":form:usuarios:viewButton, :form:usuarios:editButton, :form:usuarios:deleteButton"/>
+				paginator="true" rows="14" rendered="#{usuarioBean != null}">
 				
 				<f:facet name="header">
 					<h:outputText value="Usuários" />
 				</f:facet>
 				
-				<p:column headerText="Usuário" style="width:80px"
-					filterBy="#{usuario.nome}" filterMatchMode="usuarioins">
+				<p:column headerText="Usuário" style="width:20px"
+					filterBy="#{usuario.usuario}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.usuario}" />
+				</p:column>
+				
+				<p:column headerText="Nome" style="width:75px"
+					filterBy="#{usuario.nome}" filterMatchMode="contains">
 					<h:outputText value="#{usuario.nome}" />
 				</p:column>
-
-				<f:facet name="footer">
-					<p:commandButton id="newButton" value="Novo"
-						title="Novo" icon="ui-icon-plus" action="criarUsuario" actionListener="#{usuarioBean.preparaNovoUsuario}" ajax="false"/>  
-						&nbsp;
-					<p:commandButton id="viewButton" value="Visualizar" disabled="#{usuarioBean.usuarioSelecionado == null}"
-						title="Visualizar" icon="ui-icon-search" update=":form:display"
-						oncomplete="viewDialog.show()" />  
-						&nbsp;
-	                <p:commandButton id="editButton" value="Editar" disabled="#{usuarioBean.usuarioSelecionado == null}"
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             	title="Visualizar" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":form"
 						title="Editar" icon="ui-icon-document" action="editarUsuario" 
-						ajax="false" readonly="#{usuarioBean.usuarioSelecionado == null}" />
-	              		&nbsp;
-                    <p:commandButton id="deleteButton" value="Excluir" disabled="#{usuarioBean.usuarioSelecionado == null}"
-						title="Excluir" icon="ui-icon-trash" onclick="confirmation.show()" />
-				</f:facet>
-			</p:dataTable>
-		</center>
+						ajax="false" readonly="#{usuarioBean.usuarioSelecionado == null}">
+						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="Excluir" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+				</p:column>
 		
-		<!-- ADD Dialog -->
-		<p:dialog header="Modal Dialog" widgetVar="add" modal="true" height="300px">
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- ADD Dialog -->
+	<h:form id="formAdd">
+		<p:dialog header="Novo Usuário" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 			
@@ -61,7 +69,7 @@
 					value="#{usuarioBean.usuarioNovo.usuario}" />
 					
 				<h:outputText value="Senha: *" />
-				<p:inputText required="true" label="Senha" maxlength="15" size="15" 
+				<p:password required="true" label="Senha" maxlength="15" size="15" 
 					value="#{usuarioBean.usuarioNovo.senha}" />
 					
 				<h:outputText value="Nome: *" />
@@ -69,11 +77,11 @@
 					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
 					
 				<h:outputText value="Cargo:" />
-				<p:inputText required="true" label="Cargo"
+				<p:inputText label="Cargo"
 					value="#{usuarioBean.usuarioNovo.cargo}" maxlength="45" size="45" />
 					
 				<h:outputText value="Email:" />
-				<p:inputText required="true" label="Email"
+				<p:inputText label="Email"
 					value="#{usuarioBean.usuarioNovo.email}" maxlength="45" size="45" />
 					
 			</h:panelGrid>
@@ -82,36 +90,41 @@
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
 					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
-						action="#{usuarioBean.criar}" ajax="false" update="growl" />
+						action="#{usuarioBean.criar}" update=":form:usuarios :form:growl" oncomplete="PF('addDialog').hide()"/>
 				</h:panelGrid>
 			</div>
 				
 		</p:dialog>
-
-		<!-- VIEW Dialog -->
-		<p:dialog header="Detalhes do usuario." widgetVar="viewDialog"
-			resizable="true" id="dialog" modal="true">
+	</h:form>
+		
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="Detalhes do Usuário" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false">
 			
 			<h:panelGrid id="display" columns="2" style="margin:0 auto;">
 				<h:outputText value="Usuário:" style="font-weight:bold" />
+				<h:outputText value="#{usuarioBean.usuarioSelecionado.usuario}" />
+				
+				<h:outputText value="Nome:" style="font-weight:bold" />
 				<h:outputText value="#{usuarioBean.usuarioSelecionado.nome}" />
 			</h:panelGrid>
 		</p:dialog>
+	</h:form>
 
-		<!-- DELETE Dialog -->
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
 		<p:confirmDialog id="confirmDialog"
-			message="Tem certeza que deseja excluir este usuario?"
-			header="Excluir Evento" severity="alert" widgetVar="confirmation">
+			message="Tem certeza que deseja excluir este usuario?" header="Excluir Usuário" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
 
-			<p:commandButton id="confirm" value="Sim" update="messages"
-				oncomplete="confirmation.hide()"
-				actionListener="#{usuarioBean.excluir}" ajax="false">
-				<f:setPropertyActionListener value="#{usuario}"
-					target="#{usuarioBean.usuarioSelecionado}" />
+			<p:commandButton id="confirm" immediate="true" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:usuarios :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{usuarioBean.excluir}" >
+				<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
 			</p:commandButton>
-			<p:commandButton id="decline" value="Não"
-				onclick="confirmation.hide()" type="button" />
+			<p:commandButton id="decline" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
 		</p:confirmDialog>
-
+	</h:form>
+		
 	</ui:define>
 </ui:composition>

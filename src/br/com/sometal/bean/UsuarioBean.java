@@ -56,6 +56,7 @@ public class UsuarioBean implements Serializable {
 	private Usuario usuarioNovo;
 	private List<Usuario> listaUsuarios;
 	private List<Usuario> filteredUsuarios;
+	private SimpleDateFormat sdf = new SimpleDateFormat();
 
 	// captura a sessão do contexto criado pelo JavaServer Faces
 	FacesContext fc = FacesContext.getCurrentInstance();
@@ -63,37 +64,47 @@ public class UsuarioBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		System.out.println("init() USUARIOS");
 		usuarioDao = new UsuarioDaoImp();
 		userDao = new UserDaoImp();
 		roleDao = new RoleDaoImp();
+		
+		usuarioNovo = new Usuario();
 		usuarioAtual = new Usuario();
-		preparaNovoUsuario();
-		userName = fc.getExternalContext().getUserPrincipal().getName();
-		usuarioAtual = verificaUsuario(userName);
-		session.setAttribute("user", usuarioAtual);
+		usuarioSelecionado = new Usuario();
+		
+		try {
+			userName = fc.getExternalContext().getUserPrincipal().getName();
+			usuarioAtual = usuarioDao.findById(userName);
+			session.setAttribute("user", usuarioAtual);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		Date data = GregorianCalendar.getInstance().getTime();
-		SimpleDateFormat sdf = new SimpleDateFormat();
 		System.out.println("\nLOGIN:" + usuarioAtual + " " + sdf.format(data));
 	}
 	
 	public void preparaNovoUsuario() {
+		System.out.println("preparaNovoUsuario()");
 		usuarioNovo = new Usuario();
 	}
 	
 	public void carregaUsuarios() {
 		listaUsuarios = new ArrayList<Usuario>();
 		listaUsuarios = usuarioDao.todos("nome");
+		listaUsuarios.remove(usuarioAtual);
 		filteredUsuarios = listaUsuarios;
 	}
 	
-	private Usuario verificaUsuario(String user) {
-		try {
-			return usuarioDao.findById(user);
-		} catch (Exception e) {
-			addErrorMessage(MSG_ERROR, e.getMessage());
-		}
-		return null;
-	}
+//	private Usuario verificaUsuario(String user) {
+//		try {
+//			return usuarioDao.findById(user);
+//		} catch (Exception e) {
+//			addErrorMessage(MSG_ERROR, e.getMessage());
+//		}
+//		return null;
+//	}
 	
 	public String logout() {
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -104,7 +115,6 @@ public class UsuarioBean implements Serializable {
 		try {
 			externalContext.redirect(externalContext.getRequestContextPath());
 			Date data = GregorianCalendar.getInstance().getTime();
-			SimpleDateFormat sdf = new SimpleDateFormat();
 			System.out.println("\nLOGOUT:" + usuarioAtual + " " + sdf.format(data));
 		} catch (IOException e) {
 			throw new FacesException("Cannot redirect to / due to IO exception.", e);
@@ -125,12 +135,13 @@ public class UsuarioBean implements Serializable {
 			usuarioDao.editar(usuarioAtual);
 			// tomcat users
 			User user = userDao.findById(userName);
+			System.out.println(user.getUserName() + " " + user.getUserPass());
 			user.setUserName(usuarioAtual.getUsuario());
-			user.setUserPass(usuarioAtual.getSenha());
+//			user.setUserPass(usuarioAtual.getSenha());
 			System.out.println(user +" "+ user.getUserPass());
-			userDao.criar(user);
-			user = userDao.findById(userName);
-			userDao.excluir(user);
+			userDao.editar(user);
+//			user = userDao.findById(userName);
+//			userDao.excluir(user);
 			// tomcat user_roles
 			Role role = roleDao.findById(userName);
 			role.setUserName(usuarioAtual.getUsuario());
@@ -173,13 +184,31 @@ public class UsuarioBean implements Serializable {
 		boolean erro = false;
 		String erroMsg = null;
 		try {
+			// usuario
 			usuarioDao.criar(usuarioNovo);
-			// tomcat users
-			User user = new User();
-			user.setUserName(usuarioNovo.getUsuario());
-			user.setUserPass(usuarioNovo.getSenha());
-			System.out.println(user +" "+ user.getUserPass());
-			userDao.criar(user);
+			
+			// TODO distribuir responsabilidades
+			if (userDao.findById(userName) == null) {
+				// tomcat users
+				User user = new User();
+				user.setUserName(usuarioNovo.getUsuario());
+				user.setUserPass(usuarioNovo.getSenha());
+				System.out.println(user + " " + user.getUserPass());
+				userDao.criar(user);
+				
+				// tomcat user_role
+				Role role = new Role();
+				role.setUserName(usuarioNovo.getUsuario());
+				role.setRoleName("sometal");
+				roleDao.criar(role);
+				
+				// ajustes
+				listaUsuarios.add(usuarioNovo);
+				preparaNovoUsuario();
+			} else {
+				erro = true;
+				erroMsg = "Usuário já existe!";
+			}
 		} catch (Exception e) {
 			erro = true;
 			erroMsg = e.getMessage();
@@ -208,6 +237,8 @@ public class UsuarioBean implements Serializable {
 			return "";
 		} else {
 			addInfoMessage(MSG_SUCESS);
+			listaUsuarios.remove(usuarioSelecionado);
+			usuarioSelecionado = new Usuario();
 			return "usuarios";
 		}
 	}
@@ -245,10 +276,12 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public List<Usuario> getListaUsuarios() {
+		System.out.println(" SET listaDeUsuarios" + listaUsuarios.size());
 		return listaUsuarios;
 	}
 
 	public void setListaUsuarios(List<Usuario> listaUsuarios) {
+		System.out.println("GET listaDeUsuarios" + listaUsuarios.size());
 		this.listaUsuarios = listaUsuarios;
 	}
 	

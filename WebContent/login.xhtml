@@ -7,9 +7,13 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title><h:outputText value="Sometal" /></title>
+	<title><h:outputText value="#{msg.titulo_sistema} - #{msg.slogan_sistema}" /></title>
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css" />
 	<link rel="icon" href="#{request.contextPath}/resources/images/ical-16.png" />
 	<link rel="shortcut icon" href="#{request.contextPath}/resources/images/ical-48.png" />
+	<h:outputScript library="js" name="util.js"/>
+	<h:outputScript name="locale-primefaces.js" library="js" /> 
+	<ui:insert name="script" />
 </h:head>
 
 <h:body style="background-image: url(#{request.contextPath}/resources/images/background_login.jpg); background-size: 100%;" >
@@ -17,26 +21,29 @@
 		<form id="formlogin" method="post" action="j_security_check">
 			
 			<br /><br /><br />
-			<h:graphicImage library="images" name="sm.png" />
 			<br /><br /><br />
+			<br /><br /><br />
+			<h:graphicImage library="images" name="sm.png" />
 			
-			<div style="height:400px;font-size: 12pt; font-family: Arial; color: #000080;">
-				<p:panel header="Login" id="panel" style="height: 200px; width: 280px;">
+			<div style="height:400px">
+			
+				<p:dialog id="dialog" header="Login" widgetVar="login" draggable="false" closable="false" resizable="false" visible="true" >
 				
-					<p:focus context="panel"/>
+					<p:focus context="dialog"/>
 				
 					<h:messages showDetail="true" autoUpdate="true" />
-
+					
 					<h:panelGrid columns="2" id="loginGrid">
 						<h:outputLabel value="Usuário:" />
 						<h:inputText id="j_username" name="j_username" size="10" maxlength="16" />
 						<h:outputLabel value="Senha:" />
 						<h:inputSecret id="j_password" name="j_password" size="10" maxlength="16" />
 					</h:panelGrid>
-					<h:commandButton id="submit" ajax="false" value="Login" />
-				</p:panel>
+					<h:commandButton id="submit" ajax="false" value="Login" icon="ui-icon-disk" title="button" />
+				</p:dialog>
+				
 			</div>
-
+			
 			<div id="rodape" style="text-align:center">
 				<hr /> 
 				<a href='http://www.grandev.com.br'>

@@ -8,34 +8,39 @@
 	template="/pages/template/template.xhtml">
 
 	<ui:define name="corpo">
-	<p:growl id="growl" showDetail="true" />
-
-		<p:panel header="Editar Usuário" id="panel" style="height:500px;">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
 		
-		<p:focus context="panel"/>
-		
-			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+		<div align="center">
+	
+			<p:panel header="Editar Usuário" id="panel" style="height:500px;">
 			
-				<h:outputText value="Usuário: *" />
-				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
-					value="#{usuarioBean.usuario.usuario}" />
-					
-				<h:outputText value="Nome: *" />
-				<p:inputText required="true" label="Nome"
-					value="#{usuarioBean.usuario.nome}" maxlength="45" size="45" />
-					
-			</h:panelGrid>
+			<p:focus context="panel"/>
+			
+				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				
-			<div align="center">
-				<br />
-				<h:panelGrid id="btn" columns="1"> 
-					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
-						action="#{usuarioBean.editarAtual}" ajax="false" update="growl" />
+					<h:outputText value="Usuário: *" />
+					<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+						value="#{usuarioBean.usuario.usuario}" />
+						
+					<h:outputText value="Nome: *" />
+					<p:inputText required="true" label="Nome"
+						value="#{usuarioBean.usuario.nome}" maxlength="45" size="45" />
+						
 				</h:panelGrid>
-			</div>
-			
-		</p:panel>
-		
+					
+				<div align="center">
+					<br />
+					<h:panelGrid id="btn" columns="1"> 
+						<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
+							action="#{usuarioBean.editarAtual}" ajax="false" update="growl" />
+					</h:panelGrid>
+				</div>
+				
+			</p:panel>
+		</div>
+	</h:form>
 	</ui:define>
 
 </ui:composition>
