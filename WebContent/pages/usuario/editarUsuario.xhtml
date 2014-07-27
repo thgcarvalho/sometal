@@ -24,6 +24,10 @@
 					<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
 						value="#{usuarioBean.usuario.usuario}" />
 						
+					<h:outputText value="Senha: *" />
+					<p:password required="true" label="Senha" maxlength="15" size="15" 
+						value="#{usuarioBean.usuario.senha}" />
+						
 					<h:outputText value="Nome: *" />
 					<p:inputText required="true" label="Nome"
 						value="#{usuarioBean.usuario.nome}" maxlength="45" size="45" />

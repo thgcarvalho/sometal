@@ -11,11 +11,11 @@ import javax.faces.context.FacesContext;
  */
 public class FacesUtils {
 	
-	public final static String MSG_SUCESS = "Operação efetuada com sucesso.";
+	public final static String MSG_SUCESS = "Operação efetuada com sucesso!";
 	public final static String MSG_INFO = "Informação!";
 	public final static String MSG_WARN = "Atenção!";
-	public final static String MSG_ERROR = "Erro na operação, contacte o administrador do sistema.";
-	public final static String MSG_NENHUM_REGISTRO = "Nenhum Registro foi localizado.";
+	public final static String MSG_ERROR = "Erro na operação!";
+	public final static String MSG_NENHUM_REGISTRO = "Nenhum Registro foi localizado!";
 
 	// INFO
 	public static void addInfoMessage(String summary) {

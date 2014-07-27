@@ -40,12 +40,11 @@
 				
 				<p:column style="width:5px;text-align: center">
 		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
-		             	title="Visualizar" icon="ui-icon-search">
+		             title="Visualizar" icon="ui-icon-search">
 		                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
 		            </p:commandButton>
-	                <p:commandButton id="editButton" update=":form"
-						title="Editar" icon="ui-icon-document" action="editarUsuario" 
-						ajax="false" readonly="#{usuarioBean.usuarioSelecionado == null}">
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="Editar" icon="ui-icon-document">
 						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
 		            </p:commandButton>
                     <p:commandButton id="deleteButton"
@@ -63,7 +62,6 @@
 		<p:dialog header="Novo Usuário" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-			
 				<h:outputText value="Usuário: *" />
 				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
 					value="#{usuarioBean.usuarioNovo.usuario}" />
@@ -75,28 +73,19 @@
 				<h:outputText value="Nome: *" />
 				<p:inputText required="true" label="Nome"
 					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
-					
-				<h:outputText value="Cargo:" />
-				<p:inputText label="Cargo"
-					value="#{usuarioBean.usuarioNovo.cargo}" maxlength="45" size="45" />
-					
-				<h:outputText value="Email:" />
-				<p:inputText label="Email"
-					value="#{usuarioBean.usuarioNovo.email}" maxlength="45" size="45" />
-					
 			</h:panelGrid>
 				
 			<div align="center">
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
-					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk"
-						action="#{usuarioBean.criar}" update=":form:usuarios :form:growl" oncomplete="PF('addDialog').hide()"/>
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{usuarioBean.criar}" 
+					update=":form:usuarios :form:growl" />
 				</h:panelGrid>
 			</div>
 				
 		</p:dialog>
 	</h:form>
-		
+	
 	<!-- VIEW Dialog -->
 	<h:form id="formView">
 		<p:dialog header="Detalhes do Usuário" widgetVar="viewDialog"
@@ -111,7 +100,37 @@
 			</h:panelGrid>
 		</p:dialog>
 	</h:form>
-
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="Editar Usuário" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioSelecionado.usuario}" />
+					
+				<h:outputText value="Senha: *" />
+				<p:password required="true" label="Senha" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioSelecionado.senha}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuarioSelecionado.nome}" maxlength="45" size="45" />
+			</h:panelGrid>
+				
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{usuarioBean.editar}" 
+					update=":form:usuarios :form:growl" />
+				</h:panelGrid>
+			</div>
+				
+		</p:dialog>
+	</h:form>
+		
 	<!-- DELETE Dialog -->
 	<h:form id="formDel">
 		<p:confirmDialog id="confirmDialog"

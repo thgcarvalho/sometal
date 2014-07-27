@@ -8,4 +8,5 @@ import br.com.sometal.model.User;
  */
 public interface UserDao extends DaoGenerico<User, String> {
 
+
 }

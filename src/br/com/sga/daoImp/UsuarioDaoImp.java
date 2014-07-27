@@ -31,4 +31,26 @@ public class UsuarioDaoImp extends DaoGenericoImp<Usuario, String> implements Us
 		return todos;
 	}
 
+	@Override
+	public Usuario findByUserName(String userName) {
+		String strQuery = "SELECT u FROM Usuario u WHERE u.usuario = :usuario";
+		EntityManager em = JPAUtil.getEntityManager();
+		Query query = em.createQuery(strQuery, Usuario.class);
+		query.setParameter("usuario", userName);
+		Usuario usuario = (Usuario) query.getSingleResult();
+		em.close();
+		return usuario;
+	}
+
+	@Override
+	public Usuario findById(Long id) {
+		String strQuery = "SELECT u FROM Usuario u WHERE u.id = :id";
+		EntityManager em = JPAUtil.getEntityManager();
+		Query query = em.createQuery(strQuery, Usuario.class);
+		query.setParameter("id", id);
+		Usuario usuario = (Usuario) query.getSingleResult();
+		em.close();
+		return usuario;
+	}
+
 }

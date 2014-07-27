@@ -84,4 +84,9 @@
 		<converter-class>br.com.sga.converter.ValorConverter</converter-class>
 	</converter>
 	
+	 <validator>
+	     <validator-id>emailValidator</validator-id>
+	     <validator-class>br.com.sometal.validator.EmailValidator</validator-class>
+ 	 </validator>
+	
 </faces-config>

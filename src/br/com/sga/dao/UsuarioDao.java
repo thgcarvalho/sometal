@@ -11,5 +11,9 @@ import br.com.sometal.model.Usuario;
 public interface UsuarioDao extends DaoGenerico<Usuario, String> {
 
 	public List<Usuario> todos(String order);
-	
+
+	public Usuario findByUserName(String userName);
+
+	public Usuario findById(Long id);
+
 }
