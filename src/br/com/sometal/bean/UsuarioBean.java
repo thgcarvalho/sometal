@@ -57,6 +57,13 @@ public class UsuarioBean implements Serializable {
 	private List<Usuario> listaUsuarios;
 	private List<Usuario> filteredUsuarios;
 	private final String ROLE = "sometal";
+	private final String ROLE_ADMIN = "sometal-admin";
+	private final String ROLE_ADMIN_DESC = "Administrador";
+	private final String ROLE_ENCRR = "sometal-encrr";
+	private final String ROLE_ENCRR_DESC = "Encarregado";
+	private final String ROLE_PORTR = "sometal-portr";
+	private final String ROLE_PORTR_DESC = "Portaria";
+    private List<String> roles;
 	private SimpleDateFormat sdf = new SimpleDateFormat();
 
 	// captura a sessão do contexto criado pelo JavaServer Faces
@@ -73,6 +80,11 @@ public class UsuarioBean implements Serializable {
 		usuarioAtual = new Usuario();
 		usuarioSelecionado = new Usuario();
 		
+		roles = new ArrayList<String>();
+		roles.add(ROLE_ADMIN_DESC);
+		roles.add(ROLE_ENCRR_DESC);
+		roles.add(ROLE_PORTR_DESC);
+		
 		try {
 			userName = fc.getExternalContext().getUserPrincipal().getName();
 			usuarioAtual = usuarioDao.findByUserName(userName);
@@ -85,6 +97,40 @@ public class UsuarioBean implements Serializable {
 		System.out.println("\nLOGIN:" + usuarioAtual + " " + sdf.format(data));
 	}
 	
+	public String getRoleName(String roleDesc) {
+		if (roleDesc.equals(ROLE_ADMIN_DESC)) {
+			return ROLE_ADMIN;
+		}
+		if (roleDesc.equals(ROLE_ENCRR_DESC)) {
+			return ROLE_ENCRR;
+		}
+		if (roleDesc.equals(ROLE_PORTR_DESC)) {
+			return ROLE_PORTR;
+		}
+		return null;
+	}
+	
+	public String getRoleDesc(String roleName) {
+		if (roleName.equals(ROLE_ADMIN)) {
+			return ROLE_ADMIN_DESC;
+		}
+		if (roleName.equals(ROLE_ENCRR)) {
+			return ROLE_ENCRR_DESC;
+		}
+		if (roleName.equals(ROLE_PORTR)) {
+			return ROLE_PORTR_DESC;
+		}
+		return null;
+	}
+	
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+	
 	public void preparaNovoUsuario() {
 		usuarioNovo = new Usuario();
 	}
@@ -93,6 +139,17 @@ public class UsuarioBean implements Serializable {
 		listaUsuarios = new ArrayList<Usuario>();
 		listaUsuarios = usuarioDao.todos("nome");
 		listaUsuarios.remove(usuarioAtual);
+		
+		List<Role> rolesDoUsuario;
+		List<String> rolesDoUsuarioStr;
+		for (Usuario usuario : listaUsuarios) {
+			rolesDoUsuario = roleDao.findByUserName(usuario.getUsuario());
+			rolesDoUsuarioStr = new ArrayList<String>();
+			for (Role roleDoUsuario : rolesDoUsuario) {
+				rolesDoUsuarioStr.add(getRoleDesc(roleDoUsuario.getRoleName()));
+			}
+			usuario.setRoles(rolesDoUsuarioStr);
+		}
 		filteredUsuarios = listaUsuarios;
 	}
 	
@@ -125,7 +182,6 @@ public class UsuarioBean implements Serializable {
 			System.out.println(usuarioAtual.getUsuario());
 			System.out.println(userName);
 			if (usuarioAtual.getUsuario().equals(userName) || userDao.findById(usuarioAtual.getUsuario()) == null) {
-				System.out.println(22);
 				// usuario
 				Usuario usuarioDB = usuarioDao.findById(usuarioAtual.getId());
 				usuarioDao.editar(usuarioAtual);
@@ -168,9 +224,10 @@ public class UsuarioBean implements Serializable {
 		String erroMsg = null;
 		try {
 			// TODO distribuir responsabilidades
-			if (userDao.findById(usuarioSelecionado.getUsuario()) == null) {
+			Usuario usuarioDB = usuarioDao.findById(usuarioSelecionado.getId());
+			if (usuarioSelecionado.getUsuario().equals(usuarioDB.getUsuario()) || userDao.findById(usuarioSelecionado.getUsuario()) == null) {
 				// usuario
-				Usuario usuarioDB = usuarioDao.findById(usuarioSelecionado.getId());
+				//usuarioSelecionado.setRoles(rolesSelecionadas);
 				usuarioDao.editar(usuarioSelecionado);
 				
 				// tomcat users
@@ -182,12 +239,19 @@ public class UsuarioBean implements Serializable {
 				userDao.criar(user);
 				
 				// tomcat user_role
-				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
-				roleDao.excluir(role.getUserName(), ROLE);
-				role = new Role();
+				//Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
+				roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
+				for (String strRoles : roles) {
+					roleDao.excluir(usuarioSelecionado.getUsuario(), getRoleName(strRoles));
+				}
+				Role role = new Role();
 				role.setUserName(usuarioSelecionado.getUsuario());
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
+				for (String roleSel : usuarioSelecionado.getRoles()) {
+					role.setRoleName(getRoleName(roleSel));
+					roleDao.criar(role);
+				}
 			} else {
 				erro = true;
 				erroMsg = "Usuário já existe!";
@@ -226,6 +290,10 @@ public class UsuarioBean implements Serializable {
 				role.setUserName(usuarioNovo.getUsuario());
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
+				for (String roleCheck : usuarioNovo.getRoles()) {
+					role.setRoleName(getRoleName(roleCheck));
+					roleDao.criar(role);
+				}
 				
 				// ajustes
 				listaUsuarios.add(usuarioNovo);
@@ -261,8 +329,11 @@ public class UsuarioBean implements Serializable {
 			userDao.excluir(user);
 			
 			// tomcat user_role
-			Role role = roleDao.findById(usuarioSelecionado.getUsuario(), ROLE);
-			roleDao.excluir(role.getUserName(), ROLE);
+			// Role role = roleDao.findById(usuarioSelecionado.getUsuario(), ROLE);
+			roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
+			for (String strRoles : roles) {
+				roleDao.excluir(usuarioSelecionado.getUsuario(), getRoleName(strRoles));
+			}
 			
 			// ajustes
 			listaUsuarios.remove(usuarioSelecionado);
@@ -328,7 +399,7 @@ public class UsuarioBean implements Serializable {
     public void setFilteredUsuarios(List<Usuario> filteredUsuarios) {  
         this.filteredUsuarios = filteredUsuarios;  
     }
-	
+    
 	public Date getDataAtual() {
 		return new Date();
 	}

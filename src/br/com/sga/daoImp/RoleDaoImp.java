@@ -37,6 +37,18 @@ public class RoleDaoImp extends DaoGenericoUsersImp<Role, String> implements Rol
 	}
 	
 	@Override
+	public List<Role> findByUserName(String userName) {
+		String strQuery = "SELECT r FROM Role r WHERE r.userName = :user";
+		EntityManager em = JPAUtil.getUsersEntityManager();
+		Query query = em.createQuery(strQuery, Role.class);
+		query.setParameter("user", userName);
+		@SuppressWarnings("unchecked")
+		List<Role> roles = query.getResultList();
+		em.close();
+		return roles;
+	}
+	
+	@Override
 	public void excluir(String userName, String roleName) {
 		EntityManager em = JPAUtil.getUsersEntityManager();
 		EntityTransaction transaction = em.getTransaction();

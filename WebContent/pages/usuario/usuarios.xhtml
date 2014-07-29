@@ -74,6 +74,13 @@
 				<p:inputText required="true" label="Nome"
 					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
 			</h:panelGrid>
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioNovo.roles}" layout="grid" columns="1">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
+	        </p:selectManyCheckbox>
 				
 			<div align="center">
 				<br />
@@ -98,12 +105,20 @@
 				<h:outputText value="Nome:" style="font-weight:bold" />
 				<h:outputText value="#{usuarioBean.usuarioSelecionado.nome}" />
 			</h:panelGrid>
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioSelecionado.roles}" layout="grid" columns="1" disabled="true">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}"/>
+	        </p:selectManyCheckbox>
+			
 		</p:dialog>
 	</h:form>
 	
 	<!-- EDIT Dialog -->
 	<h:form id="formEdit">
-		<p:dialog header="Editar Usuário" widgetVar="editDialog" 
+		<p:dialog header="Usuário" widgetVar="editDialog" 
 			id="editDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
@@ -119,7 +134,14 @@
 				<p:inputText required="true" label="Nome"
 					value="#{usuarioBean.usuarioSelecionado.nome}" maxlength="45" size="45" />
 			</h:panelGrid>
-				
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioSelecionado.roles}" layout="grid" columns="1">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
+	        </p:selectManyCheckbox>
+			
 			<div align="center">
 				<br />
 				<h:panelGrid id="btn" columns="1"> 

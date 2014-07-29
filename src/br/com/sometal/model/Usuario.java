@@ -1,6 +1,8 @@
 package br.com.sometal.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,9 @@ public class Usuario implements Serializable {
 	@Transient
 	private String senha;
 	
+	@Transient
+	private List<String> roles = new ArrayList<String>();
+	
 	private String nome;
 	
 	public Long getId() {
@@ -52,6 +57,14 @@ public class Usuario implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 	
 	public String getNome() {
