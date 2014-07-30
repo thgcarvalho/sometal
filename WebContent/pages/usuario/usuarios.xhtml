@@ -48,7 +48,7 @@
 						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
 		            </p:commandButton>
                     <p:commandButton id="deleteButton"
-						title="Excluir" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						title="Excluir" icon="ui-icon-trash" onclick="PF('deleteDialog').show()" rendered="#{usuarioBean.usuario.isAdmin}">
 						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
 		            </p:commandButton>
 				</p:column>

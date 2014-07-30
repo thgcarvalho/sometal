@@ -74,6 +74,16 @@ public class Usuario implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
+	public boolean getIsAdmin() {
+		for (String role : getRoles()) {
+			System.out.println(this.usuario + " " + role + " = " + Auth.ROLE_ADMIN_DESC);
+			if (role != null && role.equals(Auth.ROLE_ADMIN_DESC)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	
 	@Override

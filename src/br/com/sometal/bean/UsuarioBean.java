@@ -4,6 +4,10 @@ import static br.com.sga.util.FacesUtils.MSG_ERROR;
 import static br.com.sga.util.FacesUtils.MSG_SUCESS;
 import static br.com.sga.util.FacesUtils.addErrorMessage;
 import static br.com.sga.util.FacesUtils.addInfoMessage;
+import static br.com.sometal.model.Auth.ROLE;
+import static br.com.sometal.model.Auth.ROLE_ADMIN_DESC;
+import static br.com.sometal.model.Auth.ROLE_ENCRR_DESC;
+import static br.com.sometal.model.Auth.ROLE_PORTR_DESC;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,6 +32,7 @@ import br.com.sga.dao.UsuarioDao;
 import br.com.sga.daoImp.RoleDaoImp;
 import br.com.sga.daoImp.UserDaoImp;
 import br.com.sga.daoImp.UsuarioDaoImp;
+import br.com.sometal.model.Auth;
 import br.com.sometal.model.Role;
 import br.com.sometal.model.User;
 import br.com.sometal.model.Usuario;
@@ -56,13 +61,14 @@ public class UsuarioBean implements Serializable {
 	private Usuario usuarioNovo;
 	private List<Usuario> listaUsuarios;
 	private List<Usuario> filteredUsuarios;
-	private final String ROLE = "sometal";
-	private final String ROLE_ADMIN = "sometal-admin";
-	private final String ROLE_ADMIN_DESC = "Administrador";
-	private final String ROLE_ENCRR = "sometal-encrr";
-	private final String ROLE_ENCRR_DESC = "Encarregado";
-	private final String ROLE_PORTR = "sometal-portr";
-	private final String ROLE_PORTR_DESC = "Portaria";
+	private Auth auth;
+//	private final String ROLE = "sometal";
+//	private final String ROLE_ADMIN = "sometal-admin";
+//	private final String ROLE_ADMIN_DESC = "Administrador";
+//	private final String ROLE_ENCRR = "sometal-encrr";
+//	private final String ROLE_ENCRR_DESC = "Encarregado";
+//	private final String ROLE_PORTR = "sometal-portr";
+//	private final String ROLE_PORTR_DESC = "Portaria";
     private List<String> roles;
 	private SimpleDateFormat sdf = new SimpleDateFormat();
 
@@ -80,6 +86,7 @@ public class UsuarioBean implements Serializable {
 		usuarioAtual = new Usuario();
 		usuarioSelecionado = new Usuario();
 		
+		auth = new Auth();
 		roles = new ArrayList<String>();
 		roles.add(ROLE_ADMIN_DESC);
 		roles.add(ROLE_ENCRR_DESC);
@@ -88,6 +95,7 @@ public class UsuarioBean implements Serializable {
 		try {
 			userName = fc.getExternalContext().getUserPrincipal().getName();
 			usuarioAtual = usuarioDao.findByUserName(userName);
+			usuarioAtual.setRoles(getRolesDoUsuario(userName));
 			session.setAttribute("user", usuarioAtual);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,32 +103,6 @@ public class UsuarioBean implements Serializable {
 		
 		Date data = GregorianCalendar.getInstance().getTime();
 		System.out.println("\nLOGIN:" + usuarioAtual + " " + sdf.format(data));
-	}
-	
-	public String getRoleName(String roleDesc) {
-		if (roleDesc.equals(ROLE_ADMIN_DESC)) {
-			return ROLE_ADMIN;
-		}
-		if (roleDesc.equals(ROLE_ENCRR_DESC)) {
-			return ROLE_ENCRR;
-		}
-		if (roleDesc.equals(ROLE_PORTR_DESC)) {
-			return ROLE_PORTR;
-		}
-		return null;
-	}
-	
-	public String getRoleDesc(String roleName) {
-		if (roleName.equals(ROLE_ADMIN)) {
-			return ROLE_ADMIN_DESC;
-		}
-		if (roleName.equals(ROLE_ENCRR)) {
-			return ROLE_ENCRR_DESC;
-		}
-		if (roleName.equals(ROLE_PORTR)) {
-			return ROLE_PORTR_DESC;
-		}
-		return null;
 	}
 	
 	public List<String> getRoles() {
@@ -140,17 +122,23 @@ public class UsuarioBean implements Serializable {
 		listaUsuarios = usuarioDao.todos("nome");
 		listaUsuarios.remove(usuarioAtual);
 		
-		List<Role> rolesDoUsuario;
-		List<String> rolesDoUsuarioStr;
 		for (Usuario usuario : listaUsuarios) {
-			rolesDoUsuario = roleDao.findByUserName(usuario.getUsuario());
-			rolesDoUsuarioStr = new ArrayList<String>();
-			for (Role roleDoUsuario : rolesDoUsuario) {
-				rolesDoUsuarioStr.add(getRoleDesc(roleDoUsuario.getRoleName()));
-			}
-			usuario.setRoles(rolesDoUsuarioStr);
+			usuario.setRoles(getRolesDoUsuario(usuario.getNome()));
 		}
 		filteredUsuarios = listaUsuarios;
+	}
+	
+	public List<String> getRolesDoUsuario(String usuario) {
+		List<Role> rolesDoUsuario;
+		List<String> rolesDoUsuarioStr;
+		rolesDoUsuario = roleDao.findByUserName(usuario);
+		rolesDoUsuarioStr = new ArrayList<String>();
+		System.out.println(rolesDoUsuario.size());
+		for (Role roleDoUsuario : rolesDoUsuario) {
+			System.out.println("Role--> " + roleDoUsuario);
+			rolesDoUsuarioStr.add(auth.getRoleDesc(roleDoUsuario.getRoleName()));
+		}
+		return rolesDoUsuarioStr;
 	}
 	
 	public String logout() {
@@ -242,14 +230,14 @@ public class UsuarioBean implements Serializable {
 				//Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
 				roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
 				for (String strRoles : roles) {
-					roleDao.excluir(usuarioSelecionado.getUsuario(), getRoleName(strRoles));
+					roleDao.excluir(usuarioSelecionado.getUsuario(), auth.getRoleName(strRoles));
 				}
 				Role role = new Role();
 				role.setUserName(usuarioSelecionado.getUsuario());
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
 				for (String roleSel : usuarioSelecionado.getRoles()) {
-					role.setRoleName(getRoleName(roleSel));
+					role.setRoleName(auth.getRoleName(roleSel));
 					roleDao.criar(role);
 				}
 			} else {
@@ -291,7 +279,7 @@ public class UsuarioBean implements Serializable {
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
 				for (String roleCheck : usuarioNovo.getRoles()) {
-					role.setRoleName(getRoleName(roleCheck));
+					role.setRoleName(auth.getRoleName(roleCheck));
 					roleDao.criar(role);
 				}
 				
@@ -332,7 +320,7 @@ public class UsuarioBean implements Serializable {
 			// Role role = roleDao.findById(usuarioSelecionado.getUsuario(), ROLE);
 			roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
 			for (String strRoles : roles) {
-				roleDao.excluir(usuarioSelecionado.getUsuario(), getRoleName(strRoles));
+				roleDao.excluir(usuarioSelecionado.getUsuario(), auth.getRoleName(strRoles));
 			}
 			
 			// ajustes
