@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="right">
+			<p:commandButton title="Criar" actionListener="#{usuarioBean.preparaNovoUsuario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
+		
+		<div align="center">
+		
+			<p:dataTable id="usuarios" var="usuario"
+				emptyMessage="Nenhuma usuário cadastrado" 
+				value="#{usuarioBean.listaUsuarios}" rowKey="#{usuario.usuario}"
+				filteredValue="#{usuarioBean.filteredUsuarios}"
+				paginator="true" rows="14" rendered="#{usuarioBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="Usuários" />
+				</f:facet>
+				
+				<p:column headerText="Usuário" style="width:20px"
+					filterBy="#{usuario.usuario}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.usuario}" />
+				</p:column>
+				
+				<p:column headerText="Nome" style="width:75px"
+					filterBy="#{usuario.nome}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="Visualizar" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="Editar" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="Excluir" icon="ui-icon-trash" onclick="PF('deleteDialog').show()" rendered="#{usuarioBean.usuario.isAdmin}">
+						<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- ADD Dialog -->
+	<h:form id="formAdd">
+		<p:dialog header="Novo Usuário" widgetVar="addDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.usuario}" />
+					
+				<h:outputText value="Senha: *" />
+				<p:password required="true" label="Senha" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioNovo.senha}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuarioNovo.nome}" maxlength="45" size="45" />
+			</h:panelGrid>
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioNovo.roles}" layout="grid" columns="1">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
+	        </p:selectManyCheckbox>
+				
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{usuarioBean.criar}" 
+					update=":form:usuarios :form:growl" />
+				</h:panelGrid>
+			</div>
+				
+		</p:dialog>
+	</h:form>
+	
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="Detalhes do Usuário" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false">
+			
+			<h:panelGrid id="display" columns="2" style="margin:0 auto;">
+				<h:outputText value="Usuário:" style="font-weight:bold" />
+				<h:outputText value="#{usuarioBean.usuarioSelecionado.usuario}" />
+				
+				<h:outputText value="Nome:" style="font-weight:bold" />
+				<h:outputText value="#{usuarioBean.usuarioSelecionado.nome}" />
+			</h:panelGrid>
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioSelecionado.roles}" layout="grid" columns="1" disabled="true">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}"/>
+	        </p:selectManyCheckbox>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="Usuário" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="Usuário: *" />
+				<p:inputText required="true" label="Usuário" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioSelecionado.usuario}" />
+					
+				<h:outputText value="Senha: *" />
+				<p:password required="true" label="Senha" maxlength="15" size="15" 
+					value="#{usuarioBean.usuarioSelecionado.senha}" />
+					
+				<h:outputText value="Nome: *" />
+				<p:inputText required="true" label="Nome"
+					value="#{usuarioBean.usuarioSelecionado.nome}" maxlength="45" size="45" />
+			</h:panelGrid>
+			
+			<br />
+			
+			<h:outputText value="Papéis:" />
+	        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuarioSelecionado.roles}" layout="grid" columns="1">
+	            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
+	        </p:selectManyCheckbox>
+			
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{usuarioBean.editar}" 
+					update=":form:usuarios :form:growl" />
+				</h:panelGrid>
+			</div>
+				
+		</p:dialog>
+	</h:form>
+		
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
+		<p:confirmDialog id="confirmDialog"
+			message="Tem certeza que deseja excluir este usuario?" header="Excluir Usuário" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
+
+			<p:commandButton id="confirm" immediate="true" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:usuarios :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{usuarioBean.excluir}" >
+				<f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.usuarioSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
+		</p:confirmDialog>
+	</h:form>
+		
+	</ui:define>
+</ui:composition>
