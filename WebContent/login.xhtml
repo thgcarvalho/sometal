@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -18,7 +18,7 @@
 
 <h:body style="background-image: url(#{request.contextPath}/resources/images/background_login.jpg); background-size: 100%;" >
 	<center>
-		<form id="formlogin" method="post" action="j_security_check">
+		<h:form id="login" onsubmit="document.getElementById('login').action='j_security_check';" prependId="false">
 			
 			<br /><br /><br />
 			<br /><br /><br />
@@ -34,12 +34,12 @@
 					<h:messages showDetail="true" autoUpdate="true" />
 					
 					<h:panelGrid columns="2" id="loginGrid">
-						<h:outputLabel value="Usuário:" />
-						<h:inputText id="j_username" name="j_username" size="10" maxlength="16" />
-						<h:outputLabel value="Senha:" />
-						<h:inputSecret id="j_password" name="j_password" size="10" maxlength="16" />
+						<p:outputLabel for="j_username" value="Usuário" />
+				        <p:inputText id="j_username" name="j_username" size="10" maxlength="16" />            
+				        <p:outputLabel for="j_password" value="Senha" />
+				        <p:password id="j_password" name="j_password" size="10" maxlength="16" />
 					</h:panelGrid>
-					<h:commandButton id="submit" ajax="false" value="Login" icon="ui-icon-disk" title="button" />
+					<p:commandButton id="submit" ajax="false" value="Login" icon="ui-icon-check" />
 				</p:dialog>
 				
 			</div>
@@ -50,7 +50,7 @@
 					<h:graphicImage library="images" name="gd_icon.png" />
 				</a>
 			</div>
-		</form>
+		</h:form>
 	</center>
 </h:body>
 </html>

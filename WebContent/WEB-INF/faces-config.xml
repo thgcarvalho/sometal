@@ -39,15 +39,6 @@
 			<to-view-id>/pages/funcionario/funcionarios.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-		<navigation-case>
-			<from-outcome>cadastrarFuncionario</from-outcome>
-			<to-view-id>/pages/funcionario/cadastrarFuncionario.xhtml</to-view-id>
-			<redirect/>
-		</navigation-case>
-		<navigation-case>
-			<from-outcome>editarFuncionario</from-outcome>
-			<to-view-id>/pages/funcionario/editarFuncionario.xhtml</to-view-id>
-		</navigation-case>
 	</navigation-rule>
 	
 	

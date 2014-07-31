@@ -1,13 +1,13 @@
 package br.com.sometal.bean;
 
-import static br.com.sga.util.FacesUtils.MSG_ERROR;
-import static br.com.sga.util.FacesUtils.MSG_SUCESS;
-import static br.com.sga.util.FacesUtils.addErrorMessage;
-import static br.com.sga.util.FacesUtils.addInfoMessage;
 import static br.com.sometal.model.Auth.ROLE;
 import static br.com.sometal.model.Auth.ROLE_ADMIN_DESC;
 import static br.com.sometal.model.Auth.ROLE_ENCRR_DESC;
 import static br.com.sometal.model.Auth.ROLE_PORTR_DESC;
+import static br.com.sometal.util.FacesUtils.MSG_ERROR;
+import static br.com.sometal.util.FacesUtils.MSG_SUCESS;
+import static br.com.sometal.util.FacesUtils.addErrorMessage;
+import static br.com.sometal.util.FacesUtils.addInfoMessage;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,12 +26,12 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import br.com.sga.dao.RoleDao;
-import br.com.sga.dao.UserDao;
-import br.com.sga.dao.UsuarioDao;
-import br.com.sga.daoImp.RoleDaoImp;
-import br.com.sga.daoImp.UserDaoImp;
-import br.com.sga.daoImp.UsuarioDaoImp;
+import br.com.sometal.dao.RoleDao;
+import br.com.sometal.dao.UserDao;
+import br.com.sometal.dao.UsuarioDao;
+import br.com.sometal.daoImp.RoleDaoImp;
+import br.com.sometal.daoImp.UserDaoImp;
+import br.com.sometal.daoImp.UsuarioDaoImp;
 import br.com.sometal.model.Auth;
 import br.com.sometal.model.Role;
 import br.com.sometal.model.User;
@@ -62,13 +62,6 @@ public class UsuarioBean implements Serializable {
 	private List<Usuario> listaUsuarios;
 	private List<Usuario> filteredUsuarios;
 	private Auth auth;
-//	private final String ROLE = "sometal";
-//	private final String ROLE_ADMIN = "sometal-admin";
-//	private final String ROLE_ADMIN_DESC = "Administrador";
-//	private final String ROLE_ENCRR = "sometal-encrr";
-//	private final String ROLE_ENCRR_DESC = "Encarregado";
-//	private final String ROLE_PORTR = "sometal-portr";
-//	private final String ROLE_PORTR_DESC = "Portaria";
     private List<String> roles;
 	private SimpleDateFormat sdf = new SimpleDateFormat();
 
@@ -133,9 +126,7 @@ public class UsuarioBean implements Serializable {
 		List<String> rolesDoUsuarioStr;
 		rolesDoUsuario = roleDao.findByUserName(usuario);
 		rolesDoUsuarioStr = new ArrayList<String>();
-		System.out.println(rolesDoUsuario.size());
 		for (Role roleDoUsuario : rolesDoUsuario) {
-			System.out.println("Role--> " + roleDoUsuario);
 			rolesDoUsuarioStr.add(auth.getRoleDesc(roleDoUsuario.getRoleName()));
 		}
 		return rolesDoUsuarioStr;
@@ -167,8 +158,6 @@ public class UsuarioBean implements Serializable {
 		String erroMsg = null;
 		try {
 			// TODO distribuir responsabilidades
-			System.out.println(usuarioAtual.getUsuario());
-			System.out.println(userName);
 			if (usuarioAtual.getUsuario().equals(userName) || userDao.findById(usuarioAtual.getUsuario()) == null) {
 				// usuario
 				Usuario usuarioDB = usuarioDao.findById(usuarioAtual.getId());

@@ -1,9 +1,9 @@
 package br.com.sometal.bean;
 
-import static br.com.sga.util.FacesUtils.MSG_ERROR;
-import static br.com.sga.util.FacesUtils.MSG_SUCESS;
-import static br.com.sga.util.FacesUtils.addErrorMessage;
-import static br.com.sga.util.FacesUtils.addInfoMessage;
+import static br.com.sometal.util.FacesUtils.MSG_ERROR;
+import static br.com.sometal.util.FacesUtils.MSG_SUCESS;
+import static br.com.sometal.util.FacesUtils.addErrorMessage;
+import static br.com.sometal.util.FacesUtils.addInfoMessage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,22 +17,22 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import br.com.sga.dao.FuncionarioDao;
-import br.com.sga.daoImp.FuncionarioDaoImp;
-import br.com.sga.service.PathServer;
+import br.com.sometal.dao.FuncionarioDao;
+import br.com.sometal.daoImp.FuncionarioDaoImp;
 import br.com.sometal.model.Funcionario;
+import br.com.sometal.service.PathServer;
 
 /**
  * @author Thiago Carvalho
  * 
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class FuncionarioBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -41,28 +41,36 @@ public class FuncionarioBean implements Serializable {
 	private FuncionarioDao funcionarioDao;
 	private Funcionario funcionario;
 	private Funcionario funcionarioSelecionado;
-	private List<Funcionario> listaFuncionarios;
+	private List<Funcionario> funcionarios;
 	private List<Funcionario> filteredFuncionarios;
 	private UploadedFile uploadedFile;
 	
 	@PostConstruct
 	public void init() {
-		preparaNovoFuncionario();
+		System.out.println("@ViewScoped FuncionarioBean");
 		funcionarioDao = new FuncionarioDaoImp();
+		preparaNovoFuncionario();
+		carregaFuncionarios();
 	}
 	
 	public void preparaNovoFuncionario() {
 		funcionario = new Funcionario();
+		int lastCode = funcionarioDao.getLastCode();
+		System.out.println(lastCode);
+		if (lastCode < 1000) {
+			lastCode = 1000;
+		}
+		funcionario.setCodigo(lastCode + 1);
 	}
 	
-	public void carregaFuncionarios() {
-		listaFuncionarios = new ArrayList<Funcionario>();
+	private void carregaFuncionarios() {
+		funcionarios = new ArrayList<Funcionario>();
 		try {
-			listaFuncionarios = funcionarioDao.todos("nome");
+			funcionarios = funcionarioDao.todos("nome");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		filteredFuncionarios = listaFuncionarios;
+		filteredFuncionarios = funcionarios;
 	}
 	
 	public String editar() {
@@ -85,7 +93,7 @@ public class FuncionarioBean implements Serializable {
 		} else {
 			addInfoMessage(MSG_SUCESS);
 			carregaFuncionarios();
-			return "contratos";
+			return "funcionarios";
 		}
 	}
 	
@@ -95,8 +103,9 @@ public class FuncionarioBean implements Serializable {
 		try {
 			preparaFuncionario(funcionario);
 			funcionarioDao.criar(funcionario);
+			// ajustes
+			funcionarios.add(funcionario);
 			preparaNovoFuncionario();
-			carregaFuncionarios();
 		} catch (Exception e) {
 			erro = true;
 			erroMsg = e.getMessage();
@@ -107,8 +116,7 @@ public class FuncionarioBean implements Serializable {
 			return "";
 		} else {
 			addInfoMessage(MSG_SUCESS);
-			carregaFuncionarios();
-			return "contratos";
+			return "funcionarios";
 		}
 	}
 
@@ -128,14 +136,13 @@ public class FuncionarioBean implements Serializable {
 		} else {
 			addInfoMessage(MSG_SUCESS);
 			carregaFuncionarios();
-			return "contratos";
+			return "funcionarios";
 		}
 	}
 	
 	private void preparaFuncionario(Funcionario funcionario) {
 		funcionario.setNome(funcionario.getNome().trim());
 	}
-	
 
 	public FuncionarioDao getFuncionarioDao() {
 		return funcionarioDao;
@@ -165,11 +172,11 @@ public class FuncionarioBean implements Serializable {
 	}
 	
 	public List<Funcionario> getFuncionarios() {
-		return listaFuncionarios;
+		return funcionarios;
 	}
 
 	public void setFuncionarios(List<Funcionario> listaFuncionarios) {
-		this.listaFuncionarios = listaFuncionarios;
+		this.funcionarios = listaFuncionarios;
 	}
 	
     public List<Funcionario> getFilteredFuncionarios() {  
@@ -180,12 +187,12 @@ public class FuncionarioBean implements Serializable {
         this.filteredFuncionarios = filteredFuncionarios;  
     }
     
-	public void upload(FileUploadEvent event) {
+	public void photoUpload(FileUploadEvent event) {
 		String destination = PathServer.PATH_PUBLIC 
 				+ File.separator + PathServer.PATH_DIR 
 				+ File.separator + PathServer.DIR_FOTOS;
-		String fileName = String.valueOf(funcionarioSelecionado.getId()) + ".pdf";
-		funcionarioSelecionado.setFoto(destination + File.separator + fileName);
+		String fileName = String.valueOf(funcionario.getCodigo());
+		funcionario.setFoto(destination + File.separator + fileName);
 		uploadedFile= event.getFile();
 		copyFile(funcionarioSelecionado.getFoto());
 		addInfoMessage(MSG_SUCESS, event.getFile().getFileName() + " foi carregado.");

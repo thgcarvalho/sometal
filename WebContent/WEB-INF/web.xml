@@ -55,10 +55,6 @@
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
 	
-	<listener>
-		<listener-class>br.com.sga.service.AppServletContextListener</listener-class>
-	</listener> 
-	
 	<security-constraint>
 		<display-name>Bloqueia o browser de acessar arquivos xhtml</display-name>
 		<web-resource-collection>
