@@ -21,7 +21,7 @@
 			<p:menuitem id="ff" value="Contas" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" />
 			<p:menuitem id="gg" value="Veículos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" />
 			
-			<p:menuitem id="miusuarios" value="Usuários" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person"/>
+			<p:menuitem id="miusuarios" value="Usuários" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.isAdmin}" />
 			
 			<p:submenu id="smajuda" label="Ajuda" icon="ui-icon-help">
 				<p:menuitem id="misuporte" value="Suporte" onclick="PF('suporteDialog').show()" immediate="true" />

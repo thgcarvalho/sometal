@@ -16,26 +16,26 @@ public class Auth {
 	public final static String ROLE_PORTR_DESC = "Portaria";
 	
 	public String getRoleName(String roleDesc) {
-		if (roleDesc.equals(ROLE_ADMIN_DESC)) {
+		if (roleDesc != null && roleDesc.equals(ROLE_ADMIN_DESC)) {
 			return ROLE_ADMIN;
 		}
-		if (roleDesc.equals(ROLE_ENCRR_DESC)) {
+		if (roleDesc != null && roleDesc.equals(ROLE_ENCRR_DESC)) {
 			return ROLE_ENCRR;
 		}
-		if (roleDesc.equals(ROLE_PORTR_DESC)) {
+		if (roleDesc != null && roleDesc.equals(ROLE_PORTR_DESC)) {
 			return ROLE_PORTR;
 		}
 		return null;
 	}
 	
 	public String getRoleDesc(String roleName) {
-		if (roleName.equals(ROLE_ADMIN)) {
+		if (roleName != null && roleName.equals(ROLE_ADMIN)) {
 			return ROLE_ADMIN_DESC;
 		}
-		if (roleName.equals(ROLE_ENCRR)) {
+		if (roleName != null && roleName.equals(ROLE_ENCRR)) {
 			return ROLE_ENCRR_DESC;
 		}
-		if (roleName.equals(ROLE_PORTR)) {
+		if (roleName != null && roleName.equals(ROLE_PORTR)) {
 			return ROLE_PORTR_DESC;
 		}
 		return null;

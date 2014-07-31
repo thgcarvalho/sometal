@@ -9,7 +9,7 @@
 
 	<ui:define name="corpo">
 	
-	<h:form id="form">
+	<h:form id="form" rendered="#{usuarioBean.usuario.isAdmin}">
 		<p:growl id="growl" showDetail="true" />
 		
 		<div align="right">

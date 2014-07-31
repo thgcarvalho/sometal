@@ -90,6 +90,7 @@ public class UsuarioBean implements Serializable {
 			usuarioAtual = usuarioDao.findByUserName(userName);
 			usuarioAtual.setRoles(getRolesDoUsuario(userName));
 			session.setAttribute("user", usuarioAtual);
+			// TODO falta selecionado
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -158,7 +159,8 @@ public class UsuarioBean implements Serializable {
 		String erroMsg = null;
 		try {
 			// TODO distribuir responsabilidades
-			if (usuarioAtual.getUsuario().equals(userName) || userDao.findById(usuarioAtual.getUsuario()) == null) {
+			String strUsuario = usuarioAtual.getUsuario();
+			if (strUsuario.equals(userName) || userDao.findById(strUsuario) == null) {
 				// usuario
 				Usuario usuarioDB = usuarioDao.findById(usuarioAtual.getId());
 				usuarioDao.editar(usuarioAtual);
@@ -167,17 +169,26 @@ public class UsuarioBean implements Serializable {
 				User user = userDao.findById(usuarioDB.getUsuario());
 				userDao.excluir(user);
 				user = new User();
-				user.setUserName(usuarioAtual.getUsuario());
+				user.setUserName(strUsuario);
 				user.setUserPass(usuarioAtual.getSenha());
 				userDao.criar(user);
 				
 				// tomcat user_role
 				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
 				roleDao.excluir(role.getUserName(), ROLE);
+				for (String strRoles : roles) {
+					roleDao.excluir(strUsuario, auth.getRoleName(strRoles));
+				}
 				role = new Role();
-				role.setUserName(usuarioAtual.getUsuario());
+				role.setUserName(strUsuario);
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
+				for (String roleSel : usuarioAtual.getRoles()) {
+					role = new Role();
+					role.setUserName(strUsuario);
+					role.setRoleName(auth.getRoleName(roleSel));
+					roleDao.criar(role);
+				}
 			} else {
 				erro = true;
 				erroMsg = "Usuário já existe!";
@@ -202,7 +213,8 @@ public class UsuarioBean implements Serializable {
 		try {
 			// TODO distribuir responsabilidades
 			Usuario usuarioDB = usuarioDao.findById(usuarioSelecionado.getId());
-			if (usuarioSelecionado.getUsuario().equals(usuarioDB.getUsuario()) || userDao.findById(usuarioSelecionado.getUsuario()) == null) {
+			String strUsuario = usuarioSelecionado.getUsuario();
+			if (strUsuario.equals(usuarioDB.getUsuario()) || userDao.findById(strUsuario) == null) {
 				// usuario
 				//usuarioSelecionado.setRoles(rolesSelecionadas);
 				usuarioDao.editar(usuarioSelecionado);
@@ -211,21 +223,23 @@ public class UsuarioBean implements Serializable {
 				User user = userDao.findById(usuarioDB.getUsuario());
 				userDao.excluir(user);
 				user = new User();
-				user.setUserName(usuarioSelecionado.getUsuario());
+				user.setUserName(strUsuario);
 				user.setUserPass(usuarioSelecionado.getSenha());
 				userDao.criar(user);
 				
 				// tomcat user_role
-				//Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
-				roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
+				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE); //TODO confimar tipos de user
+				roleDao.excluir(strUsuario, ROLE);
 				for (String strRoles : roles) {
-					roleDao.excluir(usuarioSelecionado.getUsuario(), auth.getRoleName(strRoles));
+					roleDao.excluir(strUsuario, auth.getRoleName(strRoles));
 				}
-				Role role = new Role();
-				role.setUserName(usuarioSelecionado.getUsuario());
+				role = new Role();
+				role.setUserName(strUsuario);
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
 				for (String roleSel : usuarioSelecionado.getRoles()) {
+					role = new Role();
+					role.setUserName(strUsuario);
 					role.setRoleName(auth.getRoleName(roleSel));
 					roleDao.criar(role);
 				}
@@ -252,22 +266,25 @@ public class UsuarioBean implements Serializable {
 		String erroMsg = null;
 		try {
 			// TODO distribuir responsabilidades
-			if (userDao.findById(usuarioNovo.getUsuario()) == null) {
+			String strUsuario = usuarioNovo.getUsuario();
+			if (userDao.findById(strUsuario) == null) {
 				// usuario
 				usuarioDao.criar(usuarioNovo);
 				
 				// tomcat users
 				User user = new User();
-				user.setUserName(usuarioNovo.getUsuario());
+				user.setUserName(strUsuario);
 				user.setUserPass(usuarioNovo.getSenha());
 				userDao.criar(user);
 				
 				// tomcat user_role
 				Role role = new Role();
-				role.setUserName(usuarioNovo.getUsuario());
+				role.setUserName(strUsuario);
 				role.setRoleName(ROLE);
 				roleDao.criar(role);
 				for (String roleCheck : usuarioNovo.getRoles()) {
+					role = new Role();
+					role.setUserName(strUsuario);
 					role.setRoleName(auth.getRoleName(roleCheck));
 					roleDao.criar(role);
 				}
@@ -376,6 +393,29 @@ public class UsuarioBean implements Serializable {
     public void setFilteredUsuarios(List<Usuario> filteredUsuarios) {  
         this.filteredUsuarios = filteredUsuarios;  
     }
+    
+//	private String convertStringToMd5(String valor) {
+//		MessageDigest mDigest;
+//		try {
+//			// strat HASH MD5.
+//			mDigest = MessageDigest.getInstance("MD5");
+//			// convert a string value to MD5 array of bytes
+//			byte[] valorMD5 = mDigest.digest(valor.getBytes("UTF-8"));
+//			// convert bytes to hexadecimal
+//			StringBuffer sb = new StringBuffer();
+//			for (byte b : valorMD5) {
+//				sb.append(Integer.toHexString((b & 0xFF) | 0x100).substring(1, 3));
+//			}
+//			return sb.toString();
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//			return null;
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+
     
 	public Date getDataAtual() {
 		return new Date();
