@@ -3,7 +3,7 @@ package br.com.sometal.bean;
 import static br.com.sometal.model.Auth.ROLE;
 import static br.com.sometal.model.Auth.ROLE_ADMIN_DESC;
 import static br.com.sometal.model.Auth.ROLE_ENCRR_DESC;
-import static br.com.sometal.model.Auth.ROLE_PORTR_DESC;
+import static br.com.sometal.model.Auth.ROLE_ESCRT_DESC;
 import static br.com.sometal.util.FacesUtils.MSG_ERROR;
 import static br.com.sometal.util.FacesUtils.MSG_SUCESS;
 import static br.com.sometal.util.FacesUtils.addErrorMessage;
@@ -61,7 +61,6 @@ public class UsuarioBean implements Serializable {
 	private Usuario usuarioNovo;
 	private List<Usuario> listaUsuarios;
 	private List<Usuario> filteredUsuarios;
-	private Auth auth;
     private List<String> roles;
 	private SimpleDateFormat sdf = new SimpleDateFormat();
 
@@ -79,24 +78,24 @@ public class UsuarioBean implements Serializable {
 		usuarioAtual = new Usuario();
 		usuarioSelecionado = new Usuario();
 		
-		auth = new Auth();
 		roles = new ArrayList<String>();
 		roles.add(ROLE_ADMIN_DESC);
 		roles.add(ROLE_ENCRR_DESC);
-		roles.add(ROLE_PORTR_DESC);
+		roles.add(ROLE_ESCRT_DESC);
 		
 		try {
 			userName = fc.getExternalContext().getUserPrincipal().getName();
+			// usuario atual
 			usuarioAtual = usuarioDao.findByUserName(userName);
 			usuarioAtual.setRoles(getRolesDoUsuario(userName));
+			usuarioAtual.setSenha(getSenhaDoUsuario(userName));
 			session.setAttribute("user", usuarioAtual);
-			// TODO falta selecionado
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		Date data = GregorianCalendar.getInstance().getTime();
-		System.out.println("\nLOGIN:" + usuarioAtual + " " + sdf.format(data));
+		System.out.println("\nLOGIN:" + this.usuarioAtual + " " + this.roles + " " + sdf.format(data));
 	}
 	
 	public List<String> getRoles() {
@@ -117,19 +116,39 @@ public class UsuarioBean implements Serializable {
 		listaUsuarios.remove(usuarioAtual);
 		
 		for (Usuario usuario : listaUsuarios) {
-			usuario.setRoles(getRolesDoUsuario(usuario.getNome()));
+			usuario.setRoles(getRolesDoUsuario(usuario.getUsuario()));
+			usuario.setSenha(getSenhaDoUsuario(usuario.getUsuario()));
 		}
 		filteredUsuarios = listaUsuarios;
 	}
 	
-	public List<String> getRolesDoUsuario(String usuario) {
+	private String getSenhaDoUsuario(String usuario) {
+		User user = null;
+		String senha = null;
+		try {
+			user = userDao.findById(usuario);
+			senha = user.getUserPass();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return senha;
+	}
+	
+	private List<String> getRolesDoUsuario(String usuario) {
+		System.out.print("USUÁRIO:" + usuario + " ");
 		List<Role> rolesDoUsuario;
 		List<String> rolesDoUsuarioStr;
 		rolesDoUsuario = roleDao.findByUserName(usuario);
 		rolesDoUsuarioStr = new ArrayList<String>();
+		String strRole;
 		for (Role roleDoUsuario : rolesDoUsuario) {
-			rolesDoUsuarioStr.add(auth.getRoleDesc(roleDoUsuario.getRoleName()));
+			strRole = Auth.getRoleDesc(roleDoUsuario.getRoleName());
+			if (strRole != null) {
+				rolesDoUsuarioStr.add(Auth.getRoleDesc(roleDoUsuario.getRoleName()));
+			}
 		}
+		System.out.print(rolesDoUsuario);
+		System.out.println();
 		return rolesDoUsuarioStr;
 	}
 	
@@ -142,7 +161,7 @@ public class UsuarioBean implements Serializable {
 		try {
 			externalContext.redirect(externalContext.getRequestContextPath());
 			Date data = GregorianCalendar.getInstance().getTime();
-			System.out.println("\nLOGOUT:" + usuarioAtual + " " + sdf.format(data));
+			System.out.println("\nLOGOUT:" + this.usuarioAtual + " " + sdf.format(data));
 		} catch (IOException e) {
 			throw new FacesException("Cannot redirect to / due to IO exception.", e);
 		}
@@ -177,7 +196,7 @@ public class UsuarioBean implements Serializable {
 				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);
 				roleDao.excluir(role.getUserName(), ROLE);
 				for (String strRoles : roles) {
-					roleDao.excluir(strUsuario, auth.getRoleName(strRoles));
+					roleDao.excluir(strUsuario, Auth.getRoleName(strRoles));
 				}
 				role = new Role();
 				role.setUserName(strUsuario);
@@ -186,7 +205,7 @@ public class UsuarioBean implements Serializable {
 				for (String roleSel : usuarioAtual.getRoles()) {
 					role = new Role();
 					role.setUserName(strUsuario);
-					role.setRoleName(auth.getRoleName(roleSel));
+					role.setRoleName(Auth.getRoleName(roleSel));
 					roleDao.criar(role);
 				}
 			} else {
@@ -216,7 +235,6 @@ public class UsuarioBean implements Serializable {
 			String strUsuario = usuarioSelecionado.getUsuario();
 			if (strUsuario.equals(usuarioDB.getUsuario()) || userDao.findById(strUsuario) == null) {
 				// usuario
-				//usuarioSelecionado.setRoles(rolesSelecionadas);
 				usuarioDao.editar(usuarioSelecionado);
 				
 				// tomcat users
@@ -231,7 +249,7 @@ public class UsuarioBean implements Serializable {
 				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE); //TODO confimar tipos de user
 				roleDao.excluir(strUsuario, ROLE);
 				for (String strRoles : roles) {
-					roleDao.excluir(strUsuario, auth.getRoleName(strRoles));
+					roleDao.excluir(strUsuario, Auth.getRoleName(strRoles));
 				}
 				role = new Role();
 				role.setUserName(strUsuario);
@@ -240,7 +258,7 @@ public class UsuarioBean implements Serializable {
 				for (String roleSel : usuarioSelecionado.getRoles()) {
 					role = new Role();
 					role.setUserName(strUsuario);
-					role.setRoleName(auth.getRoleName(roleSel));
+					role.setRoleName(Auth.getRoleName(roleSel));
 					roleDao.criar(role);
 				}
 			} else {
@@ -285,7 +303,7 @@ public class UsuarioBean implements Serializable {
 				for (String roleCheck : usuarioNovo.getRoles()) {
 					role = new Role();
 					role.setUserName(strUsuario);
-					role.setRoleName(auth.getRoleName(roleCheck));
+					role.setRoleName(Auth.getRoleName(roleCheck));
 					roleDao.criar(role);
 				}
 				
@@ -326,7 +344,7 @@ public class UsuarioBean implements Serializable {
 			// Role role = roleDao.findById(usuarioSelecionado.getUsuario(), ROLE);
 			roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);
 			for (String strRoles : roles) {
-				roleDao.excluir(usuarioSelecionado.getUsuario(), auth.getRoleName(strRoles));
+				roleDao.excluir(usuarioSelecionado.getUsuario(), Auth.getRoleName(strRoles));
 			}
 			
 			// ajustes

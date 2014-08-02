@@ -47,7 +47,7 @@
 			<property name="hibernate.c3p0.idle_test_period" value="3000" />
 			
 			<!--Configuracoes de Debug -->
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="use_sql_comments" value="true" />
 

@@ -26,7 +26,7 @@
 						
 					<h:outputText value="#{msg.senha}: *" />
 					<p:password required="true" label="#{msg.senha}" maxlength="15" size="15" 
-						value="#{usuarioBean.usuario.senha}" />
+						value="#{usuarioBean.usuario.senha}" redisplay="true" />
 						
 					<h:outputText value="#{msg.nome}: *" />
 					<p:inputText required="true" label="#{msg.nome}"
@@ -36,7 +36,7 @@
 				
 				<br/>
 				
-				<p:panel header="#{msg.papeis}" rendered="#{usuarioBean.usuario.isAdmin}">
+				<p:panel header="#{msg.perfil}" rendered="#{usuarioBean.usuario.auth.isAdmin}">
 			        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuario.roles}" layout="grid" columns="3">
 			            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
 			        </p:selectManyCheckbox>

@@ -33,6 +33,9 @@ public class Usuario implements Serializable {
 	@Transient
 	private List<String> roles = new ArrayList<String>();
 	
+	@Transient
+	private Auth auth = new Auth();
+	
 	private String nome;
 	
 	public Long getId() {
@@ -65,6 +68,11 @@ public class Usuario implements Serializable {
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+		this.auth.setAuth(roles);
+	}
+	
+	public Auth getAuth() {
+		return this.auth;
 	}
 	
 	public String getNome() {
@@ -74,17 +82,6 @@ public class Usuario implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public boolean getIsAdmin() {
-		for (String role : getRoles()) {
-			System.out.println(this.usuario + " " + role + " = " + Auth.ROLE_ADMIN_DESC);
-			if (role != null && role.equals(Auth.ROLE_ADMIN_DESC)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	
 	@Override
 	public String toString() {
