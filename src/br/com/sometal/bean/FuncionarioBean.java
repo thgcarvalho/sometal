@@ -194,7 +194,7 @@ public class FuncionarioBean implements Serializable {
 		String fileName = String.valueOf(funcionario.getCodigo());
 		funcionario.setFoto(destination + File.separator + fileName);
 		uploadedFile= event.getFile();
-		copyFile(funcionarioSelecionado.getFoto());
+		copyFile(funcionario.getFoto());
 		addInfoMessage(MSG_SUCESS, event.getFile().getFileName() + " foi carregado.");
 	}
 	

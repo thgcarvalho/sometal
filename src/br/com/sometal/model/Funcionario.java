@@ -30,7 +30,7 @@ public class Funcionario implements Serializable{
 	private String cargo;
 	private BigDecimal salario;
 	private Date admissao;
-	private Date demissao;
+	private Date saida;
 	private String cpf;
 	private String carteira;
 	private String endereco;
@@ -85,11 +85,11 @@ public class Funcionario implements Serializable{
 	public void setAdmissao(Date admissao) {
 		this.admissao = admissao;
 	}
-	public Date getDemissao() {
-		return demissao;
+	public Date getSaida() {
+		return saida;
 	}
-	public void setDemissao(Date demissao) {
-		this.demissao = demissao;
+	public void setSaida(Date saida) {
+		this.saida = saida;
 	}
 	public String getCpf() {
 		return cpf;

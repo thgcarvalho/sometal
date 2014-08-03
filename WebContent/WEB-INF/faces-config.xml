@@ -71,8 +71,13 @@
 	</application>
 
 	<converter>
-		<converter-id>ValorConverter</converter-id>
-		<converter-class>br.com.sga.converter.ValorConverter</converter-class>
+		<converter-id>valorConverter</converter-id>
+		<converter-class>br.com.sometal.converter.ValorConverter</converter-class>
+	</converter>
+	
+	<converter>
+		<converter-id>toUpperCaseConverter</converter-id>
+		<converter-class>br.com.sometal.converter.ToUpperCaseConverter</converter-class>
 	</converter>
 	
 	 <validator>

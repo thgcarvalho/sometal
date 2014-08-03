@@ -59,24 +59,83 @@
 		
 	<!-- ADD Dialog -->
 	<h:form id="formAdd" enctype="multipart/form-data">
-		<p:dialog header="#{msg.funcionario_novo}" widgetVar="addDialog" modal="true" resizable="false">
+		<p:dialog header="#{msg.funcionario_novo} - #{funcionarioBean.funcionario.codigo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-				<h:outputText value="#{msg.codigo}" />
-				<h:outputText value="#{funcionarioBean.funcionario.codigo}" />
+				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+						
+					<h:outputText value="#{msg.nome}: *" />
+					<p:inputText required="true" label="#{msg.nome}" size="45" 
+						value="#{funcionarioBean.funcionario.nome}" />
+						
+					<h:outputText value="#{msg.cargo}" />
+					<p:inputText label="#{msg.cargo}" size="45" 
+						value="#{funcionarioBean.funcionario.cargo}" />
+						
+					<h:outputText value="#{msg.admissao}" />	
+					<p:calendar id="admissao" label="#{msg.admissao}" value="#{funcionarioBean.funcionario.admissao}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+					<h:outputText value="#{msg.salario}" />
+					<p:inputText label="#{msg.salario}" size="10" 
+						value="#{funcionarioBean.funcionario.salario}" >
+						<f:converter converterId="valorConverter" />
+	                </p:inputText>
+	                
+	                <h:outputText value="#{msg.cpf}" mask="999.999.999-99" size="14" />
+					<p:inputText label="#{msg.cpf}" maxlength="45" size="45" 
+						value="#{funcionarioBean.funcionario.cpf}" />
+						
+					<h:outputText value="#{msg.carteira}" />
+					<p:inputText label="#{msg.carteira}" maxlength="16" size="16" 
+						value="#{funcionarioBean.funcionario.carteira}" />
+						
+					<h:outputText value="#{msg.endereco}" />
+					<p:inputText label="#{msg.endereco}" maxlength="100" size="45" 
+						value="#{funcionarioBean.funcionario.endereco}" />
+						
+	                <h:outputText value="#{msg.fone1}" />
+					<p:inputText label="#{msg.fone1}" mask="(99) 9999-9999" size="14" 
+						value="#{funcionarioBean.funcionario.fone1}" />
+						
+					<h:outputText value="#{msg.fone2}" />
+					<p:inputText label="#{msg.fone2}" mask="(99) 9999-9999" size="14" 
+						value="#{funcionarioBean.funcionario.fone2}" />
+						
+					<h:outputText value="#{msg.email}" />
+					<p:inputText label="#{msg.email}" value="#{funcionarioBean.funcionario.email}" size="45"
+						validator="#{emailValidator}" />
+						
+					<h:outputText value="#{msg.banco}" converter="toUpperCaseConverter" />
+					<p:inputText label="#{msg.banco}" size="45" 
+						value="#{funcionarioBean.funcionario.banco}" />
+						
+					<h:outputText value="#{msg.agencia}" />
+					<p:inputText label="#{msg.agencia}" size="16" 
+						value="#{funcionarioBean.funcionario.agencia}" />
+						
+					<h:outputText value="#{msg.conta}" />
+					<p:inputText label="#{msg.conta}" size="16" 
+						value="#{funcionarioBean.funcionario.conta}" />
+						
+					<h:outputText value="#{msg.tipo}" converter="toUpperCaseConverter" />
+					<p:inputText label="#{msg.tipo}" size="45" 
+						value="#{funcionarioBean.funcionario.tipo}" />
 					
-				<h:outputText value="#{msg.nome}: *" />
-				<p:inputText required="true" label="#{msg.nome}" maxlength="45" size="45" 
-					value="#{funcionarioBean.funcionario.nome}" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+                	<h:outputText value="#{msg.foto}" />
+	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760" fileLimit="1"
+						label="#{msg.adicionar}" uploadLabel="#{msg.carregar}" cancelLabel="#{msg.cancelar}" />
 					
-				<h:outputText value="#{msg.cargo}" />
-				<p:inputText label="#{msg.cargo}" maxlength="45" size="45" 
-					value="#{funcionarioBean.funcionario.cargo}" />
+					<h:outputText value="#{msg.obs}" />
+					<p:inputTextarea label="#{msg.obs}" size="500" 
+						value="#{funcionarioBean.funcionario.obs}" />
+                </h:panelGrid>
 			</h:panelGrid>
 			
-			<p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}"
-				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760" fileLimit="1"
-				label="#{msg.adicionar}" uploadLabel="#{msg.carregar}" cancelLabel="#{msg.cancelar}" />
 			
 			<div align="center">
 				<br />
