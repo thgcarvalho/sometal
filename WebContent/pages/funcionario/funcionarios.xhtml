@@ -125,8 +125,11 @@
                 </h:panelGrid>
                 
                 <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+                
+                	<h:graphicImage library="images" name="sem_foto.jpg" />
+                
                 	<h:outputText value="#{msg.foto}" />
-	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}"
+	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}" update=":form:growl"
 						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760" fileLimit="1"
 						label="#{msg.adicionar}" uploadLabel="#{msg.carregar}" cancelLabel="#{msg.cancelar}" />
 					
@@ -154,6 +157,11 @@
 			 id="viewDialog" modal="true" resizable="false">
 			
 			<h:panelGrid id="display" columns="2" style="margin:0 auto;">
+			
+				<!--  <h:outputText id="txtft" value="#{funcionarioBean.funcionarioSelecionado.foto}" /> -->
+                <p:graphicImage library="images" name="sem_foto.jpg" height="100" />
+                <p:graphicImage id="foto" value="#{photoBean.loadPhoto(funcionarioBean.funcionarioSelecionado.foto)}" height="100" />
+                
 				<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
 				<h:outputText value="#{funcionarioBean.funcionarioSelecionado.nome}" />
 			</h:panelGrid>

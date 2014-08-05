@@ -5,7 +5,9 @@ import static br.com.sometal.util.FacesUtils.MSG_SUCESS;
 import static br.com.sometal.util.FacesUtils.addErrorMessage;
 import static br.com.sometal.util.FacesUtils.addInfoMessage;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import br.com.sometal.dao.FuncionarioDao;
@@ -187,15 +191,40 @@ public class FuncionarioBean implements Serializable {
         this.filteredFuncionarios = filteredFuncionarios;  
     }
     
+	public StreamedContent getLoadPhoto() {
+		String strPhoto = null;
+		StreamedContent scPhoto = null;
+		try {
+			if (funcionarioSelecionado != null && funcionarioSelecionado.getFoto() != null && !funcionarioSelecionado.getFoto().equals("")) {
+				strPhoto = funcionarioSelecionado.getFoto();
+			} else {
+				strPhoto = "\\resources\\images\\sem_foto.jpg";
+			}
+			System.out.println("FL=" + strPhoto);
+			final File filePhoto = new File(strPhoto);
+			System.out.println("EXISTE=" + filePhoto.exists());
+			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
+			final InputStream is = new BufferedInputStream(fileInputStream);
+			scPhoto = new DefaultStreamedContent(is);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
+		}
+		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto.getName()));
+		return scPhoto;
+	}
+    
 	public void photoUpload(FileUploadEvent event) {
 		String destination = PathServer.PATH_PUBLIC 
 				+ File.separator + PathServer.PATH_DIR 
 				+ File.separator + PathServer.DIR_FOTOS;
-		String fileName = String.valueOf(funcionario.getCodigo());
-		funcionario.setFoto(destination + File.separator + fileName);
-		uploadedFile= event.getFile();
+		
+		String ext = event.getFile().getFileName().split("\\.")[1];
+		String strCodigo = String.valueOf(funcionario.getCodigo());
+		funcionario.setFoto(destination + File.separator + strCodigo + "." + ext);
+		uploadedFile = event.getFile();
 		copyFile(funcionario.getFoto());
-		addInfoMessage(MSG_SUCESS, event.getFile().getFileName() + " foi carregado.");
+		addInfoMessage(MSG_SUCESS, "Foto " + event.getFile().getFileName() + " foi carregada.");
 	}
 	
 	private void copyFile(String file) {
