@@ -15,6 +15,8 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import br.com.sometal.model.Funcionario;
+
 /**
  * @author Thiago Carvalho
  * 
@@ -25,14 +27,17 @@ public class PhotoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public StreamedContent getLoadPhoto() {
-		String strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\1004.jpg";
-		StreamedContent scPhoto = null;
+	public StreamedContent loadPhoto(Funcionario funcionario) {
+		System.out.println("PhotoBean.loadPhoto=" + funcionario);
+		StreamedContent scPhoto = new DefaultStreamedContent();
+		String strPhoto = "";
 		try {
-			if (strPhoto == null || strPhoto.equals("")) {
-				strPhoto = "\\resources\\images\\sem_foto.jpg";
+			if (funcionario != null && funcionario.getFoto() != null && !funcionario.getFoto().equals("")) {
+				strPhoto = funcionario.getFoto();
+			} else {
+				strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg";
 			}
-			System.out.println("PhotoBean.FL=" + strPhoto);
+			System.out.println("FL=" + strPhoto);
 			final File filePhoto = new File(strPhoto);
 			System.out.println("EXISTE=" + filePhoto.exists());
 			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
@@ -42,27 +47,7 @@ public class PhotoBean implements Serializable {
 			e.printStackTrace();
 			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
 		}
-		System.out.println("PhotoBean.SC=" + (scPhoto == null ? "null" : scPhoto.getName()));
-		return scPhoto;
-	}
-	
-	public StreamedContent loadPhoto(String strPhoto) {
-		System.out.println("Bean.FL=" + strPhoto);
-		StreamedContent scPhoto = null;
-		try {
-			if (strPhoto == null || strPhoto.equals("")) {
-				strPhoto = "";
-			}
-			final File filePhoto = new File(strPhoto);
-			System.out.println("EXISTE=" + filePhoto.exists());
-			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
-			final InputStream is = new BufferedInputStream(fileInputStream);
-			scPhoto = new DefaultStreamedContent(is);
-		} catch (Exception e) {
-			e.printStackTrace();
-			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
-		}
-		System.out.println("Bean.SC=" + (scPhoto == null ? "null" : scPhoto));
+		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto));
 		return scPhoto;
 	}
 

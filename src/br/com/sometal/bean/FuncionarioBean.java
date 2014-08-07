@@ -5,9 +5,7 @@ import static br.com.sometal.util.FacesUtils.MSG_SUCESS;
 import static br.com.sometal.util.FacesUtils.addErrorMessage;
 import static br.com.sometal.util.FacesUtils.addInfoMessage;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +17,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import br.com.sometal.dao.FuncionarioDao;
@@ -36,7 +32,7 @@ import br.com.sometal.service.PathServer;
  * 
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class FuncionarioBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -54,6 +50,7 @@ public class FuncionarioBean implements Serializable {
 		System.out.println("@ViewScoped FuncionarioBean");
 		funcionarioDao = new FuncionarioDaoImp();
 		preparaNovoFuncionario();
+		funcionarioSelecionado = new Funcionario();
 		carregaFuncionarios();
 	}
 	
@@ -191,28 +188,26 @@ public class FuncionarioBean implements Serializable {
         this.filteredFuncionarios = filteredFuncionarios;  
     }
     
-	public StreamedContent getLoadPhoto() {
-		String strPhoto = null;
-		StreamedContent scPhoto = null;
-		try {
-			if (funcionarioSelecionado != null && funcionarioSelecionado.getFoto() != null && !funcionarioSelecionado.getFoto().equals("")) {
-				strPhoto = funcionarioSelecionado.getFoto();
-			} else {
-				strPhoto = "\\resources\\images\\sem_foto.jpg";
-			}
-			System.out.println("FL=" + strPhoto);
-			final File filePhoto = new File(strPhoto);
-			System.out.println("EXISTE=" + filePhoto.exists());
-			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
-			final InputStream is = new BufferedInputStream(fileInputStream);
-			scPhoto = new DefaultStreamedContent(is);
-		} catch (Exception e) {
-			e.printStackTrace();
-			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
-		}
-		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto.getName()));
-		return scPhoto;
-	}
+//	public StreamedContent loadPhoto(String strPhoto) {
+//		StreamedContent scPhoto = null;
+//		try {
+//			if (strPhoto == null || strPhoto.equals("")) {
+//				strPhoto = "";
+//				//strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg";
+//			}
+//			System.out.println("FL=" + strPhoto);
+//			final File filePhoto = new File(strPhoto);
+//			System.out.println("EXISTE=" + filePhoto.exists());
+//			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
+//			final InputStream is = new BufferedInputStream(fileInputStream);
+//			scPhoto = new DefaultStreamedContent(is);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
+//		}
+//		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto));
+//		return scPhoto;
+//	}
     
 	public void photoUpload(FileUploadEvent event) {
 		String destination = PathServer.PATH_PUBLIC 

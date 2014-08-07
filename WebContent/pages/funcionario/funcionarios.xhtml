@@ -82,8 +82,8 @@
 						<f:converter converterId="valorConverter" />
 	                </p:inputText>
 	                
-	                <h:outputText value="#{msg.cpf}" mask="999.999.999-99" size="14" />
-					<p:inputText label="#{msg.cpf}" maxlength="45" size="45" 
+	                <h:outputText value="#{msg.cpf}"/>
+					<p:inputMask label="#{msg.cpf}" mask="999.999.999-99" size="14"  
 						value="#{funcionarioBean.funcionario.cpf}" />
 						
 					<h:outputText value="#{msg.carteira}" />
@@ -95,20 +95,23 @@
 						value="#{funcionarioBean.funcionario.endereco}" />
 						
 	                <h:outputText value="#{msg.fone1}" />
-					<p:inputText label="#{msg.fone1}" mask="(99) 9999-9999" size="14" 
+					<p:inputMask label="#{msg.fone1}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionario.fone1}" />
 						
 					<h:outputText value="#{msg.fone2}" />
-					<p:inputText label="#{msg.fone2}" mask="(99) 9999-9999" size="14" 
+					<p:inputMask label="#{msg.fone2}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionario.fone2}" />
 						
 					<h:outputText value="#{msg.email}" />
-					<p:inputText label="#{msg.email}" value="#{funcionarioBean.funcionario.email}" size="45"
-						validator="#{emailValidator}" />
+					<p:inputText label="#{msg.email}" value="#{funcionarioBean.funcionario.email}" size="45">
+						<f:validator validatorId="emailValidator" />
+		  			</p:inputText>
 						
-					<h:outputText value="#{msg.banco}" converter="toUpperCaseConverter" />
+					<h:outputText value="#{msg.banco}" />
 					<p:inputText label="#{msg.banco}" size="45" 
-						value="#{funcionarioBean.funcionario.banco}" />
+						value="#{funcionarioBean.funcionario.banco}" >
+						<f:converter converterId="toUpperCaseConverter" />
+	                </p:inputText>
 						
 					<h:outputText value="#{msg.agencia}" />
 					<p:inputText label="#{msg.agencia}" size="16" 
@@ -118,24 +121,25 @@
 					<p:inputText label="#{msg.conta}" size="16" 
 						value="#{funcionarioBean.funcionario.conta}" />
 						
-					<h:outputText value="#{msg.tipo}" converter="toUpperCaseConverter" />
+					<h:outputText value="#{msg.tipo}" />
 					<p:inputText label="#{msg.tipo}" size="45" 
-						value="#{funcionarioBean.funcionario.tipo}" />
+						value="#{funcionarioBean.funcionario.tipo}" >
+						<f:converter converterId="toUpperCaseConverter" />
+	                </p:inputText>
+	                
+	                <h:outputText value="#{msg.obs}" />
+					<p:inputTextarea label="#{msg.obs}" size="500" 
+						value="#{funcionarioBean.funcionario.obs}" />
 					
                 </h:panelGrid>
                 
                 <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
                 
-                	<h:graphicImage library="images" name="sem_foto.jpg" />
-                
-                	<h:outputText value="#{msg.foto}" />
+                	<h:graphicImage library="images" name="sem_foto.jpg" height="100"/>
 	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}" update=":form:growl"
 						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760" fileLimit="1"
 						label="#{msg.adicionar}" uploadLabel="#{msg.carregar}" cancelLabel="#{msg.cancelar}" />
 					
-					<h:outputText value="#{msg.obs}" />
-					<p:inputTextarea label="#{msg.obs}" size="500" 
-						value="#{funcionarioBean.funcionario.obs}" />
                 </h:panelGrid>
 			</h:panelGrid>
 			
@@ -154,13 +158,12 @@
 	<!-- VIEW Dialog -->
 	<h:form id="formView">
 		<p:dialog header="#{msg.funcionario_detalhes}" widgetVar="viewDialog"
-			 id="viewDialog" modal="true" resizable="false">
+			 id="viewDialog" modal="true" resizable="false" >
 			
-			<h:panelGrid id="display" columns="2" style="margin:0 auto;">
+			<h:panelGrid id="display" columns="2" style="margin:0 auto;" >
 			
-				<!--  <h:outputText id="txtft" value="#{funcionarioBean.funcionarioSelecionado.foto}" /> -->
-                <p:graphicImage library="images" name="sem_foto.jpg" height="100" />
-                <p:graphicImage id="foto" value="#{photoBean.loadPhoto(funcionarioBean.funcionarioSelecionado.foto)}" height="100" />
+				<h:outputText id="txtft1" value="#{msg.foto}" /> 
+				<h:outputText id="txtft2" value="#{msg.foto}" /> 
                 
 				<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
 				<h:outputText value="#{funcionarioBean.funcionarioSelecionado.nome}" />

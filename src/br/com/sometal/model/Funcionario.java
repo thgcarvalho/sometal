@@ -26,7 +26,7 @@ public class Funcionario implements Serializable{
 
 	private int codigo;
 	private String nome;
-	private String foto;
+	private String foto = "";
 	private String cargo;
 	private BigDecimal salario;
 	private Date admissao;
