@@ -13,7 +13,7 @@
 		<p:growl id="growl" showDetail="true" />
 		
 		<div align="right">
-			<p:commandButton title="Criar" actionListener="#{funcionarioBean.preparaNovoFuncionario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+			<p:commandButton value="#{msg.novo}" title="#{msg.novo}" actionListener="#{funcionarioBean.preparaNovoFuncionario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
 		</div>
 		
 		<div align="center">
@@ -133,10 +133,11 @@
 					
                 </h:panelGrid>
                 
-                <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+                <h:panelGrid columns="1" columnClasses="label, value" styleClass="grid">
                 
-                	<h:graphicImage library="images" name="sem_foto.jpg" height="100"/>
-	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}" update=":form:growl"
+                	<p:graphicImage id="fotoadd" value="#{funcionarioBean.loadPhoto}" height="100" cache="false"/>
+                	
+	                <p:fileUpload fileUploadListener="#{funcionarioBean.photoUpload}" update=":form:growl fotoadd"
 						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760" fileLimit="1"
 						label="#{msg.adicionar}" uploadLabel="#{msg.carregar}" cancelLabel="#{msg.cancelar}" />
 					

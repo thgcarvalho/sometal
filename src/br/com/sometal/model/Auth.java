@@ -1,5 +1,6 @@
 package br.com.sometal.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -7,8 +8,10 @@ import java.util.List;
  * @author Thiago Carvalho
  * 
  */
-public class Auth {
+public class Auth implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	public final static String ROLE = "sometal";
 	public final static String ROLE_ADMIN = "sometal-admin";
 	public final static String ROLE_ADMIN_DESC = "Administrador";
