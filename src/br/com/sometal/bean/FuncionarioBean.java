@@ -192,28 +192,7 @@ public class FuncionarioBean implements Serializable {
         this.filteredFuncionarios = filteredFuncionarios;  
     }
     
-//	public StreamedContent loadPhoto(String strPhoto) {
-//		StreamedContent scPhoto = null;
-//		try {
-//			if (strPhoto == null || strPhoto.equals("")) {
-//				strPhoto = "";
-//				//strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg";
-//			}
-//			System.out.println("FL=" + strPhoto);
-//			final File filePhoto = new File(strPhoto);
-//			System.out.println("EXISTE=" + filePhoto.exists());
-//			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
-//			final InputStream is = new BufferedInputStream(fileInputStream);
-//			scPhoto = new DefaultStreamedContent(is);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
-//		}
-//		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto));
-//		return scPhoto;
-//	}
-    
-    public StreamedContent getFotoNovoFuncionario() {
+    public StreamedContent getFotoFuncionario() {
     	return loadPhoto(funcionario);
     }
     
@@ -248,7 +227,15 @@ public class FuncionarioBean implements Serializable {
 		return scPhoto;
 	}
     
-	public void photoUpload(FileUploadEvent event) {
+    public void photoUploadFuncionario(FileUploadEvent event) {
+    	photoUpload(event, funcionario);
+    }
+    
+    public void photoUploadFuncionarioSelecionado(FileUploadEvent event) {
+    	photoUpload(event, funcionarioSelecionado);
+    }
+    
+	private void photoUpload(FileUploadEvent event, Funcionario funcionario) {
 		String destination = PathServer.PATH_PUBLIC 
 				+ File.separator + PathServer.PATH_DIR 
 				+ File.separator + PathServer.DIR_FOTOS;
