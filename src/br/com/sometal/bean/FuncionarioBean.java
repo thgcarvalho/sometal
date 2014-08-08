@@ -213,7 +213,15 @@ public class FuncionarioBean implements Serializable {
 //		return scPhoto;
 //	}
     
-    public StreamedContent getLoadPhoto() {
+    public StreamedContent getFotoNovoFuncionario() {
+    	return loadPhoto(funcionario);
+    }
+    
+    public StreamedContent getFotoFuncionarioSelecionado() {
+    	return loadPhoto(funcionarioSelecionado);
+    }
+    
+    private StreamedContent loadPhoto(Funcionario funcionario) {
 		System.out.println("PhotoBean.loadPhoto=" + funcionario);
 		StreamedContent scPhoto = new DefaultStreamedContent();
 		String strPhoto = "";
@@ -221,7 +229,10 @@ public class FuncionarioBean implements Serializable {
 			if (funcionario != null && funcionario.getFoto() != null && !funcionario.getFoto().equals("")) {
 				strPhoto = funcionario.getFoto();
 			} else {
-				strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg";
+				strPhoto = PathServer.PATH_PUBLIC 
+						+ File.separator + PathServer.PATH_DIR 
+						+ File.separator + PathServer.DIR_FOTOS 
+						+ File.separator + "sem_foto.jpg";
 			}
 			System.out.println("FL=" + strPhoto);
 			final File filePhoto = new File(strPhoto);

@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.com.sometal.util.DataUtil;
 
 /**
  * @author Thiago Carvalho
@@ -84,6 +87,10 @@ public class Funcionario implements Serializable{
 	}
 	public void setAdmissao(Date admissao) {
 		this.admissao = admissao;
+	}
+	@Transient
+	public String getAdmissaoFormatada() {
+		return DataUtil.formatarData(this.admissao);
 	}
 	public Date getSaida() {
 		return saida;
@@ -188,7 +195,5 @@ public class Funcionario implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
 	
 }
