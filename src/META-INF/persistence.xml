@@ -7,6 +7,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>br.com.sometal.model.Funcionario</class>
 		<class>br.com.sometal.model.Usuario</class>
+		<class>br.com.sometal.model.Ponto</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />

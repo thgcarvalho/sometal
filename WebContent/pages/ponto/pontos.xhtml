@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="center">
+		
+			<p:dataTable id="pontos" var="ponto"
+				emptyMessage="#{msg.ponto_nenhum}" 
+				value="#{pontoBean.pontos}" rowKey="#{ponto.ponto}"
+				filteredValue="#{pontoBean.filteredPontos}"
+				paginator="true" rows="14" rendered="#{pontoBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.ponto}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.codigo}" style="width:5px"
+					filterBy="#{ponto.funcionario.codigo}" filterMatchMode="contains">
+					<h:outputText value="#{ponto.funcionario.codigo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.nome}" style="width:70px"
+					filterBy="#{ponto.funcionario.nome}" filterMatchMode="contains">
+					<h:outputText value="#{ponto.funcionario.nome}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.cargo}" style="width:20px"
+					filterBy="#{ponto.funcionario.cargo}" filterMatchMode="contains">
+					<h:outputText value="#{ponto.funcionario.cargo}" />
+				</p:column>
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{ponto}" target="#{pontoBean.pontoSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{ponto}" target="#{pontoBean.pontoSelecionado}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="#{msg.ponto_detalhes}" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false" >
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+					<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
+					<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.nome}" />
+						
+					<h:outputText value="#{msg.cargo}" style="font-weight:bold" />
+					<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.cargo}" />
+					
+					<h:outputText value="#{msg.entrada}" style="font-weight:bold" />	
+					<h:outputText value="#{funcionarioBean.pontoSelecionado.entrada}" >
+						<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
+					</h:outputText>
+					
+					<h:outputText value="#{msg.saida}" style="font-weight:bold" />	
+					<h:outputText value="#{funcionarioBean.pontoSelecionado.saida}" >
+						<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
+					</h:outputText>
+						
+					<p:inputTextarea size="500" autoResize="false" readonly="true" disabled="true"
+						value="#{pontoBean.pontoSelecionado.obs}" />
+				</h:panelGrid>
+			
+				<h:panelGrid columns="1" columnClasses="label, value" styleClass="grid">
+                	<p:graphicImage id="fotovw" value="#{pontoBean.fotoFuncionarioSelecionado}" height="100" cache="false"/>
+                </h:panelGrid>
+			</h:panelGrid>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="#{msg.ponto_editar}" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+					<h:outputText value="#{msg.nome}:" />
+					<p:inputText required="true" label="#{msg.nome}" size="45" 
+						value="#{pontoBean.pontoSelecionado.funcionario.nome}" />
+						
+					<h:outputText value="#{msg.cargo}" />
+					<p:inputText label="#{msg.cargo}" size="45" 
+						value="#{pontoBean.pontoSelecionado.funcionario.cargo}" />
+						
+					<h:outputText value="#{msg.entrada}" />	
+					<p:calendar id="entrada" label="#{msg.entrada}" 
+						value="#{pontoBean.pontoSelecionado.entrada}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+	                <h:outputText value="#{msg.obs}" />
+					<p:inputTextarea label="#{msg.obs}" size="500" 
+						value="#{pontoBean.pontoSelecionado.obs}" />
+                </h:panelGrid>
+                
+			</h:panelGrid>
+
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{pontoBean.editar}" 
+					update=":form:pontos :form:growl" />
+				</h:panelGrid>
+			</div>
+				
+		</p:dialog>
+	</h:form>
+		
+	</ui:define>
+</ui:composition>
