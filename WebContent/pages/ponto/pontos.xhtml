@@ -12,8 +12,14 @@
 	<h:form id="form">
 		<p:growl id="growl" showDetail="true" />
 		
-		<div align="center">
+		<div align="right">
+			<br />
+			<p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
+			<br /><br />
+		</div>
 		
+		<div align="center">
+			
 			<p:dataTable id="pontos" var="ponto"
 				emptyMessage="#{msg.ponto_nenhum}" 
 				value="#{pontoBean.pontos}" rowKey="#{ponto.ponto}"
@@ -34,10 +40,17 @@
 					<h:outputText value="#{ponto.funcionario.nome}" />
 				</p:column>
 				
-				<p:column headerText="#{msg.cargo}" style="width:20px"
+				<p:column headerText="#{msg.cargo}" style="width:15px"
 					filterBy="#{ponto.funcionario.cargo}" filterMatchMode="contains">
 					<h:outputText value="#{ponto.funcionario.cargo}" />
 				</p:column>
+				
+				<p:column headerText="#{msg.entrada_saida}" style="width:5px;text-align: center">
+					<p:selectManyButton value="#{pontoBean.selectedOptions}" >
+			            <f:selectItem itemLabel="E" itemValue="e" />
+			            <f:selectItem itemLabel="S" itemValue="s" />
+			        </p:selectManyButton>
+		        </p:column>
 				
 				<p:column style="width:5px;text-align: center">
 		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
@@ -60,30 +73,24 @@
 			 id="viewDialog" modal="true" resizable="false" >
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-					<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
-					<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.nome}" />
-						
-					<h:outputText value="#{msg.cargo}" style="font-weight:bold" />
-					<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.cargo}" />
+				<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
+				<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.nome}" />
 					
-					<h:outputText value="#{msg.entrada}" style="font-weight:bold" />	
-					<h:outputText value="#{funcionarioBean.pontoSelecionado.entrada}" >
-						<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
-					</h:outputText>
+				<h:outputText value="#{msg.cargo}" style="font-weight:bold" />
+				<h:outputText value="#{pontoBean.pontoSelecionado.funcionario.cargo}" />
+				
+				<h:outputText value="#{msg.entrada}" style="font-weight:bold" />	
+				<h:outputText value="#{pontoBean.pontoSelecionado.entrada}" >
+					<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				
+				<h:outputText value="#{msg.saida}" style="font-weight:bold" />	
+				<h:outputText value="#{pontoBean.pontoSelecionado.saida}" >
+					<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
+				</h:outputText>
 					
-					<h:outputText value="#{msg.saida}" style="font-weight:bold" />	
-					<h:outputText value="#{funcionarioBean.pontoSelecionado.saida}" >
-						<f:convertDateTime pattern="HH:mm" timeZone="#{initParam.timezone}" />
-					</h:outputText>
-						
-					<p:inputTextarea size="500" autoResize="false" readonly="true" disabled="true"
-						value="#{pontoBean.pontoSelecionado.obs}" />
-				</h:panelGrid>
-			
-				<h:panelGrid columns="1" columnClasses="label, value" styleClass="grid">
-                	<p:graphicImage id="fotovw" value="#{pontoBean.fotoFuncionarioSelecionado}" height="100" cache="false"/>
-                </h:panelGrid>
+				<p:inputTextarea size="500" autoResize="false" readonly="true" disabled="true"
+					value="#{pontoBean.pontoSelecionado.obs}" />
 			</h:panelGrid>
 			
 		</p:dialog>

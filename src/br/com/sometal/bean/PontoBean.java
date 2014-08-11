@@ -7,15 +7,18 @@ import static br.com.sometal.util.FacesUtils.addInfoMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import br.com.sometal.dao.FuncionarioDao;
 import br.com.sometal.dao.PontoDao;
+import br.com.sometal.daoImp.FuncionarioDaoImp;
 import br.com.sometal.daoImp.PontoDaoImp;
+import br.com.sometal.model.Funcionario;
 import br.com.sometal.model.Ponto;
 
 /**
@@ -28,24 +31,46 @@ public class PontoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Resource(name = "pontoDao")
 	private PontoDao pontoDao;
+	private FuncionarioDao funcionarioDao;
 	private Ponto pontoSelecionado;
+	private List<Funcionario> funcionarios;
 	private List<Ponto> pontos;
 	private List<Ponto> filteredPontos;
 	
 	@PostConstruct
 	public void init() {
 		System.out.println("@ViewScoped PontoBean");
+		funcionarioDao = new FuncionarioDaoImp();
 		pontoDao = new PontoDaoImp();
 		pontoSelecionado = new Ponto();
+		carregaFuncionarios();
 		carregaPontos();
 	}
 	
+	private void carregaFuncionarios() {
+		funcionarios = new ArrayList<Funcionario>();
+		try {
+			funcionarios = funcionarioDao.todos("nome");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void carregaPontos() {
+		Ponto ponto;
 		pontos = new ArrayList<Ponto>();
 		try {
-			pontos = pontoDao.todos("data");
+			//pontos = pontoDao.todos("data");
+			for (Funcionario funcionario : funcionarios) {
+				ponto = new Ponto();
+				ponto.setFuncionario(funcionario);
+				ponto.setData(new Date());
+				ponto.setEntrada(null);
+				ponto.setSaida(null);
+				ponto.setObs("");
+				pontos.add(ponto);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -102,6 +127,16 @@ public class PontoBean implements Serializable {
   
     public void setFilteredPontos(List<Ponto> filteredPontos) {  
         this.filteredPontos = filteredPontos;  
+    }
+    
+    private List<String> selectedOptions;
+    public List<String> getSelectedOptions() {
+    	System.out.println("getSelectedOptions");
+        return selectedOptions;
+    }
+    public void setSelectedOptions(List<String> selectedOptions) {
+    	System.out.println("setSelectedOptions="+selectedOptions);
+        this.selectedOptions = selectedOptions;
     }
 
 }
