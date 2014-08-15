@@ -51,7 +51,7 @@ public class FuncionarioBean implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		System.out.println("@ViewScoped FuncionarioBean");
+		System.out.println("@SessionScoped FuncionarioBean");
 		funcionarioDao = new FuncionarioDaoImp();
 		preparaNovoFuncionario();
 		funcionarioSelecionado = new Funcionario();
@@ -208,8 +208,7 @@ public class FuncionarioBean implements Serializable {
 			if (funcionario != null && funcionario.getFoto() != null && !funcionario.getFoto().equals("")) {
 				strPhoto = funcionario.getFoto();
 			} else {
-				strPhoto = PathServer.PATH_PUBLIC 
-						+ File.separator + PathServer.PATH_DIR 
+				strPhoto = PathServer.PATH_DIR 
 						+ File.separator + PathServer.DIR_FOTOS 
 						+ File.separator + "sem_foto.jpg";
 			}
@@ -236,13 +235,13 @@ public class FuncionarioBean implements Serializable {
     }
     
 	private void photoUpload(FileUploadEvent event, Funcionario funcionario) {
-		String destination = PathServer.PATH_PUBLIC 
-				+ File.separator + PathServer.PATH_DIR 
+		String destination =  PathServer.PATH_DIR 
 				+ File.separator + PathServer.DIR_FOTOS;
 		
 		String ext = event.getFile().getFileName().split("\\.")[1];
 		String strCodigo = String.valueOf(funcionario.getCodigo());
 		funcionario.setFoto(destination + File.separator + strCodigo + "." + ext);
+		System.out.println("photoUpload= " + funcionario.getFoto());
 		uploadedFile = event.getFile();
 		copyFile(funcionario.getFoto());
 		addInfoMessage(MSG_SUCESS, "Foto " + event.getFile().getFileName() + " foi carregada.");

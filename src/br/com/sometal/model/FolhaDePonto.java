@@ -3,6 +3,10 @@ package br.com.sometal.model;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+/**
+ * @author Thiago Carvalho
+ * 
+ */
 public class FolhaDePonto {
 	
 	public static void main(String[] args) {

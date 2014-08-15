@@ -6,12 +6,19 @@ package br.com.sometal.util;
  */
 public class Paths {
 
-	public static final String DOMAIN = "http://www.grandev.com.br/";
+	public static String DOMAIN = "http://www.grandev.com.br/";
+	public static String TMP_PATH = "/home/grandev/temp/";
+	public static String PUBLIC_PATH = "/home/grandev/public_html/";
+	public static String APP_DIR = "sometal/";
+	public boolean test = false;
 	
-	public static final String TMP_PATH = "/home/grandev/temp/";
-	
-	public static final String PUBLIC_PATH = "/home/grandev/public_html/";
-	
-	public static final String APP_DIR = "sga/";
+	public Paths() {
+		if (test) {
+			DOMAIN = "http://www.grandev.com.br/";
+			TMP_PATH = "/home/grandev/temp/";
+			PUBLIC_PATH = "/home/grandev/public_html/";
+			APP_DIR = "sometal/";
+		}
+	}
 	
 }

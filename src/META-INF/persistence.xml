@@ -8,6 +8,7 @@
 		<class>br.com.sometal.model.Funcionario</class>
 		<class>br.com.sometal.model.Usuario</class>
 		<class>br.com.sometal.model.Ponto</class>
+		<class>br.com.sometal.model.Cliente</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />

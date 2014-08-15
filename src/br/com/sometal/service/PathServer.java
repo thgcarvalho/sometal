@@ -2,8 +2,15 @@ package br.com.sometal.service;
 
 public class PathServer {
 	
-	public static final String PATH_PUBLIC = "C:\\Users\\tcarvalho\\sometal"; //"/home/grandevc/public_html/files/sga";
-	public static final String PATH_DIR = "files\\sometal"; //"files/sometal"
-	public static final String DIR_FOTOS = "FOTOS";
+	public static String PATH_DIR = "/home/sometal";
+	public static String DIR_FOTOS = "fotos";
+	private boolean test = false;
+	
+	public PathServer() {
+		if (test) {
+			PATH_DIR = "files\\sometal";
+			DIR_FOTOS = "FOTOS";
+		}
+	}
 	
 }
