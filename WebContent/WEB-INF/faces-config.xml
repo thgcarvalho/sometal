@@ -19,7 +19,7 @@
 		</navigation-case>
 	</navigation-rule>
 	
-	<!-- USUARIOS -->
+	<!-- HOME -->
 
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
@@ -52,6 +52,16 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<!-- CLIENTES -->
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>clientes</from-outcome>
+			<to-view-id>/pages/cliente/clientes.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
 	
 	<!-- USUARIOS -->
 

@@ -1,20 +1,25 @@
 function setCPF() {
-	document.getElementById("form:cpf").style.background = "#FFFFFF";
-	document.getElementById("form:cnpj").style.background = "#CCCCCC";
-	document.getElementById("form:cnpj").value = "";
+	alert("setCPF");
+	console.log("setCPF");
+	console.log(value);
+	document.getElementById("formAdd:cpf").style.background = "#FFFFFF";
+	document.getElementById("formAdd:cnpj").style.background = "#CCCCCC";
+	document.getElementById("formAdd:cnpj").value = "";
 }
 
 function setCNPJ() {
-	var cpf = document.getElementById("form:cpf").value;
+	alert("setCNPJ");
+	console.log("setCNPJ");
+	var cpf = document.getElementById("formAdd:cpf").value;
 	console.log(cpf);
 	if (cpf == "") {
 		console.log("if");
-		document.getElementById("form:cnpj").style.color = "#000000";
-		document.getElementById("form:cnpj").style.background = "#FFFFFF";
-		document.getElementById("form:cpf").style.background = "#CCCCCC";
-		document.getElementById("form:cpf").value = "";
+		document.getElementById("formAdd:cnpj").style.color = "#000000";
+		document.getElementById("formAdd:cnpj").style.background = "#FFFFFF";
+		document.getElementById("formAdd:cpf").style.background = "#CCCCCC";
+		document.getElementById("formAdd:cpf").value = "";
 	} else{
-		document.getElementById("form:cnpj").style.color = "#CCCCCC";
+		document.getElementById("formAdd:cnpj").style.color = "#CCCCCC";
 	}
 }
 
