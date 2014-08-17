@@ -90,9 +90,9 @@
 					<p:inputMask label="#{msg.cpf}" mask="999.999.999-99" size="14"  
 						value="#{funcionarioBean.funcionario.cpf}" />
 						
-					<h:outputText value="#{msg.carteira}" />
-					<p:inputText label="#{msg.carteira}" maxlength="16" size="16" 
-						value="#{funcionarioBean.funcionario.carteira}" />
+					<h:outputText value="#{msg.pis}" />
+					<p:inputMask label="#{msg.pis}" mask="999.99999.99-9" size="14"  
+						value="#{funcionarioBean.funcionario.pis}" />
 						
 					<h:outputText value="#{msg.endereco}" />
 					<p:inputText label="#{msg.endereco}" maxlength="100" size="45" 
@@ -183,8 +183,8 @@
 	                <h:outputText value="#{msg.cpf}" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.cpf}" />
 						
-					<h:outputText value="#{msg.carteira}" style="font-weight:bold" />
-					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.carteira}" />
+					<h:outputText value="#{msg.pis}" style="font-weight:bold" />
+					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.pis}" />
 						
 					<h:outputText value="#{msg.endereco}" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.endereco}" />
@@ -253,9 +253,9 @@
 					<p:inputMask label="#{msg.cpf}" mask="999.999.999-99" size="14"  
 						value="#{funcionarioBean.funcionarioSelecionado.cpf}" />
 						
-					<h:outputText value="#{msg.carteira}" />
-					<p:inputText label="#{msg.carteira}" maxlength="16" size="16" 
-						value="#{funcionarioBean.funcionarioSelecionado.carteira}" />
+					<h:outputText value="#{msg.pis}" />
+						<p:inputMask label="#{msg.pis}" mask="999.99999.99-9" size="14"  
+						value="#{funcionarioBean.funcionarioSelecionado.pis}" />
 						
 					<h:outputText value="#{msg.endereco}" />
 					<p:inputText label="#{msg.endereco}" maxlength="100" size="45" 

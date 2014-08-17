@@ -35,7 +35,7 @@ public class Funcionario implements Serializable{
 	private Date admissao;
 	private Date saida;
 	private String cpf;
-	private String carteira;
+	private String pis;
 	private String endereco;
 	private String fone1;
 	private String fone2;
@@ -104,11 +104,11 @@ public class Funcionario implements Serializable{
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	public String getCarteira() {
-		return carteira;
+	public String getPis() {
+		return pis;
 	}
-	public void setCarteira(String carteira) {
-		this.carteira = carteira;
+	public void setPis(String pis) {
+		this.pis = pis;
 	}
 	public String getEndereco() {
 		return endereco;
