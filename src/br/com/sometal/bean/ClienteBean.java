@@ -35,7 +35,6 @@ public class ClienteBean implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		System.out.println("@ViewScoped ClienteBean");
 		clienteDao = new ClienteDaoImp();
 		preparaNovoCliente();
 		clienteSelecionado = new Cliente();

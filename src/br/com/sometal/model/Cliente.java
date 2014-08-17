@@ -48,40 +48,54 @@ public class Cliente implements Serializable {
 	}
 
 	public void setCadastro(String cadastro) {
-		if (!cadastro.equals("")) {
+		if (cadastro != null) {
 			this.cadastro = cadastro;
 		}
 	}
-
+	
 	/*
 	 * getters e setters cpf e cnpj auxiliam para inserir na colula (cadastro)
 	 * no db somentente o campo preenchido e permite a separacao desse campo
 	 * quando se obtem o (cadastro) no db
 	 */
 	public String getCpf() {
-		if (getCadastro() != null && getCadastro().length() == 14) {
+		if (getIsPF()) {
 			return getCadastro();
 		}
 		return "";
 	}
 
 	public void setCpf(String cpf) {
-		if (getCpf().equals("")) {
+		if (getCnpj().equals("")) {
 			setCadastro(cpf);
 		}
 	}
 
 	public String getCnpj() {
-		if (getCadastro() != null && getCadastro().length() == 18) {
+		if (getIsPJ()) {
 			return getCadastro();
 		}
 		return "";
 	}
 
 	public void setCnpj(String cnpj) {
-		if (getCnpj().equals("")) {
+		if (getCpf().equals("")) {
 			setCadastro(cnpj);
 		}
+	}
+
+	public boolean getIsPF() {
+		if (getCadastro() != null && getCadastro().length() == 14) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean getIsPJ() {
+		if (getCadastro() != null && getCadastro().length() == 18) {
+			return true;
+		}
+		return false;
 	}
 
 	public String getEndereco() {
