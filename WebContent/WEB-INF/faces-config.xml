@@ -63,6 +63,17 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<!-- FORNECEDORES -->
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>fornecedores</from-outcome>
+			<to-view-id>/pages/fornecedor/fornecedores.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
 	<!-- USUARIOS -->
 
 	<navigation-rule>

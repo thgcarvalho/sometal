@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />  
+		<center>
+			<p:dataTable id="fornecedoresDeMateriais" var="fornecedor"
+				emptyMessage="Nenhum fornecedor de material cadastrado" 
+				value="#{fornecedorDeMaterialBean.fornecedores}" rowKey="#{fornecedor.id}"
+				filteredValue="#{fornecedorDeMaterialBean.filteredFornecedores}"
+				selection="#{fornecedorDeMaterialBean.fornecedorSelecionado}" selectionMode="single"
+				resizableColumns="true" paginator="true" rows="14"
+				rendered="#{fornecedorDeMaterialBean != null}" style="width:100%">
+				
+				<p:ajax event="rowSelect" update=":form:fornecedoresDeMateriais:viewButton, :form:fornecedoresDeMateriais:editButton, :form:fornecedoresDeMateriais:deleteButton" />
+				<p:ajax event="rowUnselect" update=":form:fornecedoresDeMateriais:viewButton, :form:fornecedoresDeMateriais:editButton, :form:fornecedoresDeMateriais:deleteButton"/>
+				
+				<f:facet name="header">
+					<h:outputText value="Fornecedores de Materiais" />
+				</f:facet>
+				
+				<p:column headerText="Fornecedor" style="width:300px"
+					filterBy="#{fornecedor.nome}" filterMatchMode="contains">
+					<h:outputText value="#{fornecedor.nome}" />
+				</p:column>
+				
+				<p:column headerText="Condomínio" style="width:400px"
+					filterBy="#{fornecedor.condominiosFormatado}" filterMatchMode="contains">
+					<h:outputText value="#{fornecedor.condominiosFormatado}" escape="false"/>
+				</p:column>
+
+				<p:column headerText="Materiais" style="width:300px"
+					filterBy="#{fornecedor.oferta}" filterMatchMode="contains">
+					<h:outputText value="#{fornecedor.oferta}" escape="false" />
+				</p:column>
+
+				<p:column headerText="Telefone"
+					style="text-align:center;width:200px" filterBy="#{fornecedor.fones}"
+					filterMatchMode="contains">
+					<h:outputText value="#{fornecedor.fones}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton id="newButton" value="Cadastrar"
+						title="Novo" icon="ui-icon-plus" action="cadastrarFornecedorDeMaterial" ajax="false"/>  
+						&nbsp;
+					<p:commandButton id="viewButton" value="Visualizar" disabled="#{fornecedorDeMaterialBean.fornecedorSelecionado == null}"
+						title="Visualizar" icon="ui-icon-search" update=":form:display"
+						oncomplete="viewDialog.show()" />  
+						&nbsp;
+	                <p:commandButton id="editButton" value="Editar" disabled="#{fornecedorDeMaterialBean.fornecedorSelecionado == null}"
+						title="Editar" icon="ui-icon-document" action="editarFornecedorDeMaterial" 
+						ajax="false" readonly="#{fornecedorDeMaterialBean.fornecedorSelecionado == null}" />
+	              		&nbsp;
+                    <p:commandButton id="deleteButton" value="Excluir" disabled="#{fornecedorDeMaterialBean.fornecedorSelecionado == null}"
+						title="Excluir" icon="ui-icon-trash" onclick="confirmation.show()" />
+				</f:facet>
+			</p:dataTable>
+		</center>
+
+		<!-- VIEW Dialog -->
+		<p:dialog header="Detalhes do fornecedor de material" widgetVar="viewDialog"
+			resizable="true" id="dialog" modal="true">
+			
+			<h:panelGrid id="display" columns="2" cellpadding="40"
+				style="margin:0 auto;">
+
+				<h:panelGrid id="display1" columns="2" cellpadding="1"
+					style="margin:0 auto;">
+					<h:outputText value="Fornecedor:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.nome}" />
+					<h:outputText value="Cadastro:" style="font-weight:bold"/>
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.cadastro}" />
+					<h:outputText value="Telefone 1:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.fone1}" />
+					<h:outputText value="Telefone 2:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.fone2}" />
+					<h:outputText value="Endereco:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.endereco}" />
+					<h:outputText value="Complemento:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.complemento}" />
+					<h:outputText value="Número:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.numero}" />
+					<h:outputText value="Bairro:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.bairro}" />
+					<h:outputText value="Cidade:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.cidade}" />
+					<h:outputText value="CEP:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.cep}" />
+					<h:outputText value="Email:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.email}" />
+				</h:panelGrid>	
+	
+				<h:panelGrid id="display2" columns="2" cellpadding="1"
+					style="margin:0 auto;">
+					<h:outputText value="Banco:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.banco}" />
+					<h:outputText value="Agência:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.agencia}" />
+					<h:outputText value="Conta:" style="font-weight:bold" />
+					<h:outputText value="#{fornecedorDeMaterialBean.fornecedorSelecionado.conta}" />
+					<h:outputText value="Obs:" style="font-weight:bold" />
+					<p:inputTextarea rows="3" maxlength="250" cols="50" id="obs"
+						value="#{fornecedorDeMaterialBean.fornecedorSelecionado.obs}" autoResize="false" readonly="true" disabled="true">
+					</p:inputTextarea>
+				</h:panelGrid>
+		
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- DELETE Dialog -->
+		<p:confirmDialog id="confirmDialog"
+			message="Tem certeza que deseja excluir este fornecedor?"
+			header="Excluir Fornecedor" severity="alert" widgetVar="confirmation">
+
+			<p:commandButton id="confirm" value="Sim" update="messages"
+				oncomplete="confirmation.hide()"
+				actionListener="#{fornecedorDeMaterialBean.excluir}" ajax="false">
+				<f:setPropertyActionListener value="#{condominio}"
+					target="#{fornecedorDeMaterialBean.fornecedorSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="Não"
+				onclick="confirmation.hide()" type="button" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

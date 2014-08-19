@@ -28,12 +28,12 @@
 					<h:outputText value="#{msg.clientes}" />
 				</f:facet>
 				
-				<p:column headerText="Nome" style="width:70px"
+				<p:column headerText="#{msg.nome}" style="width:70px"
 					filterBy="#{cliente.nome}" filterMatchMode="contains">
 					<h:outputText value="#{cliente.nome}" />
 				</p:column>
 
-				<p:column headerText="Telefone"
+				<p:column headerText="#{msg.telefone}"
 					style="text-align:center;width:30px" filterBy="#{cliente.fones}"
 					filterMatchMode="contains">
 					<h:outputText value="#{cliente.fones}" />
