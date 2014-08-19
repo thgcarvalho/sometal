@@ -64,13 +64,14 @@
 		
 	<!-- ADD Dialog -->
 	<h:form id="formAdd" enctype="multipart/form-data">
+		<p:growl id="growl" showDetail="true" />
 		<p:dialog header="#{msg.fornecedor_novo}" widgetVar="addDialog" modal="true" resizable="false">
 		
-			<p:wizard flowListener="#{fornecedorBean.onFlowProcess}" nextLabel="Próximo" backLabel="Anterior"> 
+			<p:wizard flowListener="#{fornecedorBean.onFlowProcess}" nextLabel="#{msg.proximo}" backLabel="#{msg.anterior}"> 
 				<p:focus context="panel" />
 				
-				<p:tab id="tab_fornecedor" title="Fornecedor de Material">
-					<p:panel header="Dados do Fornecedor de Material">  
+				<p:tab id="tab_fornecedor" title="#{msg.fornecedor}">
+					<p:panel header="#{msg.fornecedor_dados}">  
 					<h:messages errorClass="error"/>  
 						<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 							<h:outputText value="#{msg.nome}: *" />
@@ -114,8 +115,8 @@
 	  		    	 </p:panel>  
   		    	</p:tab> 
   		    	
-			  	<p:tab id="tab_condominios" title="Conta">
-					<p:panel header="Dados bancários">  
+			  	<p:tab id="tab_condominios" title="#{msg.conta}">
+					<p:panel header="#{msg.dados_bancarios}">  
 					<h:messages errorClass="error"/>
 				  		<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 					  		<h:outputText value="#{msg.banco}:" />
@@ -139,13 +140,50 @@
 			            </h:panelGrid>
 		            </p:panel>  
 				</p:tab>
-				
-            </p:wizard> 
+
+				<p:tab id="tab_materiais" title="#{msg.servicos}">
+					<p:panel header="#{msg.dados_dos_servicos}">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid id="servico" columns="3">
+							<h:outputText value="#{msg.servico}:" />
+							<p:inputText label="#{msg.servico}" size="50" maxlength="96"
+								value="#{fornecedorBean.oferta}" />
+							<p:commandButton value="#{msg.adicionar}" update=":formAdd:servicos :formAdd:growl @parent" action="#{fornecedorBean.reinit}">
+								<p:collector value="#{fornecedorBean.oferta}"
+									addTo="#{fornecedorBean.fornecedor.ofertas}" />
+							</p:commandButton>
+						</h:panelGrid>
+
+						<p:outputPanel id="servicos">
+							<p:dataTable id="servicosTable" value="#{fornecedorBean.fornecedor.ofertas}" var="oferta">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.servico}" />
+									</f:facet>
+									<h:outputText value="#{oferta}" />
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.operacao}" />
+									</f:facet>
+									<p:commandLink value="#{msg.remover}" update=":formAdd:servicos" process=":formAdd:servicos">
+										<p:collector value="#{oferta}" removeFrom="#{fornecedorBean.fornecedor.ofertas}" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panel>
+				</p:tab>
+
+			</p:wizard> 
 			
 			<div align="center">
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
-					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{fornecedorBean.criar}" 
+					<p:commandButton id="btnSalvar" value="#{msg.salvar}" icon="ui-icon-disk" action="#{fornecedorBean.criar}" 
 					update=":form:fornecedores :form:growl" />
 				</h:panelGrid>
 			</div>
@@ -215,67 +253,122 @@
 	
 	<!-- EDIT Dialog -->
 	<h:form id="formEdit">
+		<p:growl id="growl" showDetail="true" />
 		<p:dialog header="#{msg.fornecedor_editar}" widgetVar="editDialog" 
 			id="editDialog" modal="true" resizable="false">
 			
-			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-				<h:outputText value="#{msg.nome}: *" />
-				<p:inputText id="nome" label="#{msg.nome}" value="#{fornecedorBean.fornecedorSelecionado.nome}" required="true" size="45" />
-						
-				<h:outputText value="#{msg.cpf}:" />
-				<p:inputMask id="cpf" label="#{msg.cpf}" value="#{fornecedorBean.fornecedorSelecionado.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setEdtCPF()" />
+				<p:wizard flowListener="#{fornecedorBean.onFlowProcess}" nextLabel="#{msg.proximo}" backLabel="#{msg.anterior}"> 
+				<p:focus context="panel" />
 				
-				<h:outputText value="#{msg.cnpj}:" />
-				<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{fornecedorBean.fornecedorSelecionado.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setEdtCNPJ()" />
+				<p:tab id="tab_fornecedor" title="#{msg.fornecedor}">
+					<p:panel header="#{msg.fornecedor_dados}">  
+					<h:messages errorClass="error"/>  
+						<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+							<h:outputText value="#{msg.nome}: *" />
+							<p:inputText id="nome" label="#{msg.nome}" value="#{fornecedorBean.fornecedorSelecionado.nome}" required="true" size="45" />
+									
+							<h:outputText value="#{msg.cpf}:" />
+							<p:inputMask id="cpf" label="#{msg.cpf}" value="#{fornecedorBean.fornecedorSelecionado.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setAddCPF()" />
+							
+							<h:outputText value="#{msg.cnpj}:" />
+							<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{fornecedorBean.fornecedorSelecionado.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setAddCNPJ()" />
+							
+							<h:outputText value="#{msg.endereco}:" />
+							<p:inputText id="endereco" label="#{msg.endereco}" value="#{fornecedorBean.fornecedorSelecionado.endereco}" size="45" />
+			
+							<h:outputText value="#{msg.complemento}:" />
+							<p:inputText id="complemento" label="#{msg.complemento}" value="#{fornecedorBean.fornecedorSelecionado.complemento}" size="45" />
+							
+							<h:outputText value="#{msg.no}:" />
+							<p:inputText id="numero" label="#{msg.no}" value="#{fornecedorBean.fornecedorSelecionado.numero}" size="14" />
 				
-				<h:outputText value="#{msg.endereco}:" />
-				<p:inputText id="endereco" label="#{msg.endereco}" value="#{fornecedorBean.fornecedorSelecionado.endereco}" size="45" />
+							<h:outputText value="#{msg.bairro}:" />
+							<p:inputText id="bairro" label="#{msg.bairro}" value="#{fornecedorBean.fornecedorSelecionado.bairro}" size="45" />
+			
+							<h:outputText value="#{msg.cidade}:" />
+							<p:inputText id="cidade" label="#{msg.cidade}" value="#{fornecedorBean.fornecedorSelecionado.cidade}" size="15" />
+			
+							<h:outputText value="#{msg.cep}:" />
+							<p:inputMask id="cep" label="#{msg.cep}" value="#{fornecedorBean.fornecedorSelecionado.cep}" mask="99999-999" size="14" />
+			
+							<h:outputText value="#{msg.fone1}:" />
+							<p:inputMask id="fone1" label="#{msg.fone1}" value="#{fornecedorBean.fornecedorSelecionado.fone1}" mask="(99) 9999-9999" size="14" />
+							
+							<h:outputText value="#{msg.fone2}:" />
+							<p:inputMask id="fone2" label="#{msg.fone2}" value="#{fornecedorBean.fornecedorSelecionado.fone2}" mask="(99) 9999-9999" size="14" />
+			
+							<h:outputText value="#{msg.email}:" />
+							<p:inputText id="email" label="#{msg.email}" value="#{fornecedorBean.fornecedorSelecionado.email}" size="45">
+								<f:validator validatorId="emailValidator" />
+					  		</p:inputText>
+		  		    	</h:panelGrid>
+	  		    	 </p:panel>  
+  		    	</p:tab> 
+  		    	
+			  	<p:tab id="tab_condominios" title="#{msg.conta}">
+					<p:panel header="#{msg.dados_bancarios}">  
+					<h:messages errorClass="error"/>
+				  		<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+					  		<h:outputText value="#{msg.banco}:" />
+							<p:inputText label="#{msg.banco}" size="45" value="#{fornecedorBean.fornecedorSelecionado.banco}" >
+								<f:converter converterId="toUpperCaseConverter" />
+			                </p:inputText>
+								
+							<h:outputText value="#{msg.agencia}:" />
+							<p:inputText label="#{msg.agencia}" size="16" value="#{fornecedorBean.fornecedorSelecionado.agencia}" />
+								
+							<h:outputText value="#{msg.conta}:" />
+							<p:inputText label="#{msg.conta}" size="16" value="#{fornecedorBean.fornecedorSelecionado.conta}" />
+								
+							<h:outputText value="#{msg.tipo}:" />
+							<p:inputText label="#{msg.tipo}" size="45" value="#{fornecedorBean.fornecedorSelecionado.tipo}" >
+								<f:converter converterId="toUpperCaseConverter" />
+			                </p:inputText>
+			                
+			                <h:outputText value="#{msg.obs}:" />
+							<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{fornecedorBean.fornecedorSelecionado.obs}" />
+			            </h:panelGrid>
+		            </p:panel>  
+				</p:tab>
 
-				<h:outputText value="#{msg.complemento}:" />
-				<p:inputText id="complemento" label="#{msg.complemento}" value="#{fornecedorBean.fornecedorSelecionado.complemento}" size="45" />
-				
-				<h:outputText value="#{msg.no}:" />
-				<p:inputText id="numero" label="#{msg.no}" value="#{fornecedorBean.fornecedorSelecionado.numero}" size="14" />
-	
-				<h:outputText value="#{msg.bairro}:" />
-				<p:inputText id="bairro" label="#{msg.bairro}" value="#{fornecedorBean.fornecedorSelecionado.bairro}" size="45" />
+				<p:tab id="tab_materiais" title="#{msg.servicos}">
+					<p:panel header="#{msg.dados_dos_servicos}">
 
-				<h:outputText value="#{msg.cidade}:" />
-				<p:inputText id="cidade" label="#{msg.cidade}" value="#{fornecedorBean.fornecedorSelecionado.cidade}" size="15" />
+						<h:messages errorClass="error" />
 
-				<h:outputText value="#{msg.cep}:" />
-				<p:inputMask id="cep" label="#{msg.cep}" value="#{fornecedorBean.fornecedorSelecionado.cep}" mask="99999-999" size="14" />
+						<h:panelGrid id="servico" columns="3">
+							<h:outputText value="#{msg.servico}:" />
+							<p:inputText label="#{msg.servico}" size="50" maxlength="96"
+								value="#{fornecedorBean.oferta}" />
+							<p:commandButton value="#{msg.adicionar}" update=":formEdit:servicos :formEdit:growl @parent" action="#{fornecedorBean.reinit}">
+								<p:collector value="#{fornecedorBean.oferta}"
+									addTo="#{fornecedorBean.fornecedorSelecionado.ofertas}" />
+							</p:commandButton>
+						</h:panelGrid>
 
-				<h:outputText value="#{msg.fone1}:" />
-				<p:inputMask id="fone1" label="#{msg.fone1}" value="#{fornecedorBean.fornecedorSelecionado.fone1}" mask="(99) 9999-9999" size="14" />
-				
-				<h:outputText value="#{msg.fone2}:" />
-				<p:inputMask id="fone2" label="#{msg.fone2}" value="#{fornecedorBean.fornecedorSelecionado.fone2}" mask="(99) 9999-9999" size="14" />
+						<p:outputPanel id="servicos">
+							<p:dataTable id="servicosTable" value="#{fornecedorBean.fornecedorSelecionado.ofertas}" var="oferta">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.servico}" />
+									</f:facet>
+									<h:outputText value="#{oferta}" />
+								</p:column>
 
-				<h:outputText value="#{msg.email}:" />
-				<p:inputText id="email" label="#{msg.email}" value="#{fornecedorBean.fornecedorSelecionado.email}" size="45">
-					<f:validator validatorId="emailValidator" />
-		  		</p:inputText>
-		  		
-		  		<h:outputText value="#{msg.banco}:" />
-				<p:inputText label="#{msg.banco}" size="45" value="#{fornecedorBean.fornecedorSelecionado.banco}" >
-					<f:converter converterId="toUpperCaseConverter" />
-                </p:inputText>
-					
-				<h:outputText value="#{msg.agencia}:" />
-				<p:inputText label="#{msg.agencia}" size="16" value="#{fornecedorBean.fornecedorSelecionado.agencia}" />
-					
-				<h:outputText value="#{msg.conta}:" />
-				<p:inputText label="#{msg.conta}" size="16" value="#{fornecedorBean.fornecedorSelecionado.conta}" />
-					
-				<h:outputText value="#{msg.tipo}:" />
-				<p:inputText label="#{msg.tipo}" size="45" value="#{fornecedorBean.fornecedorSelecionado.tipo}" >
-					<f:converter converterId="toUpperCaseConverter" />
-                </p:inputText>
-                
-                <h:outputText value="#{msg.obs}:" />
-				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{fornecedorBean.fornecedorSelecionado.obs}" />
-            </h:panelGrid>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.operacao}" />
+									</f:facet>
+									<p:commandLink value="#{msg.remover}" update=":formEdit:servicos" process=":formEdit:servicos">
+										<p:collector value="#{oferta}" removeFrom="#{fornecedorBean.fornecedorSelecionado.ofertas}" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panel>
+				</p:tab>
+
+			</p:wizard> 
 			
 			<div align="center">
 				<br />
