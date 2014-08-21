@@ -10,6 +10,7 @@
 		<class>br.com.sometal.model.Ponto</class>
 		<class>br.com.sometal.model.Cliente</class>
 		<class>br.com.sometal.model.Fornecedor</class>
+		<class>br.com.sometal.model.Conta</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />

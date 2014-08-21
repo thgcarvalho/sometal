@@ -74,6 +74,17 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<!-- CONTAS -->
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>contas</from-outcome>
+			<to-view-id>/pages/conta/contas.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
 	<!-- USUARIOS -->
 
 	<navigation-rule>

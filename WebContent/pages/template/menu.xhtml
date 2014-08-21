@@ -12,13 +12,12 @@
 		<p:menubar>
 			
 			<p:menuitem value="Home" url="/pages/home.jsf" icon="ui-icon-contact" />
-			
 			<p:menuitem id="funcionarios" value="#{msg.funcionarios}" action="funcionarios" ajax="false" immediate="true" icon="ui-icon-person" />
-			<p:menuitem id="pontos" value="#{msg.pontos}" action="pontos" ajax="false" immediate="true" icon="ui-icon-check" />
-			<p:menuitem id="cc" value="Pagamentos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" />
-			<p:menuitem id="clientes" value="Clientes" action="clientes" ajax="false" immediate="true" icon="ui-icon-person" />
-			<p:menuitem id="fornecedores" value="Fornecedores" action="fornecedores"  ajax="false" immediate="true" icon="ui-icon-wrench" />
-			<p:menuitem id="ff" value="Contas" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" />
+			<p:menuitem id="pontos" value="#{msg.pontos}" action="pontos" ajax="false" immediate="true" icon="ui-icon-check" rendered="#{usuarioBean.usuario.auth.isEncrr}" />
+			<p:menuitem id="cc" value="Pagamentos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="clientes" value="Clientes" action="clientes" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="fornecedores" value="Fornecedores" action="fornecedores"  ajax="false" immediate="true" icon="ui-icon-wrench" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="contas" value="Contas" action="contas" ajax="false" immediate="true" icon="ui-icon-document" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
 			<p:menuitem id="gg" value="Veículos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" />
 			
 			<p:menuitem id="miusuarios" value="Usuários" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isAdmin}" />

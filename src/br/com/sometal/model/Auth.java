@@ -70,11 +70,9 @@ public class Auth implements Serializable{
 	public boolean getIsAdmin() {
 		return this.admin;
 	}
-	
 	public boolean getIsEncrr() {
 		return this.encrr;
 	}
-	
 	public boolean getIsEscrt() {
 		return this.escrt;
 	}

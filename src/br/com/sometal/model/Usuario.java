@@ -24,61 +24,46 @@ public class Usuario implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
 	private String usuario;
-	
 	@Transient
 	private String senha;
-	
 	@Transient
 	private List<String> roles = new ArrayList<String>();
-	
 	@Transient
 	private Auth auth = new Auth();
-	
 	private String nome;
 	
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getUsuario() {
 		return usuario;
 	}
-
 	public void setUsuario(String login) {
 		this.usuario = login;
 	}
-	
 	public String getSenha() {
 		return senha;
 	}
-
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
 	public List<String> getRoles() {
 		return roles;
 	}
-
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 		this.auth.setAuth(roles);
 	}
-	
 	public Auth getAuth() {
 		return this.auth;
 	}
-	
 	public String getNome() {
 		return nome;
 	}
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
