@@ -268,10 +268,10 @@
 							<p:inputText id="nome" label="#{msg.nome}" value="#{fornecedorBean.fornecedorSelecionado.nome}" required="true" size="45" />
 									
 							<h:outputText value="#{msg.cpf}:" />
-							<p:inputMask id="cpf" label="#{msg.cpf}" value="#{fornecedorBean.fornecedorSelecionado.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setAddCPF()" />
+							<p:inputMask id="cpf" label="#{msg.cpf}" value="#{fornecedorBean.fornecedorSelecionado.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setEdtCPF()" />
 							
 							<h:outputText value="#{msg.cnpj}:" />
-							<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{fornecedorBean.fornecedorSelecionado.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setAddCNPJ()" />
+							<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{fornecedorBean.fornecedorSelecionado.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setEdtCNPJ()" />
 							
 							<h:outputText value="#{msg.endereco}:" />
 							<p:inputText id="endereco" label="#{msg.endereco}" value="#{fornecedorBean.fornecedorSelecionado.endereco}" size="45" />
