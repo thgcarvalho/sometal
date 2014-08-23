@@ -6,7 +6,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 /**
- * @author tcarvalho
+ * @author Thiago Carvalho
  * 
  */
 public class FacesUtils {

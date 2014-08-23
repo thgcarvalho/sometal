@@ -434,7 +434,6 @@ public class UsuarioBean implements Serializable {
 //		}
 //	}
 
-    
 	public Date getDataAtual() {
 		return new Date();
 	}
