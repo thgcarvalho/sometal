@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UsuarioBean.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sometal WebApp</a> &gt; <a href="index.html" class="el_package">br.com.grandev.bean</a> &gt; <span class="el_source">UsuarioBean.java</span></div><h1>UsuarioBean.java</h1><pre class="source lang-java linenums">package br.com.grandev.bean;
+
+import static br.com.grandev.model.Auth.ROLE;
+import static br.com.grandev.model.Auth.ROLE_ADMIN_DESC;
+import static br.com.grandev.model.Auth.ROLE_ENCRR_DESC;
+import static br.com.grandev.model.Auth.ROLE_ESCRT_DESC;
+import static br.com.grandev.util.FacesUtils.MSG_ERROR;
+import static br.com.grandev.util.FacesUtils.MSG_SUCESS;
+import static br.com.grandev.util.FacesUtils.addErrorMessage;
+import static br.com.grandev.util.FacesUtils.addInfoMessage;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.faces.FacesException;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
+import br.com.grandev.dao.RoleDao;
+import br.com.grandev.dao.UserDao;
+import br.com.grandev.dao.UsuarioDao;
+import br.com.grandev.daoImp.RoleDaoImp;
+import br.com.grandev.daoImp.UserDaoImp;
+import br.com.grandev.daoImp.UsuarioDaoImp;
+import br.com.grandev.model.Auth;
+import br.com.grandev.model.Role;
+import br.com.grandev.model.User;
+import br.com.grandev.model.Usuario;
+
+/**
+ * @author Thiago Carvalho
+ * 
+ */
+@ManagedBean
+@SessionScoped
+<span class="nc" id="L46">public class UsuarioBean implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+	
+	private String originalViewId;
+
+	@Resource(name = &quot;usuarioDao&quot;)
+	private UsuarioDao usuarioDao;
+	@Resource(name = &quot;userDao&quot;)
+	private UserDao userDao;
+	@Resource(name = &quot;roleDao&quot;)
+	private RoleDao roleDao;
+	private String userName;
+	private Usuario usuarioAtual;
+	private Usuario usuarioSelecionado;
+	private Usuario usuarioNovo;
+	private List&lt;Usuario&gt; listaUsuarios;
+	private List&lt;Usuario&gt; filteredUsuarios;
+    private List&lt;String&gt; roles;
+<span class="nc" id="L65">	private SimpleDateFormat sdf = new SimpleDateFormat();</span>
+
+	// captura a sess�o do contexto criado pelo JavaServer Faces
+<span class="nc" id="L68">	FacesContext fc = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L69">	HttpSession session = (HttpSession) fc.getExternalContext().getSession(true);</span>
+
+	@PostConstruct
+	public void init() {
+<span class="nc" id="L73">		usuarioDao = new UsuarioDaoImp();</span>
+<span class="nc" id="L74">		userDao = new UserDaoImp();</span>
+<span class="nc" id="L75">		roleDao = new RoleDaoImp();</span>
+		
+<span class="nc" id="L77">		usuarioNovo = new Usuario();</span>
+<span class="nc" id="L78">		usuarioAtual = new Usuario();</span>
+<span class="nc" id="L79">		usuarioSelecionado = new Usuario();</span>
+		
+<span class="nc" id="L81">		roles = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L82">		roles.add(ROLE_ADMIN_DESC);</span>
+<span class="nc" id="L83">		roles.add(ROLE_ENCRR_DESC);</span>
+<span class="nc" id="L84">		roles.add(ROLE_ESCRT_DESC);</span>
+		
+		try {
+<span class="nc" id="L87">			userName = fc.getExternalContext().getUserPrincipal().getName();</span>
+			// usuario atual
+<span class="nc" id="L89">			usuarioAtual = usuarioDao.findByUserName(userName);</span>
+<span class="nc" id="L90">			usuarioAtual.setRoles(getRolesDoUsuario(userName));</span>
+<span class="nc" id="L91">			usuarioAtual.setSenha(getSenhaDoUsuario(userName));</span>
+<span class="nc" id="L92">			session.setAttribute(&quot;user&quot;, usuarioAtual);</span>
+<span class="nc" id="L93">		} catch (Exception e) {</span>
+<span class="nc" id="L94">			e.printStackTrace();</span>
+<span class="nc" id="L95">		}</span>
+		
+<span class="nc" id="L97">		Date data = GregorianCalendar.getInstance().getTime();</span>
+<span class="nc" id="L98">		System.out.println(&quot;\nLOGIN:&quot; + this.usuarioAtual + &quot; &quot; + this.roles + &quot; &quot; + sdf.format(data));</span>
+<span class="nc" id="L99">	}</span>
+	
+	public List&lt;String&gt; getRoles() {
+<span class="nc" id="L102">		return roles;</span>
+	}
+
+	public void setRoles(List&lt;String&gt; roles) {
+<span class="nc" id="L106">		this.roles = roles;</span>
+<span class="nc" id="L107">	}</span>
+	
+	public void preparaNovoUsuario() {
+<span class="nc" id="L110">		usuarioNovo = new Usuario();</span>
+<span class="nc" id="L111">	}</span>
+	
+	public void carregaUsuarios() {
+<span class="nc" id="L114">		listaUsuarios = new ArrayList&lt;Usuario&gt;();</span>
+<span class="nc" id="L115">		listaUsuarios = usuarioDao.todos(&quot;nome&quot;);</span>
+<span class="nc" id="L116">		listaUsuarios.remove(usuarioAtual);</span>
+		
+<span class="nc bnc" id="L118" title="All 2 branches missed.">		for (Usuario usuario : listaUsuarios) {</span>
+<span class="nc" id="L119">			usuario.setRoles(getRolesDoUsuario(usuario.getUsuario()));</span>
+<span class="nc" id="L120">			usuario.setSenha(getSenhaDoUsuario(usuario.getUsuario()));</span>
+<span class="nc" id="L121">		}</span>
+<span class="nc" id="L122">		filteredUsuarios = listaUsuarios;</span>
+<span class="nc" id="L123">	}</span>
+	
+	private String getSenhaDoUsuario(String usuario) {
+<span class="nc" id="L126">		User user = null;</span>
+<span class="nc" id="L127">		String senha = null;</span>
+		try {
+<span class="nc" id="L129">			user = userDao.findById(usuario);</span>
+<span class="nc" id="L130">			senha = user.getUserPass();</span>
+<span class="nc" id="L131">		} catch (Exception e) {</span>
+<span class="nc" id="L132">			e.printStackTrace();</span>
+<span class="nc" id="L133">		}</span>
+<span class="nc" id="L134">		return senha;</span>
+	}
+	
+	private List&lt;String&gt; getRolesDoUsuario(String usuario) {
+<span class="nc" id="L138">		System.out.print(&quot;USU�RIO:&quot; + usuario + &quot; &quot;);</span>
+		List&lt;Role&gt; rolesDoUsuario;
+		List&lt;String&gt; rolesDoUsuarioStr;
+<span class="nc" id="L141">		rolesDoUsuario = roleDao.findByUserName(usuario);</span>
+<span class="nc" id="L142">		rolesDoUsuarioStr = new ArrayList&lt;String&gt;();</span>
+		String strRole;
+<span class="nc bnc" id="L144" title="All 2 branches missed.">		for (Role roleDoUsuario : rolesDoUsuario) {</span>
+<span class="nc" id="L145">			strRole = Auth.getRoleDesc(roleDoUsuario.getRoleName());</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">			if (strRole != null) {</span>
+<span class="nc" id="L147">				rolesDoUsuarioStr.add(Auth.getRoleDesc(roleDoUsuario.getRoleName()));</span>
+			}
+<span class="nc" id="L149">		}</span>
+<span class="nc" id="L150">		System.out.print(rolesDoUsuario);</span>
+<span class="nc" id="L151">		System.out.println();</span>
+<span class="nc" id="L152">		return rolesDoUsuarioStr;</span>
+	}
+	
+	public String logout() {
+<span class="nc" id="L156">		FacesContext context = FacesContext.getCurrentInstance();</span>
+<span class="nc" id="L157">		ExternalContext externalContext = context.getExternalContext();</span>
+<span class="nc" id="L158">		Object session = externalContext.getSession(false);</span>
+<span class="nc" id="L159">		HttpSession httpSession = (HttpSession) session;</span>
+<span class="nc" id="L160">		httpSession.invalidate();</span>
+		try {
+<span class="nc" id="L162">			externalContext.redirect(externalContext.getRequestContextPath());</span>
+<span class="nc" id="L163">			Date data = GregorianCalendar.getInstance().getTime();</span>
+<span class="nc" id="L164">			System.out.println(&quot;\nLOGOUT:&quot; + this.usuarioAtual + &quot; &quot; + sdf.format(data));</span>
+<span class="nc" id="L165">		} catch (IOException e) {</span>
+<span class="nc" id="L166">			throw new FacesException(&quot;Cannot redirect to / due to IO exception.&quot;, e);</span>
+<span class="nc" id="L167">		}</span>
+<span class="nc" id="L168">		return null;</span>
+	}
+
+	public void resetarCampos() {
+<span class="nc" id="L172">		setListaUsuarios(new ArrayList&lt;Usuario&gt;());</span>
+<span class="nc" id="L173">		this.setUsuario(new Usuario());</span>
+<span class="nc" id="L174">	}</span>
+	
+	public String editarAtual() {
+<span class="nc" id="L177">		boolean erro = false;</span>
+<span class="nc" id="L178">		String erroMsg = null;</span>
+		try {
+			// TODO distribuir responsabilidades
+<span class="nc" id="L181">			String strUsuario = usuarioAtual.getUsuario();</span>
+<span class="nc bnc" id="L182" title="All 4 branches missed.">			if (strUsuario.equals(userName) || userDao.findById(strUsuario) == null) {</span>
+				// usuario
+<span class="nc" id="L184">				Usuario usuarioDB = usuarioDao.findById(usuarioAtual.getId());</span>
+<span class="nc" id="L185">				usuarioDao.editar(usuarioAtual);</span>
+				
+				// tomcat users
+<span class="nc" id="L188">				User user = userDao.findById(usuarioDB.getUsuario());</span>
+<span class="nc" id="L189">				userDao.excluir(user);</span>
+<span class="nc" id="L190">				user = new User();</span>
+<span class="nc" id="L191">				user.setUserName(strUsuario);</span>
+<span class="nc" id="L192">				user.setUserPass(usuarioAtual.getSenha());</span>
+<span class="nc" id="L193">				userDao.criar(user);</span>
+				
+				// tomcat user_role
+<span class="nc" id="L196">				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE);</span>
+<span class="nc" id="L197">				roleDao.excluir(role.getUserName(), ROLE);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">				for (String strRoles : roles) {</span>
+<span class="nc" id="L199">					roleDao.excluir(strUsuario, Auth.getRoleName(strRoles));</span>
+<span class="nc" id="L200">				}</span>
+<span class="nc" id="L201">				role = new Role();</span>
+<span class="nc" id="L202">				role.setUserName(strUsuario);</span>
+<span class="nc" id="L203">				role.setRoleName(ROLE);</span>
+<span class="nc" id="L204">				roleDao.criar(role);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">				for (String roleSel : usuarioAtual.getRoles()) {</span>
+<span class="nc" id="L206">					role = new Role();</span>
+<span class="nc" id="L207">					role.setUserName(strUsuario);</span>
+<span class="nc" id="L208">					role.setRoleName(Auth.getRoleName(roleSel));</span>
+<span class="nc" id="L209">					roleDao.criar(role);</span>
+<span class="nc" id="L210">				}</span>
+<span class="nc" id="L211">			} else {</span>
+<span class="nc" id="L212">				erro = true;</span>
+<span class="nc" id="L213">				erroMsg = &quot;Usu�rio j� existe!&quot;;</span>
+			}
+<span class="nc" id="L215">		} catch (Exception e) {</span>
+<span class="nc" id="L216">			erro = true;</span>
+<span class="nc" id="L217">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L218">			e.printStackTrace();</span>
+<span class="nc" id="L219">		}</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L221">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L222">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L224">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L225">			return &quot;usuario&quot;;</span>
+		}
+	}
+	
+	public String editar() {
+<span class="nc" id="L230">		boolean erro = false;</span>
+<span class="nc" id="L231">		String erroMsg = null;</span>
+		try {
+			// TODO distribuir responsabilidades
+<span class="nc" id="L234">			Usuario usuarioDB = usuarioDao.findById(usuarioSelecionado.getId());</span>
+<span class="nc" id="L235">			String strUsuario = usuarioSelecionado.getUsuario();</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">			if (strUsuario.equals(usuarioDB.getUsuario()) || userDao.findById(strUsuario) == null) {</span>
+				// usuario
+<span class="nc" id="L238">				usuarioDao.editar(usuarioSelecionado);</span>
+				
+				// tomcat users
+<span class="nc" id="L241">				User user = userDao.findById(usuarioDB.getUsuario());</span>
+<span class="nc" id="L242">				userDao.excluir(user);</span>
+<span class="nc" id="L243">				user = new User();</span>
+<span class="nc" id="L244">				user.setUserName(strUsuario);</span>
+<span class="nc" id="L245">				user.setUserPass(usuarioSelecionado.getSenha());</span>
+<span class="nc" id="L246">				userDao.criar(user);</span>
+				
+				// tomcat user_role
+<span class="nc" id="L249">				Role role = roleDao.findById(usuarioDB.getUsuario(), ROLE); //TODO confimar tipos de user</span>
+<span class="nc" id="L250">				roleDao.excluir(strUsuario, ROLE);</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">				for (String strRoles : roles) {</span>
+<span class="nc" id="L252">					roleDao.excluir(strUsuario, Auth.getRoleName(strRoles));</span>
+<span class="nc" id="L253">				}</span>
+<span class="nc" id="L254">				role = new Role();</span>
+<span class="nc" id="L255">				role.setUserName(strUsuario);</span>
+<span class="nc" id="L256">				role.setRoleName(ROLE);</span>
+<span class="nc" id="L257">				roleDao.criar(role);</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">				for (String roleSel : usuarioSelecionado.getRoles()) {</span>
+<span class="nc" id="L259">					role = new Role();</span>
+<span class="nc" id="L260">					role.setUserName(strUsuario);</span>
+<span class="nc" id="L261">					role.setRoleName(Auth.getRoleName(roleSel));</span>
+<span class="nc" id="L262">					roleDao.criar(role);</span>
+<span class="nc" id="L263">				}</span>
+<span class="nc" id="L264">			} else {</span>
+<span class="nc" id="L265">				erro = true;</span>
+<span class="nc" id="L266">				erroMsg = &quot;Usu�rio j� existe!&quot;;</span>
+			}
+<span class="nc" id="L268">		} catch (Exception e) {</span>
+<span class="nc" id="L269">			erro = true;</span>
+<span class="nc" id="L270">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L271">			e.printStackTrace();</span>
+<span class="nc" id="L272">		}</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L274">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L275">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L277">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L278">			return &quot;usuarios&quot;;</span>
+		}
+	}
+	
+	public String criar() {
+<span class="nc" id="L283">		boolean erro = false;</span>
+<span class="nc" id="L284">		String erroMsg = null;</span>
+		try {
+			// TODO distribuir responsabilidades
+<span class="nc" id="L287">			String strUsuario = usuarioNovo.getUsuario();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">			if (userDao.findById(strUsuario) == null) {</span>
+				// usuario
+<span class="nc" id="L290">				usuarioDao.criar(usuarioNovo);</span>
+				
+				// tomcat users
+<span class="nc" id="L293">				User user = new User();</span>
+<span class="nc" id="L294">				user.setUserName(strUsuario);</span>
+<span class="nc" id="L295">				user.setUserPass(usuarioNovo.getSenha());</span>
+<span class="nc" id="L296">				userDao.criar(user);</span>
+				
+				// tomcat user_role
+<span class="nc" id="L299">				Role role = new Role();</span>
+<span class="nc" id="L300">				role.setUserName(strUsuario);</span>
+<span class="nc" id="L301">				role.setRoleName(ROLE);</span>
+<span class="nc" id="L302">				roleDao.criar(role);</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">				for (String roleCheck : usuarioNovo.getRoles()) {</span>
+<span class="nc" id="L304">					role = new Role();</span>
+<span class="nc" id="L305">					role.setUserName(strUsuario);</span>
+<span class="nc" id="L306">					role.setRoleName(Auth.getRoleName(roleCheck));</span>
+<span class="nc" id="L307">					roleDao.criar(role);</span>
+<span class="nc" id="L308">				}</span>
+				
+				// ajustes
+<span class="nc" id="L311">				listaUsuarios.add(usuarioNovo);</span>
+<span class="nc" id="L312">				preparaNovoUsuario();</span>
+<span class="nc" id="L313">			} else {</span>
+<span class="nc" id="L314">				erro = true;</span>
+<span class="nc" id="L315">				erroMsg = &quot;Usu�rio j� existe!&quot;;</span>
+			}
+<span class="nc" id="L317">		} catch (Exception e) {</span>
+<span class="nc" id="L318">			erro = true;</span>
+<span class="nc" id="L319">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L320">			e.printStackTrace();</span>
+<span class="nc" id="L321">		}</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L323">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L324">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L326">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L327">			return &quot;usuarios&quot;;</span>
+		}
+	}
+
+	public String excluir() {
+<span class="nc" id="L332">		boolean erro = false;</span>
+<span class="nc" id="L333">		String erroMsg = null;</span>
+		try {
+			// TODO distribuir responsabilidades
+			// usuario
+<span class="nc" id="L337">			usuarioDao.excluir(usuarioSelecionado);</span>
+			
+			// tomcat users
+<span class="nc" id="L340">			User user = userDao.findById(usuarioSelecionado.getUsuario());</span>
+<span class="nc" id="L341">			userDao.excluir(user);</span>
+			
+			// tomcat user_role
+			// Role role = roleDao.findById(usuarioSelecionado.getUsuario(), ROLE);
+<span class="nc" id="L345">			roleDao.excluir(usuarioSelecionado.getUsuario(), ROLE);</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">			for (String strRoles : roles) {</span>
+<span class="nc" id="L347">				roleDao.excluir(usuarioSelecionado.getUsuario(), Auth.getRoleName(strRoles));</span>
+<span class="nc" id="L348">			}</span>
+			
+			// ajustes
+<span class="nc" id="L351">			listaUsuarios.remove(usuarioSelecionado);</span>
+<span class="nc" id="L352">			usuarioSelecionado = new Usuario();</span>
+<span class="nc" id="L353">		} catch (Exception e) {</span>
+<span class="nc" id="L354">			erro = true;</span>
+<span class="nc" id="L355">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L356">			e.printStackTrace();</span>
+<span class="nc" id="L357">		}</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L359">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L360">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L362">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L363">			return &quot;usuarios&quot;;</span>
+		}
+	}
+
+	public UsuarioDao getUsuarioDao() {
+<span class="nc" id="L368">		return usuarioDao;</span>
+	}
+
+	public void setUsuarioDao(UsuarioDao usuarioDao) {
+<span class="nc" id="L372">		this.usuarioDao = usuarioDao;</span>
+<span class="nc" id="L373">	}</span>
+
+	public Usuario getUsuario() {
+<span class="nc" id="L376">		return usuarioAtual;</span>
+	}
+
+	public void setUsuario(Usuario usuarioAtual) {
+<span class="nc" id="L380">		this.usuarioAtual = usuarioAtual;</span>
+<span class="nc" id="L381">	}</span>
+	
+	public Usuario getUsuarioNovo() {
+<span class="nc" id="L384">		return usuarioNovo;</span>
+	}
+
+	public void setUsuarioNovo(Usuario usuarioNovo) {
+<span class="nc" id="L388">		this.usuarioNovo = usuarioNovo;</span>
+<span class="nc" id="L389">	}</span>
+	
+	public Usuario getUsuarioSelecionado() {
+<span class="nc" id="L392">		return usuarioSelecionado;</span>
+	}
+
+	public void setUsuarioSelecionado(Usuario usuarioSelecionado) {
+<span class="nc" id="L396">		this.usuarioSelecionado = usuarioSelecionado;</span>
+<span class="nc" id="L397">	}</span>
+
+	public List&lt;Usuario&gt; getListaUsuarios() {
+<span class="nc" id="L400">		return listaUsuarios;</span>
+	}
+
+	public void setListaUsuarios(List&lt;Usuario&gt; listaUsuarios) {
+<span class="nc" id="L404">		this.listaUsuarios = listaUsuarios;</span>
+<span class="nc" id="L405">	}</span>
+	
+    public List&lt;Usuario&gt; getFilteredUsuarios() {  
+<span class="nc" id="L408">        return filteredUsuarios;  </span>
+    }  
+  
+    public void setFilteredUsuarios(List&lt;Usuario&gt; filteredUsuarios) {  
+<span class="nc" id="L412">        this.filteredUsuarios = filteredUsuarios;  </span>
+<span class="nc" id="L413">    }</span>
+    
+//	private String convertStringToMd5(String valor) {
+//		MessageDigest mDigest;
+//		try {
+//			// strat HASH MD5.
+//			mDigest = MessageDigest.getInstance(&quot;MD5&quot;);
+//			// convert a string value to MD5 array of bytes
+//			byte[] valorMD5 = mDigest.digest(valor.getBytes(&quot;UTF-8&quot;));
+//			// convert bytes to hexadecimal
+//			StringBuffer sb = new StringBuffer();
+//			for (byte b : valorMD5) {
+//				sb.append(Integer.toHexString((b &amp; 0xFF) | 0x100).substring(1, 3));
+//			}
+//			return sb.toString();
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//			return null;
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
+
+	public Date getDataAtual() {
+<span class="nc" id="L438">		return new Date();</span>
+	}
+	
+	public String getOriginalViewId() {
+<span class="nc" id="L442">		String temp = originalViewId;</span>
+<span class="nc" id="L443">		originalViewId = null;</span>
+<span class="nc" id="L444">		return temp;</span>
+	}
+
+	public void setOriginalViewId(String originalViewId) {
+<span class="nc" id="L448">		this.originalViewId = originalViewId;</span>
+<span class="nc" id="L449">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

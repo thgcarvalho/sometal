@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="right">
+			<p:commandButton value="#{msg.novo}" title="#{msg.novo}" actionListener="#{clienteBean.preparaNovoCliente}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
+		
+		<div align="center">
+		
+			<p:dataTable id="clientes" var="cliente"
+				emptyMessage="#{msg.cliente_nenhum}" 
+				value="#{clienteBean.clientes}" rowKey="#{cliente.cliente}"
+				filteredValue="#{clienteBean.filteredClientes}"
+				paginator="true" rows="14" rendered="#{clienteBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.clientes}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.nome}" style="width:70px"
+					filterBy="#{cliente.nome}" filterMatchMode="contains">
+					<h:outputText value="#{cliente.nome}" />
+				</p:column>
+
+				<p:column headerText="#{msg.telefone}"
+					style="text-align:center;width:30px" filterBy="#{cliente.fones}"
+					filterMatchMode="contains">
+					<h:outputText value="#{cliente.fones}" />
+				</p:column>
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.clienteSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.clienteSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.clienteSelecionado}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- ADD Dialog -->
+	<h:form id="formAdd" enctype="multipart/form-data">
+		<p:dialog header="#{msg.cliente_novo}" widgetVar="addDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.nome}: *" />
+				<p:inputText id="nome" label="#{msg.nome}" value="#{clienteBean.cliente.nome}" required="true" size="45" />
+						
+				<h:outputText value="#{msg.cpf}:" />
+				<p:inputMask id="cpf" label="#{msg.cpf}" value="#{clienteBean.cliente.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setAddCPF()" />
+				
+				<h:outputText value="#{msg.cnpj}:" />
+				<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{clienteBean.cliente.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setAddCNPJ()" />
+				
+				<h:outputText value="#{msg.endereco}:" />
+				<p:inputText id="endereco" label="#{msg.endereco}" value="#{clienteBean.cliente.endereco}" size="45" />
+
+				<h:outputText value="#{msg.complemento}:" />
+				<p:inputText id="complemento" label="#{msg.complemento}" value="#{clienteBean.cliente.complemento}" size="45" />
+				
+				<h:outputText value="#{msg.no}:" />
+				<p:inputText id="numero" label="#{msg.no}" value="#{clienteBean.cliente.numero}" size="14" />
+	
+				<h:outputText value="#{msg.bairro}:" />
+				<p:inputText id="bairro" label="#{msg.bairro}" value="#{clienteBean.cliente.bairro}" size="45" />
+
+				<h:outputText value="#{msg.cidade}:" />
+				<p:inputText id="cidade" label="#{msg.cidade}" value="#{clienteBean.cliente.cidade}" size="15" />
+
+				<h:outputText value="#{msg.cep}:" />
+				<p:inputMask id="cep" label="#{msg.cep}" value="#{clienteBean.cliente.cep}" mask="99999-999" size="14" />
+
+				<h:outputText value="#{msg.fone1}:" />
+				<p:inputMask id="fone1" label="#{msg.fone1}" value="#{clienteBean.cliente.fone1}" mask="(99) 9999-9999" size="14" />
+				
+				<h:outputText value="#{msg.fone2}:" />
+				<p:inputMask id="fone2" label="#{msg.fone2}" value="#{clienteBean.cliente.fone2}" mask="(99) 9999-9999" size="14" />
+
+				<h:outputText value="#{msg.email}:" />
+				<p:inputText id="email" label="#{msg.email}" value="#{clienteBean.cliente.email}" size="45">
+					<f:validator validatorId="emailValidator" />
+		  		</p:inputText>
+                
+                <h:outputText value="#{msg.obs}" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{clienteBean.cliente.obs}" />
+            </h:panelGrid>
+                
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{clienteBean.criar}" 
+					update=":form:clientes :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+	</h:form>
+	
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="#{msg.cliente_detalhes}" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false" >
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.nome}" />
+						
+				<h:outputText value="#{msg.cpf}:" style="font-weight:bold" rendered="#{clienteBean.clienteSelecionado.isPF}" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.cpf}" rendered="#{clienteBean.clienteSelecionado.isPF}" />
+				
+				<h:outputText value="#{msg.cnpj}:" style="font-weight:bold" rendered="#{clienteBean.clienteSelecionado.isPJ}" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.cnpj}" rendered="#{clienteBean.clienteSelecionado.isPJ}" />
+				
+				<h:outputText value="#{msg.endereco}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.endereco}" />
+
+				<h:outputText value="#{msg.complemento}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.complemento}" />
+				
+				<h:outputText value="#{msg.no}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.numero}" />
+	
+				<h:outputText value="#{msg.bairro}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.bairro}" />
+
+				<h:outputText value="#{msg.cidade}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.cidade}" />
+
+				<h:outputText value="#{msg.cep}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.cep}" />
+
+				<h:outputText value="#{msg.fone1}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.fone1}" />
+				
+				<h:outputText value="#{msg.fone2}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.fone2}" />
+
+				<h:outputText value="#{msg.email}:" style="font-weight:bold" />
+				<h:outputText value="#{clienteBean.clienteSelecionado.email}" />
+                
+                <h:outputText value="#{msg.obs}" style="font-weight:bold" />
+				<p:inputTextarea size="500" value="#{clienteBean.clienteSelecionado.obs}" readonly="true" disabled="true" />
+            </h:panelGrid>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="#{msg.cliente_editar}" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.nome}: *" />
+				<p:inputText id="nome" label="#{msg.nome}" value="#{clienteBean.clienteSelecionado.nome}" required="true" size="45" />
+						
+				<h:outputText value="#{msg.cpf}:" />
+				<p:inputMask id="cpf" label="#{msg.cpf}" value="#{clienteBean.clienteSelecionado.cpf}"  mask="999.999.999-99" size="14" onfocus="javascript:setEdtCPF()" />
+				
+				<h:outputText value="#{msg.cnpj}:" />
+				<p:inputMask id="cnpj" label="#{msg.cnpj}" value="#{clienteBean.clienteSelecionado.cnpj}"  mask="99.999.999/9999-99" size="18" onfocus="javascript:setEdtCNPJ()" />
+				
+				<h:outputText value="#{msg.endereco}:" />
+				<p:inputText id="endereco" label="#{msg.endereco}" value="#{clienteBean.clienteSelecionado.endereco}" size="45" />
+
+				<h:outputText value="#{msg.complemento}:" />
+				<p:inputText id="complemento" label="#{msg.complemento}" value="#{clienteBean.clienteSelecionado.complemento}" size="45" />
+				
+				<h:outputText value="#{msg.no}:" />
+				<p:inputText id="numero" label="#{msg.no}" value="#{clienteBean.clienteSelecionado.numero}" size="14" />
+	
+				<h:outputText value="#{msg.bairro}:" />
+				<p:inputText id="bairro" label="#{msg.bairro}" value="#{clienteBean.clienteSelecionado.bairro}" size="45" />
+
+				<h:outputText value="#{msg.cidade}:" />
+				<p:inputText id="cidade" label="#{msg.cidade}" value="#{clienteBean.clienteSelecionado.cidade}" size="15" />
+
+				<h:outputText value="#{msg.cep}:" />
+				<p:inputMask id="cep" label="#{msg.cep}" value="#{clienteBean.clienteSelecionado.cep}" mask="99999-999" size="14" />
+
+				<h:outputText value="#{msg.fone1}:" />
+				<p:inputMask id="fone1" label="#{msg.fone1}" value="#{clienteBean.clienteSelecionado.fone1}" mask="(99) 9999-9999" size="14" />
+				
+				<h:outputText value="#{msg.fone2}:" />
+				<p:inputMask id="fone2" label="#{msg.fone2}" value="#{clienteBean.clienteSelecionado.fone2}" mask="(99) 9999-9999" size="14" />
+
+				<h:outputText value="#{msg.email}:" />
+				<p:inputText id="email" label="#{msg.email}" value="#{clienteBean.clienteSelecionado.email}" size="45">
+					<f:validator validatorId="emailValidator" />
+		  		</p:inputText>
+                
+                <h:outputText value="#{msg.obs}" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{clienteBean.clienteSelecionado.obs}" />
+            </h:panelGrid>
+			
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{clienteBean.editar}" 
+					update=":form:clientes :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+		
+	</h:form>
+		
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
+		<p:confirmDialog id="confirmDialog"
+			message="#{msg.cliente_confirma_excluir}" header="#{msg.cliente_excluir}" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
+
+			<p:commandButton id="confirm" immediate="true" value="#{msg.sim}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:clientes :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{clienteBean.excluir}" >
+				<f:setPropertyActionListener value="#{cliente}" target="#{clienteBean.clienteSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="#{msg.nao}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
+		</p:confirmDialog>
+	</h:form>
+	
+	<script type="text/javascript">
+			function setAddCPF() {
+				document.getElementById("formAdd:cpf").style.background = "#FFFFFF";
+				document.getElementById("formAdd:cnpj").style.background = "#CCCCCC";
+				document.getElementById("formAdd:cnpj").value = "";
+			}
+
+			function setAddCNPJ() {
+				var cpf = document.getElementById("formAdd:cpf").value;
+				console.log(cpf);
+				if (cpf == "") {
+					document.getElementById("formAdd:cnpj").style.color = "#000000";
+					document.getElementById("formAdd:cnpj").style.background = "#FFFFFF";
+					document.getElementById("formAdd:cpf").style.background = "#CCCCCC";
+					document.getElementById("formAdd:cpf").value = "";
+				} else{
+					document.getElementById("formAdd:cnpj").style.color = "#CCCCCC";
+				}
+			}
+			
+			function setEdtCPF() {
+				document.getElementById("formEdit:cpf").style.background = "#FFFFFF";
+				document.getElementById("formEdit:cnpj").style.background = "#CCCCCC";
+				document.getElementById("formEdit:cnpj").value = "";
+			}
+
+			function setEdtCNPJ() {
+				var cpf = document.getElementById("formEdit:cpf").value;
+				console.log(cpf);
+				if (cpf == "") {
+					document.getElementById("formEdit:cnpj").style.color = "#000000";
+					document.getElementById("formEdit:cnpj").style.background = "#FFFFFF";
+					document.getElementById("formEdit:cpf").style.background = "#CCCCCC";
+					document.getElementById("formEdit:cpf").value = "";
+				} else{
+					document.getElementById("formEdit:cnpj").style.color = "#CCCCCC";
+				}
+			}
+		</script>
+		
+	</ui:define>
+</ui:composition>

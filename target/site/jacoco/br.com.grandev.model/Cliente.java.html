@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Cliente.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sometal WebApp</a> &gt; <a href="index.html" class="el_package">br.com.grandev.model</a> &gt; <span class="el_source">Cliente.java</span></div><h1>Cliente.java</h1><pre class="source lang-java linenums">package br.com.grandev.model;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * @author Thiago Carvalho
+ * 
+ */
+@Entity
+@Table(name = &quot;clientes&quot;)
+<span class="fc" id="L17">public class Cliente implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String nome;
+	private String cadastro;
+	private String endereco;
+	private String numero;
+	private String complemento;
+	private String bairro;
+	private String cidade;
+	private String cep;
+	private String fone1;
+	private String fone2;
+	private String email;
+	private String obs;
+
+	public String getNome() {
+<span class="nc" id="L39">		return nome;</span>
+	}
+
+	public void setNome(String nome) {
+<span class="nc" id="L43">		this.nome = nome;</span>
+<span class="nc" id="L44">	}</span>
+
+	public String getCadastro() {
+<span class="fc" id="L47">		return cadastro;</span>
+	}
+
+	public void setCadastro(String cadastro) {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">		if (cadastro != null) {</span>
+<span class="fc" id="L52">			this.cadastro = cadastro;</span>
+		}
+<span class="fc" id="L54">	}</span>
+	
+	/*
+	 * getters e setters cpf e cnpj auxiliam para inserir na colula (cadastro)
+	 * no db somentente o campo preenchido e permite a separacao desse campo
+	 * quando se obtem o (cadastro) no db
+	 */
+	public String getCpf() {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">		if (getIsPF()) {</span>
+<span class="fc" id="L63">			return getCadastro();</span>
+		}
+<span class="fc" id="L65">		return &quot;&quot;;</span>
+	}
+
+	public void setCpf(String cpf) {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (getCnpj().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L70">			setCadastro(cpf);</span>
+		}
+<span class="nc" id="L72">	}</span>
+
+	public String getCnpj() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">		if (getIsPJ()) {</span>
+<span class="fc" id="L76">			return getCadastro();</span>
+		}
+<span class="fc" id="L78">		return &quot;&quot;;</span>
+	}
+
+	public void setCnpj(String cnpj) {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">		if (getCpf().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L83">			setCadastro(cnpj);</span>
+		}
+<span class="nc" id="L85">	}</span>
+
+	public boolean getIsPF() {
+<span class="fc bfc" id="L88" title="All 4 branches covered.">		if (getCadastro() != null &amp;&amp; getCadastro().length() == 14) {</span>
+<span class="fc" id="L89">			return true;</span>
+		}
+<span class="fc" id="L91">		return false;</span>
+	}
+
+	public boolean getIsPJ() {
+<span class="fc bfc" id="L95" title="All 4 branches covered.">		if (getCadastro() != null &amp;&amp; getCadastro().length() == 18) {</span>
+<span class="fc" id="L96">			return true;</span>
+		}
+<span class="fc" id="L98">		return false;</span>
+	}
+
+	public String getEndereco() {
+<span class="nc" id="L102">		return endereco;</span>
+	}
+
+	public void setEndereco(String endereco) {
+<span class="nc" id="L106">		this.endereco = endereco;</span>
+<span class="nc" id="L107">	}</span>
+
+	public String getNumero() {
+<span class="nc" id="L110">		return numero;</span>
+	}
+
+	public void setNumero(String numero) {
+<span class="nc" id="L114">		this.numero = numero;</span>
+<span class="nc" id="L115">	}</span>
+
+	public String getComplemento() {
+<span class="nc" id="L118">		return complemento;</span>
+	}
+
+	public void setComplemento(String complemento) {
+<span class="nc" id="L122">		this.complemento = complemento;</span>
+<span class="nc" id="L123">	}</span>
+
+	public String getBairro() {
+<span class="nc" id="L126">		return bairro;</span>
+	}
+
+	public void setBairro(String bairro) {
+<span class="nc" id="L130">		this.bairro = bairro;</span>
+<span class="nc" id="L131">	}</span>
+
+	public String getCidade() {
+<span class="nc" id="L134">		return cidade;</span>
+	}
+
+	public void setCidade(String cidade) {
+<span class="nc" id="L138">		this.cidade = cidade;</span>
+<span class="nc" id="L139">	}</span>
+
+	public String getCep() {
+<span class="nc" id="L142">		return cep;</span>
+	}
+
+	public void setCep(String cep) {
+<span class="nc" id="L146">		this.cep = cep;</span>
+<span class="nc" id="L147">	}</span>
+
+	public String getFone1() {
+<span class="nc" id="L150">		return fone1;</span>
+	}
+
+	public void setFone1(String fone1) {
+<span class="nc" id="L154">		this.fone1 = fone1;</span>
+<span class="nc" id="L155">	}</span>
+
+	public String getFone2() {
+<span class="nc" id="L158">		return fone2;</span>
+	}
+
+	public void setFone2(String fone2) {
+<span class="nc" id="L162">		this.fone2 = fone2;</span>
+<span class="nc" id="L163">	}</span>
+
+	public String getFones() {
+<span class="nc" id="L166">		String fones = &quot;&quot;;</span>
+<span class="nc bnc" id="L167" title="All 4 branches missed.">		if (fone1 != null &amp;&amp; !fone1.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L168">			fones += fone1;</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">			if (fone2 != null &amp;&amp; !fone2.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L170">				fones += &quot; / &quot;;</span>
+<span class="nc" id="L171">				fones += fone2;</span>
+			}
+<span class="nc bnc" id="L173" title="All 4 branches missed.">		} else if (fone2 != null &amp;&amp; !fone2.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L174">			fones += fone2;</span>
+		}
+<span class="nc" id="L176">		return fones;</span>
+	}
+
+	public String getEmail() {
+<span class="nc" id="L180">		return email;</span>
+	}
+
+	public void setEmail(String email) {
+<span class="nc" id="L184">		this.email = email;</span>
+<span class="nc" id="L185">	}</span>
+
+	public String getObs() {
+<span class="nc" id="L188">		return obs;</span>
+	}
+
+	public void setObs(String obs) {
+<span class="nc" id="L192">		this.obs = obs;</span>
+<span class="nc" id="L193">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

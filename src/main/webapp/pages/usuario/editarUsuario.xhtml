@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="center">
+	
+			<p:panel header="#{msg.usuario}" id="panel" style="height:500px;">
+			
+			<p:focus context="panel"/>
+			
+				<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				
+					<h:outputText value="#{msg.usuario}: *" />
+					<p:inputText required="true" label="#{msg.usuario}" maxlength="15" size="15" 
+						value="#{usuarioBean.usuario.usuario}" />
+						
+					<h:outputText value="#{msg.senha}: *" />
+					<p:password required="true" label="#{msg.senha}" maxlength="15" size="15" 
+						value="#{usuarioBean.usuario.senha}" redisplay="true" />
+						
+					<h:outputText value="#{msg.nome}: *" />
+					<p:inputText required="true" label="#{msg.nome}"
+						value="#{usuarioBean.usuario.nome}" maxlength="45" size="45" />
+						
+				</h:panelGrid>
+				
+				<br/>
+				
+				<p:panel header="#{msg.perfil}" rendered="#{usuarioBean.usuario.auth.isAdmin}">
+			        <p:selectManyCheckbox id="papeis" value="#{usuarioBean.usuario.roles}" layout="grid" columns="3">
+			            <f:selectItems value="#{usuarioBean.roles}" var="role" itemLabel="#{role}" itemValue="#{role}" />
+			        </p:selectManyCheckbox>
+		        </p:panel>
+					
+				<div align="center">
+					<br />
+					<h:panelGrid id="btn" columns="1"> 
+						<p:commandButton id="btnSalvar" value="#{msg.salvar}" icon="ui-icon-disk"
+							action="#{usuarioBean.editarAtual}" ajax="false" update="growl" />
+					</h:panelGrid>
+				</div>
+				
+			</p:panel>
+		</div>
+	</h:form>
+	</ui:define>
+
+</ui:composition>

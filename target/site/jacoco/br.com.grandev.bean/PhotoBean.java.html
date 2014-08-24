@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PhotoBean.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sometal WebApp</a> &gt; <a href="index.html" class="el_package">br.com.grandev.bean</a> &gt; <span class="el_source">PhotoBean.java</span></div><h1>PhotoBean.java</h1><pre class="source lang-java linenums">package br.com.grandev.bean;
+
+import static br.com.grandev.util.FacesUtils.MSG_ERROR;
+import static br.com.grandev.util.FacesUtils.addErrorMessage;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.Serializable;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import br.com.grandev.model.Funcionario;
+
+/**
+ * @author Thiago Carvalho
+ * 
+ */
+@ManagedBean
+@SessionScoped
+<span class="nc" id="L26">public class PhotoBean implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+	
+	public StreamedContent loadPhoto(Funcionario funcionario) {
+<span class="nc" id="L31">		System.out.println(&quot;PhotoBean.loadPhoto=&quot; + funcionario);</span>
+<span class="nc" id="L32">		StreamedContent scPhoto = new DefaultStreamedContent();</span>
+<span class="nc" id="L33">		String strPhoto = &quot;&quot;;</span>
+		try {
+<span class="nc bnc" id="L35" title="All 6 branches missed.">			if (funcionario != null &amp;&amp; funcionario.getFoto() != null &amp;&amp; !funcionario.getFoto().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L36">				strPhoto = funcionario.getFoto();</span>
+			} else {
+<span class="nc" id="L38">				strPhoto = &quot;C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg&quot;;</span>
+			}
+<span class="nc" id="L40">			System.out.println(&quot;FL=&quot; + strPhoto);</span>
+<span class="nc" id="L41">			final File filePhoto = new File(strPhoto);</span>
+<span class="nc" id="L42">			System.out.println(&quot;EXISTE=&quot; + filePhoto.exists());</span>
+<span class="nc" id="L43">			final FileInputStream fileInputStream = new FileInputStream(filePhoto);</span>
+<span class="nc" id="L44">			final InputStream is = new BufferedInputStream(fileInputStream);</span>
+<span class="nc" id="L45">			scPhoto = new DefaultStreamedContent(is);</span>
+<span class="nc" id="L46">		} catch (Exception e) {</span>
+<span class="nc" id="L47">			e.printStackTrace();</span>
+<span class="nc" id="L48">			addErrorMessage(MSG_ERROR, &quot;Erro ao carregar foto!&quot;);</span>
+<span class="nc" id="L49">		}</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">		System.out.println(&quot;SC=&quot; + (scPhoto == null ? &quot;null&quot; : scPhoto));</span>
+<span class="nc" id="L51">		return scPhoto;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

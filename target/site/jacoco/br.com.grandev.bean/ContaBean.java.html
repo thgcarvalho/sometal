@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ContaBean.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sometal WebApp</a> &gt; <a href="index.html" class="el_package">br.com.grandev.bean</a> &gt; <span class="el_source">ContaBean.java</span></div><h1>ContaBean.java</h1><pre class="source lang-java linenums">package br.com.grandev.bean;
+
+import static br.com.grandev.util.FacesUtils.MSG_ERROR;
+import static br.com.grandev.util.FacesUtils.MSG_SUCESS;
+import static br.com.grandev.util.FacesUtils.addErrorMessage;
+import static br.com.grandev.util.FacesUtils.addInfoMessage;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import br.com.grandev.dao.ContaDao;
+import br.com.grandev.daoImp.ContaDaoImp;
+import br.com.grandev.model.Conta;
+
+/**
+ * @author Thiago Carvalho
+ * 
+ */
+@ManagedBean
+@ViewScoped
+<span class="nc" id="L26">public class ContaBean implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	private ContaDao contaDao;
+	private Conta conta;
+	private Conta contaSelecionado;
+	private List&lt;Conta&gt; contas;
+	private List&lt;Conta&gt; filteredContas;
+	
+	@PostConstruct
+	public void init() {
+<span class="nc" id="L38">		contaDao = new ContaDaoImp();</span>
+<span class="nc" id="L39">		preparaNovaConta();</span>
+<span class="nc" id="L40">		contaSelecionado = new Conta();</span>
+<span class="nc" id="L41">		carregaContas();</span>
+<span class="nc" id="L42">	}</span>
+	
+	public void preparaNovaConta() {
+<span class="nc" id="L45">		conta = new Conta();</span>
+<span class="nc" id="L46">	}</span>
+	
+	private void carregaContas() {
+<span class="nc" id="L49">		contas = new ArrayList&lt;Conta&gt;();</span>
+		try {
+<span class="nc" id="L51">			contas = contaDao.todos(&quot;nome&quot;);</span>
+<span class="nc" id="L52">		} catch (Exception e) {</span>
+<span class="nc" id="L53">			e.printStackTrace();</span>
+<span class="nc" id="L54">		}</span>
+<span class="nc" id="L55">		filteredContas = contas;</span>
+<span class="nc" id="L56">	}</span>
+	
+	public String editar() {
+<span class="nc" id="L59">		boolean erro = false;</span>
+<span class="nc" id="L60">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L62">			preparaConta(contaSelecionado);</span>
+<span class="nc" id="L63">			contaDao.editar(contaSelecionado);</span>
+<span class="nc" id="L64">		} catch (Exception e) {</span>
+<span class="nc" id="L65">			erro = true;</span>
+<span class="nc" id="L66">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L67">			e.printStackTrace();</span>
+<span class="nc" id="L68">		}</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L70">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L71">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L73">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L74">			carregaContas();</span>
+<span class="nc" id="L75">			return &quot;contas&quot;;</span>
+		}
+	}
+	
+	public String criar() {
+<span class="nc" id="L80">		boolean erro = false;</span>
+<span class="nc" id="L81">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L83">			preparaConta(conta);</span>
+<span class="nc" id="L84">			contaDao.criar(conta);</span>
+			// ajustes
+<span class="nc" id="L86">			contas.add(conta);</span>
+<span class="nc" id="L87">			preparaNovaConta();</span>
+<span class="nc" id="L88">		} catch (Exception e) {</span>
+<span class="nc" id="L89">			erro = true;</span>
+<span class="nc" id="L90">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L91">			e.printStackTrace();</span>
+<span class="nc" id="L92">		}</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L94">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L95">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L97">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L98">			return &quot;contas&quot;;</span>
+		}
+	}
+
+	public String excluir() {
+<span class="nc" id="L103">		boolean erro = false;</span>
+<span class="nc" id="L104">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L106">			contaDao.excluir(contaSelecionado);</span>
+<span class="nc" id="L107">		} catch (Exception e) {</span>
+<span class="nc" id="L108">			erro = true;</span>
+<span class="nc" id="L109">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L110">			e.printStackTrace();</span>
+<span class="nc" id="L111">		}</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L113">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L114">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L116">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L117">			carregaContas();</span>
+<span class="nc" id="L118">			return &quot;contas&quot;;</span>
+		}
+	}
+	
+	private void preparaConta(Conta conta) {
+<span class="nc" id="L123">		conta.setNome(conta.getNome().trim());</span>
+<span class="nc" id="L124">	}</span>
+
+	public ContaDao getContaDao() {
+<span class="nc" id="L127">		return contaDao;</span>
+	}
+
+	public void setContaDao(ContaDao contaDao) {
+<span class="nc" id="L131">		this.contaDao = contaDao;</span>
+<span class="nc" id="L132">	}</span>
+
+	public Conta getConta() {
+<span class="nc bnc" id="L135" title="All 2 branches missed.">		if (conta == null) {</span>
+<span class="nc" id="L136">			conta = new Conta();</span>
+		}
+<span class="nc" id="L138">		return conta;</span>
+	}
+
+	public void setConta(Conta conta) {
+<span class="nc" id="L142">		this.conta = conta;</span>
+<span class="nc" id="L143">	}</span>
+	
+	public Conta getContaSelecionado() {
+<span class="nc" id="L146">		return contaSelecionado;</span>
+	}
+
+	public void setContaSelecionado(Conta contaSelecionado) {
+<span class="nc" id="L150">		this.contaSelecionado = contaSelecionado;</span>
+<span class="nc" id="L151">	}</span>
+	
+	public List&lt;Conta&gt; getContas() {
+<span class="nc" id="L154">		return contas;</span>
+	}
+
+	public void setContas(List&lt;Conta&gt; listaContas) {
+<span class="nc" id="L158">		this.contas = listaContas;</span>
+<span class="nc" id="L159">	}</span>
+	
+    public List&lt;Conta&gt; getFilteredContas() {  
+<span class="nc" id="L162">        return filteredContas;  </span>
+    }  
+  
+    public void setFilteredContas(List&lt;Conta&gt; filteredContas) {  
+<span class="nc" id="L166">        this.filteredContas = filteredContas;  </span>
+<span class="nc" id="L167">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

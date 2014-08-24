@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FuncionarioBean.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sometal WebApp</a> &gt; <a href="index.html" class="el_package">br.com.grandev.bean</a> &gt; <span class="el_source">FuncionarioBean.java</span></div><h1>FuncionarioBean.java</h1><pre class="source lang-java linenums">package br.com.grandev.bean;
+
+import static br.com.grandev.util.FacesUtils.MSG_ERROR;
+import static br.com.grandev.util.FacesUtils.MSG_SUCESS;
+import static br.com.grandev.util.FacesUtils.addErrorMessage;
+import static br.com.grandev.util.FacesUtils.addInfoMessage;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+import br.com.grandev.dao.FuncionarioDao;
+import br.com.grandev.daoImp.FuncionarioDaoImp;
+import br.com.grandev.model.Funcionario;
+import br.com.grandev.service.PathServer;
+
+/**
+ * @author Thiago Carvalho
+ * 
+ */
+@ManagedBean
+@SessionScoped
+<span class="nc" id="L40">public class FuncionarioBean implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	@Resource(name = &quot;funcionarioDao&quot;)
+	private FuncionarioDao funcionarioDao;
+	private Funcionario funcionario;
+	private Funcionario funcionarioSelecionado;
+	private List&lt;Funcionario&gt; funcionarios;
+	private List&lt;Funcionario&gt; filteredFuncionarios;
+	private UploadedFile uploadedFile;
+	
+	@PostConstruct
+	public void init() {
+<span class="nc" id="L54">		System.out.println(&quot;@SessionScoped FuncionarioBean&quot;);</span>
+<span class="nc" id="L55">		funcionarioDao = new FuncionarioDaoImp();</span>
+<span class="nc" id="L56">		preparaNovoFuncionario();</span>
+<span class="nc" id="L57">		funcionarioSelecionado = new Funcionario();</span>
+<span class="nc" id="L58">		carregaFuncionarios();</span>
+<span class="nc" id="L59">	}</span>
+	
+	public void preparaNovoFuncionario() {
+<span class="nc" id="L62">		funcionario = new Funcionario();</span>
+<span class="nc" id="L63">		int lastCode = funcionarioDao.getLastCode();</span>
+<span class="nc" id="L64">		System.out.println(lastCode);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (lastCode &lt; 1000) {</span>
+<span class="nc" id="L66">			lastCode = 1000;</span>
+		}
+<span class="nc" id="L68">		funcionario.setCodigo(lastCode + 1);</span>
+<span class="nc" id="L69">	}</span>
+	
+	private void carregaFuncionarios() {
+<span class="nc" id="L72">		funcionarios = new ArrayList&lt;Funcionario&gt;();</span>
+		try {
+<span class="nc" id="L74">			funcionarios = funcionarioDao.todos(&quot;nome&quot;);</span>
+<span class="nc" id="L75">		} catch (Exception e) {</span>
+<span class="nc" id="L76">			e.printStackTrace();</span>
+<span class="nc" id="L77">		}</span>
+<span class="nc" id="L78">		filteredFuncionarios = funcionarios;</span>
+<span class="nc" id="L79">	}</span>
+	
+	public String editar() {
+<span class="nc" id="L82">		boolean erro = false;</span>
+<span class="nc" id="L83">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L85">			preparaFuncionario(funcionarioSelecionado);</span>
+<span class="nc" id="L86">			funcionarioDao.editar(funcionarioSelecionado);</span>
+//			if (uploadedFile != null) {
+//				 copyFile(funcionarioSelecionado.getFoto());
+//			}
+<span class="nc" id="L90">		} catch (Exception e) {</span>
+<span class="nc" id="L91">			erro = true;</span>
+<span class="nc" id="L92">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L93">			e.printStackTrace();</span>
+<span class="nc" id="L94">		}</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L96">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L97">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L99">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L100">			carregaFuncionarios();</span>
+<span class="nc" id="L101">			return &quot;funcionarios&quot;;</span>
+		}
+	}
+	
+	public String criar() {
+<span class="nc" id="L106">		boolean erro = false;</span>
+<span class="nc" id="L107">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L109">			preparaFuncionario(funcionario);</span>
+<span class="nc" id="L110">			funcionarioDao.criar(funcionario);</span>
+			// ajustes
+<span class="nc" id="L112">			funcionarios.add(funcionario);</span>
+<span class="nc" id="L113">			preparaNovoFuncionario();</span>
+<span class="nc" id="L114">		} catch (Exception e) {</span>
+<span class="nc" id="L115">			erro = true;</span>
+<span class="nc" id="L116">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L117">			e.printStackTrace();</span>
+<span class="nc" id="L118">		}</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L120">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L121">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L123">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L124">			return &quot;funcionarios&quot;;</span>
+		}
+	}
+
+	public String excluir() {
+<span class="nc" id="L129">		boolean erro = false;</span>
+<span class="nc" id="L130">		String erroMsg = null;</span>
+		try {
+<span class="nc" id="L132">			funcionarioDao.excluir(funcionarioSelecionado);</span>
+<span class="nc" id="L133">		} catch (Exception e) {</span>
+<span class="nc" id="L134">			erro = true;</span>
+<span class="nc" id="L135">			erroMsg = e.getMessage();</span>
+<span class="nc" id="L136">			e.printStackTrace();</span>
+<span class="nc" id="L137">		}</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">		if (erro) {</span>
+<span class="nc" id="L139">			addErrorMessage(MSG_ERROR, erroMsg);</span>
+<span class="nc" id="L140">			return &quot;&quot;;</span>
+		} else {
+<span class="nc" id="L142">			addInfoMessage(MSG_SUCESS);</span>
+<span class="nc" id="L143">			carregaFuncionarios();</span>
+<span class="nc" id="L144">			return &quot;funcionarios&quot;;</span>
+		}
+	}
+	
+	private void preparaFuncionario(Funcionario funcionario) {
+<span class="nc" id="L149">		funcionario.setNome(funcionario.getNome().trim());</span>
+<span class="nc" id="L150">	}</span>
+
+	public FuncionarioDao getFuncionarioDao() {
+<span class="nc" id="L153">		return funcionarioDao;</span>
+	}
+
+	public void setFuncionarioDao(FuncionarioDao funcionarioDao) {
+<span class="nc" id="L157">		this.funcionarioDao = funcionarioDao;</span>
+<span class="nc" id="L158">	}</span>
+
+	public Funcionario getFuncionario() {
+<span class="nc bnc" id="L161" title="All 2 branches missed.">		if (funcionario == null) {</span>
+<span class="nc" id="L162">			funcionario = new Funcionario();</span>
+		}
+<span class="nc" id="L164">		return funcionario;</span>
+	}
+
+	public void setFuncionario(Funcionario funcionario) {
+<span class="nc" id="L168">		this.funcionario = funcionario;</span>
+<span class="nc" id="L169">	}</span>
+	
+	public Funcionario getFuncionarioSelecionado() {
+<span class="nc" id="L172">		return funcionarioSelecionado;</span>
+	}
+
+	public void setFuncionarioSelecionado(Funcionario funcionarioSelecionado) {
+<span class="nc" id="L176">		this.funcionarioSelecionado = funcionarioSelecionado;</span>
+<span class="nc" id="L177">	}</span>
+	
+	public List&lt;Funcionario&gt; getFuncionarios() {
+<span class="nc" id="L180">		return funcionarios;</span>
+	}
+
+	public void setFuncionarios(List&lt;Funcionario&gt; listaFuncionarios) {
+<span class="nc" id="L184">		this.funcionarios = listaFuncionarios;</span>
+<span class="nc" id="L185">	}</span>
+	
+    public List&lt;Funcionario&gt; getFilteredFuncionarios() {  
+<span class="nc" id="L188">        return filteredFuncionarios;  </span>
+    }  
+  
+    public void setFilteredFuncionarios(List&lt;Funcionario&gt; filteredFuncionarios) {  
+<span class="nc" id="L192">        this.filteredFuncionarios = filteredFuncionarios;  </span>
+<span class="nc" id="L193">    }</span>
+    
+    public StreamedContent getFotoFuncionario() {
+<span class="nc" id="L196">    	return loadPhoto(funcionario);</span>
+    }
+    
+    public StreamedContent getFotoFuncionarioSelecionado() {
+<span class="nc" id="L200">    	return loadPhoto(funcionarioSelecionado);</span>
+    }
+    
+    private StreamedContent loadPhoto(Funcionario funcionario) {
+<span class="nc" id="L204">		System.out.println(&quot;PhotoBean.loadPhoto=&quot; + funcionario);</span>
+<span class="nc" id="L205">		StreamedContent scPhoto = new DefaultStreamedContent();</span>
+<span class="nc" id="L206">		String strPhoto = &quot;&quot;;</span>
+		try {
+<span class="nc bnc" id="L208" title="All 6 branches missed.">			if (funcionario != null &amp;&amp; funcionario.getFoto() != null &amp;&amp; !funcionario.getFoto().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L209">				strPhoto = funcionario.getFoto();</span>
+			} else {
+<span class="nc" id="L211">				strPhoto = PathServer.PATH_DIR </span>
+						+ File.separator + PathServer.DIR_FOTOS 
+						+ File.separator + &quot;sem_foto.jpg&quot;;
+			}
+<span class="nc" id="L215">			System.out.println(&quot;FL=&quot; + strPhoto);</span>
+<span class="nc" id="L216">			final File filePhoto = new File(strPhoto);</span>
+<span class="nc" id="L217">			System.out.println(&quot;EXISTE=&quot; + filePhoto.exists());</span>
+<span class="nc" id="L218">			final FileInputStream fileInputStream = new FileInputStream(filePhoto);</span>
+<span class="nc" id="L219">			final InputStream is = new BufferedInputStream(fileInputStream);</span>
+<span class="nc" id="L220">			scPhoto = new DefaultStreamedContent(is);</span>
+<span class="nc" id="L221">		} catch (Exception e) {</span>
+<span class="nc" id="L222">			e.printStackTrace();</span>
+<span class="nc" id="L223">			addErrorMessage(MSG_ERROR, &quot;Erro ao carregar foto!&quot;);</span>
+<span class="nc" id="L224">		}</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">		System.out.println(&quot;SC=&quot; + (scPhoto == null ? &quot;null&quot; : scPhoto));</span>
+<span class="nc" id="L226">		return scPhoto;</span>
+	}
+    
+    public void photoUploadFuncionario(FileUploadEvent event) {
+<span class="nc" id="L230">    	photoUpload(event, funcionario);</span>
+<span class="nc" id="L231">    }</span>
+    
+    public void photoUploadFuncionarioSelecionado(FileUploadEvent event) {
+<span class="nc" id="L234">    	photoUpload(event, funcionarioSelecionado);</span>
+<span class="nc" id="L235">    }</span>
+    
+	private void photoUpload(FileUploadEvent event, Funcionario funcionario) {
+<span class="nc" id="L238">		String destination =  PathServer.PATH_DIR </span>
+				+ File.separator + PathServer.DIR_FOTOS;
+		
+<span class="nc" id="L241">		String ext = event.getFile().getFileName().split(&quot;\\.&quot;)[1];</span>
+<span class="nc" id="L242">		String strCodigo = String.valueOf(funcionario.getCodigo());</span>
+<span class="nc" id="L243">		funcionario.setFoto(destination + File.separator + strCodigo + &quot;.&quot; + ext);</span>
+<span class="nc" id="L244">		System.out.println(&quot;photoUpload= &quot; + funcionario.getFoto());</span>
+<span class="nc" id="L245">		uploadedFile = event.getFile();</span>
+<span class="nc" id="L246">		copyFile(funcionario.getFoto());</span>
+<span class="nc" id="L247">		addInfoMessage(MSG_SUCESS, &quot;Foto &quot; + event.getFile().getFileName() + &quot; foi carregada.&quot;);</span>
+<span class="nc" id="L248">	}</span>
+	
+	private void copyFile(String file) {
+		try {
+<span class="nc bnc" id="L252" title="All 2 branches missed.">			if (uploadedFile != null) {</span>
+<span class="nc" id="L253">				InputStream inputStream = uploadedFile.getInputstream();</span>
+				// write the inputStream to a FileOutputStream
+<span class="nc" id="L255">				OutputStream out = new FileOutputStream(new File(file));</span>
+<span class="nc" id="L256">				int read = 0;</span>
+<span class="nc" id="L257">				byte[] bytes = new byte[1024];</span>
+	
+<span class="nc bnc" id="L259" title="All 2 branches missed.">				while ((read = inputStream.read(bytes)) != -1) {</span>
+<span class="nc" id="L260">					out.write(bytes, 0, read);</span>
+				}
+<span class="nc" id="L262">				inputStream.close();</span>
+<span class="nc" id="L263">				out.flush();</span>
+<span class="nc" id="L264">				out.close();</span>
+<span class="nc" id="L265">				uploadedFile = null;</span>
+			}
+<span class="nc" id="L267">		} catch (IOException e) {</span>
+<span class="nc" id="L268">			e.printStackTrace();</span>
+<span class="nc" id="L269">		}</span>
+<span class="nc" id="L270">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
