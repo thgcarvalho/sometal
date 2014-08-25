@@ -35,12 +35,16 @@
 
 				<p:column headerText="#{msg.valor}" style="text-align:center;width:20px" 
 					filterBy="#{conta.valor}" filterMatchMode="contains">
-					<h:outputText value="#{conta.valor}" />
+					<h:outputText value="#{conta.valor}" >
+						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>
+					</h:outputText>  
 				</p:column>
 				
 				<p:column headerText="#{msg.vencimento}" style="text-align:center;width:20px" 
 					filterBy="#{conta.vencimento}" filterMatchMode="contains">
-					<h:outputText value="#{conta.vencimento}" />
+					<h:outputText value="#{conta.vencimento}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+					</h:outputText>
 				</p:column>
 				
 				<p:column headerText="#{msg.situacao}" style="text-align:center;width:20px" 
@@ -72,7 +76,26 @@
 		<p:dialog header="#{msg.conta_novo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-
+				<h:outputText value="#{msg.nome}: *" />
+				<p:inputText id="nome" label="#{msg.nome}" value="#{contaBean.conta.nome}" required="true" size="45" />
+				
+				<h:outputText value="#{msg.valor}" />
+				<p:inputText label="#{msg.valor}" size="10" 
+					value="#{contaBean.conta.valor}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+				
+				<h:outputText value="#{msg.vencimento}" />	
+					<p:calendar id="vencimento" label="#{msg.vencimento}" value="#{contaBean.conta.vencimento}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputLabel value="Situação:" />
+				<p:selectOneMenu value="#{contaBean.conta.situacao}">
+					<f:selectItems value="#{contaBean.situacao}" var="situacao" itemLabel="#{situacao.nome}" itemValue="#{situacao.nome}" />
+				</p:selectOneMenu>
+						
+                <h:outputText value="#{msg.obs}" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{contaBean.conta.obs}" />
             </h:panelGrid>
                 
 			<div align="center">

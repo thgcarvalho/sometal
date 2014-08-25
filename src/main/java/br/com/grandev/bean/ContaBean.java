@@ -41,6 +41,17 @@ public class ContaBean implements Serializable {
 		carregaContas();
 	}
 	
+	public enum Situacao {
+		AGUARDANDO("Aguardando"), RECEBIDA("Recebida"), PAGA("Paga");
+		private Situacao(String nome) {
+			this.nome = nome;
+		}
+		String nome;
+		public String getNome() {
+			return nome;
+		}
+	}
+	
 	public void preparaNovaConta() {
 		conta = new Conta();
 	}
@@ -165,5 +176,9 @@ public class ContaBean implements Serializable {
     public void setFilteredContas(List<Conta> filteredContas) {  
         this.filteredContas = filteredContas;  
     }
+    
+	public Situacao[] getSituacao() {
+		return Situacao.values();
+	}
     
 }

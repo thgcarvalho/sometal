@@ -95,7 +95,7 @@ public class UsuarioBean implements Serializable {
 		}
 		
 		Date data = GregorianCalendar.getInstance().getTime();
-		System.out.println("\nLOGIN:" + this.usuarioAtual + " " + this.roles + " " + sdf.format(data));
+		System.out.println("\nLOGIN:" + this.usuarioAtual + " " + this.usuarioAtual.getRoles() + " " + sdf.format(data));
 	}
 	
 	public List<String> getRoles() {
