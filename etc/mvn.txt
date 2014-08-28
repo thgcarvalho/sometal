@@ -1,3 +1,137 @@
 mvn archetype:generate -DgroupId=br.com.grandev -DartifactId=sometal -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 
 mvn eclipse:eclipse -Dwtpversion=2.0
+
+<p:contextMenu for="contas" widgetVar="cMenu">   
+       			<p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('cellCars').showCellEditor();return false;"/>  
+       			<p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
+   			</p:contextMenu> 
+   			
+			<p:dataTable id="contas" var="conta"
+				emptyMessage="#{msg.conta_nenhum}" 
+				value="#{contaBean.contas}" rowKey="#{conta.conta}"
+				filteredValue="#{contaBean.filteredContas}"
+				paginator="true" rows="14" rendered="#{contaBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.contas}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.nome}" style="width:40px"
+					filterBy="#{conta.nome}" filterMatchMode="contains">
+					<h:outputText value="#{conta.nome}" />
+				</p:column>
+
+				<p:column headerText="#{msg.valor}" style="text-align:center;width:20px" 
+					filterBy="#{conta.valor}" filterMatchMode="contains">
+					<h:outputText value="#{conta.valor}" >
+						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>
+					</h:outputText>  
+				</p:column>
+				
+				<p:column headerText="#{msg.vencimento}" style="text-align:center;width:20px" 
+					filterBy="#{conta.vencimento}" filterMatchMode="contains">
+					<h:outputText value="#{conta.vencimento}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+					</h:outputText>
+				</p:column>
+				
+				<p:ajax event="cellEdit" listener="#{dtEditView.onCellEdit}" update=":form:growl" />
+				
+				<p:column headerText="#{msg.situacao}" style="text-align:center;width:20px">
+					<p:cellEditor>
+					<f:facet name="input">
+					<h:selectOneMenu value="#{conta.situacao}" style="width:100%">
+                    	<f:selectItems value="#{contaBean.situacao}" var="situacao" itemLabel="#{situacao.nome}" itemValue="#{situacao.nome}" />
+                    </h:selectOneMenu>
+                    </f:facet>
+                    </p:cellEditor>
+				</p:column>
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+						<p:contextMenu for="cars2" widgetVar="cMenu">   
+       <p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('cellCars').showCellEditor();return false;"/>  
+       <p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
+   </p:contextMenu> 
+ 
+   <p:dataTable id="cars2" var="car" value="#{dtEditView.cars2}" editable="true" editMode="cell" widgetVar="cellCars">
+       <f:facet name="header">
+           Cell Editing with DoubleClick and RightClick
+       </f:facet>
+ 
+       <p:ajax event="cellEdit" listener="#{dtEditView.onCellEdit}" update=":form:msgs" />
+ 
+       <p:column headerText="Id">
+              <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.id}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput" value="#{car.id}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+          </p:column>
+ 
+          <p:column headerText="Year">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{car.year}" /></f:facet>
+               <f:facet name="input"><p:inputText value="#{car.year}" style="width:96%" label="Year"/></f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column headerText="Brand">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{car.brand}" /></f:facet>
+               <f:facet name="input">
+                   <h:selectOneMenu value="#{car.brand}" style="width:100%">
+                       <f:selectItems value="#{dtEditView.brands}" var="man" itemLabel="#{man}" itemValue="#{man}" />
+                   </h:selectOneMenu>
+               </f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column headerText="Color">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{car.color}" /></f:facet>
+               <f:facet name="input">
+                   <h:selectOneMenu value="#{car.color}" style="width:100%">
+                       <f:selectItems value="#{dtEditView.colors}" var="color" itemLabel="#{color}" itemValue="#{color}" />
+                   </h:selectOneMenu>
+               </f:facet>
+           </p:cellEditor>
+       </p:column>
+   </p:dataTable>

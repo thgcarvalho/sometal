@@ -10,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.CellEditEvent;
 
 import br.com.grandev.dao.ContaDao;
 import br.com.grandev.daoImp.ContaDaoImp;
@@ -180,5 +184,19 @@ public class ContaBean implements Serializable {
 	public Situacao[] getSituacao() {
 		return Situacao.values();
 	}
+	
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+
+        if (newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Situação Alterada", "Antes: " + oldValue + ", Agora:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
     
+    
+    public void onCellEdit(Conta conta) {
+    	System.out.println(conta.getSituacao());
+    }
 }

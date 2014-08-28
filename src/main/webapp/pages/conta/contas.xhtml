@@ -18,38 +18,47 @@
 		
 		<div align="center">
 		
-			<p:dataTable id="contas" var="conta"
-				emptyMessage="#{msg.conta_nenhum}" 
-				value="#{contaBean.contas}" rowKey="#{conta.conta}"
-				filteredValue="#{contaBean.filteredContas}"
-				paginator="true" rows="14" rendered="#{contaBean != null}">
+			<p:contextMenu for="contas" widgetVar="cMenu">   
+       			<p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('cellContas').showCellEditor();return false;"/>  
+       			<p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
+   			</p:contextMenu> 
+   			
+			<p:dataTable id="contas" var="conta" value="#{contaBean.contas}" 
+				editable="true" editMode="cell" widgetVar="cellContas" 
+				emptyMessage="#{msg.conta_nenhum}" filteredValue="#{contaBean.filteredContas}"
+				paginator="true" rows="20" rendered="#{contaBean != null}">
+				
+				<p:ajax event="cellEdit" listener="#{contaBean.onCellEdit(conta)}" update=":form:growl" />
 				
 				<f:facet name="header">
 					<h:outputText value="#{msg.contas}" />
 				</f:facet>
 				
-				<p:column headerText="#{msg.nome}" style="width:40px"
-					filterBy="#{conta.nome}" filterMatchMode="contains">
+				<p:column headerText="#{msg.nome}" style="width:60px" sortBy="#{conta.nome}" >
 					<h:outputText value="#{conta.nome}" />
 				</p:column>
 
-				<p:column headerText="#{msg.valor}" style="text-align:center;width:20px" 
-					filterBy="#{conta.valor}" filterMatchMode="contains">
+				<p:column headerText="#{msg.valor}" style="text-align:center;width:10px" sortBy="#{conta.valor}" >
 					<h:outputText value="#{conta.valor}" >
 						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>
 					</h:outputText>  
 				</p:column>
 				
-				<p:column headerText="#{msg.vencimento}" style="text-align:center;width:20px" 
-					filterBy="#{conta.vencimento}" filterMatchMode="contains">
+				<p:column headerText="#{msg.vencimento}" style="text-align:center;width:10px" sortBy="#{conta.vencimento}" >
 					<h:outputText value="#{conta.vencimento}" >
 						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
 					</h:outputText>
 				</p:column>
 				
-				<p:column headerText="#{msg.situacao}" style="text-align:center;width:20px" 
-					filterBy="#{conta.situacao}" filterMatchMode="contains">
-					<h:outputText value="#{conta.situacao}" />
+				<p:column headerText="#{msg.situacao}" style="text-align:center;width:15px" sortBy="#{conta.situacao}">
+					<p:cellEditor>
+						<f:facet name="output"><h:outputText value="#{conta.situacao}" /></f:facet>
+						<f:facet name="input">
+						<h:selectOneMenu value="#{conta.situacao}" style="width:100%">
+	                    	<f:selectItems value="#{contaBean.situacao}" var="situacao" itemLabel="#{situacao.nome}" itemValue="#{situacao.nome}" />
+	                    </h:selectOneMenu>
+	                    </f:facet>
+                    </p:cellEditor>
 				</p:column>
 				
 				<p:column style="width:5px;text-align: center">
@@ -68,6 +77,8 @@
 				</p:column>
 		
 			</p:dataTable>
+		
+			
 		</div>
 	</h:form>
 		
