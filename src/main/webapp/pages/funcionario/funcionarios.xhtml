@@ -13,7 +13,7 @@
 		<p:growl id="growl" showDetail="true" />
 		
 		<div align="right">
-			<p:commandButton value="#{msg.novo}" title="#{msg.novo}" actionListener="#{funcionarioBean.preparaNovoFuncionario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{funcionarioBean.preparaNovoFuncionario}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
 		</div>
 		
 		<div align="center">
@@ -72,66 +72,66 @@
 					<p:inputText required="true" label="#{msg.nome}" size="45" 
 						value="#{funcionarioBean.funcionario.nome}" />
 						
-					<h:outputText value="#{msg.cargo}" />
+					<h:outputText value="#{msg.cargo}:" />
 					<p:inputText label="#{msg.cargo}" size="45" 
 						value="#{funcionarioBean.funcionario.cargo}" />
 						
-					<h:outputText value="#{msg.admissao}" />	
+					<h:outputText value="#{msg.admissao}:" />	
 					<p:calendar id="admissao" label="#{msg.admissao}" value="#{funcionarioBean.funcionario.admissao}"
 						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
 						
-					<h:outputText value="#{msg.salario}" />
+					<h:outputText value="#{msg.salario}:" />
 					<p:inputText label="#{msg.salario}" size="10" 
 						value="#{funcionarioBean.funcionario.salario}" >
 						<f:converter converterId="valorConverter" />
 	                </p:inputText>
 	                
-	                <h:outputText value="#{msg.cpf}"/>
+	                <h:outputText value="#{msg.cpf}:"/>
 					<p:inputMask label="#{msg.cpf}" mask="999.999.999-99" size="14"  
 						value="#{funcionarioBean.funcionario.cpf}" />
 						
-					<h:outputText value="#{msg.pis}" />
+					<h:outputText value="#{msg.pis}:" />
 					<p:inputMask label="#{msg.pis}" mask="999.99999.99-9" size="14"  
 						value="#{funcionarioBean.funcionario.pis}" />
 						
-					<h:outputText value="#{msg.endereco}" />
+					<h:outputText value="#{msg.endereco}:" />
 					<p:inputText label="#{msg.endereco}" maxlength="100" size="45" 
 						value="#{funcionarioBean.funcionario.endereco}" />
 						
-	                <h:outputText value="#{msg.fone1}" />
+	                <h:outputText value="#{msg.fone1}:" />
 					<p:inputMask label="#{msg.fone1}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionario.fone1}" />
 						
-					<h:outputText value="#{msg.fone2}" />
+					<h:outputText value="#{msg.fone2}:" />
 					<p:inputMask label="#{msg.fone2}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionario.fone2}" />
 						
-					<h:outputText value="#{msg.email}" />
+					<h:outputText value="#{msg.email}:" />
 					<p:inputText label="#{msg.email}" value="#{funcionarioBean.funcionario.email}" size="45">
 						<f:validator validatorId="emailValidator" />
 		  			</p:inputText>
 						
-					<h:outputText value="#{msg.banco}" />
+					<h:outputText value="#{msg.banco}:" />
 					<p:inputText label="#{msg.banco}" size="45" 
 						value="#{funcionarioBean.funcionario.banco}" >
 						<f:converter converterId="toUpperCaseConverter" />
 	                </p:inputText>
 						
-					<h:outputText value="#{msg.agencia}" />
+					<h:outputText value="#{msg.agencia}:" />
 					<p:inputText label="#{msg.agencia}" size="16" 
 						value="#{funcionarioBean.funcionario.agencia}" />
 						
-					<h:outputText value="#{msg.conta}" />
+					<h:outputText value="#{msg.conta}:" />
 					<p:inputText label="#{msg.conta}" size="16" 
 						value="#{funcionarioBean.funcionario.conta}" />
 						
-					<h:outputText value="#{msg.tipo}" />
+					<h:outputText value="#{msg.tipo}:" />
 					<p:inputText label="#{msg.tipo}" size="45" 
 						value="#{funcionarioBean.funcionario.tipo}" >
 						<f:converter converterId="toUpperCaseConverter" />
 	                </p:inputText>
 	                
-	                <h:outputText value="#{msg.obs}" />
+	                <h:outputText value="#{msg.obs}:" />
 					<p:inputTextarea label="#{msg.obs}" size="500" 
 						value="#{funcionarioBean.funcionario.obs}" />
                 </h:panelGrid>
@@ -167,50 +167,50 @@
 					<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.nome}" />
 						
-					<h:outputText value="#{msg.cargo}" style="font-weight:bold" />
+					<h:outputText value="#{msg.cargo}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.cargo}" />
 						
-					<h:outputText value="#{msg.admissao}" style="font-weight:bold" />	
+					<h:outputText value="#{msg.admissao}:" style="font-weight:bold" />	
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.admissao}" >
 						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
 					</h:outputText>
 						
-					<h:outputText value="#{msg.salario}" style="font-weight:bold" />
+					<h:outputText value="#{msg.salario}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.salario}">
 						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
 					</h:outputText>  
 	                
-	                <h:outputText value="#{msg.cpf}" style="font-weight:bold" />
+	                <h:outputText value="#{msg.cpf}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.cpf}" />
 						
-					<h:outputText value="#{msg.pis}" style="font-weight:bold" />
+					<h:outputText value="#{msg.pis}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.pis}" />
 						
-					<h:outputText value="#{msg.endereco}" style="font-weight:bold" />
+					<h:outputText value="#{msg.endereco}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.endereco}" />
 						
-	                <h:outputText value="#{msg.fone1}" style="font-weight:bold" />
+	                <h:outputText value="#{msg.fone1}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.fone1}" />
 						
-					<h:outputText value="#{msg.fone2}" style="font-weight:bold" />
+					<h:outputText value="#{msg.fone2}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.fone2}" />
 						
-					<h:outputText value="#{msg.email}" style="font-weight:bold" />
+					<h:outputText value="#{msg.email}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.email}" />
 						
-					<h:outputText value="#{msg.banco}" style="font-weight:bold" />
+					<h:outputText value="#{msg.banco}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.banco}" />
 						
-					<h:outputText value="#{msg.agencia}" style="font-weight:bold" />
+					<h:outputText value="#{msg.agencia}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.agencia}" />
 						
-					<h:outputText value="#{msg.conta}" style="font-weight:bold" />
+					<h:outputText value="#{msg.conta}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.conta}" />
 						
-					<h:outputText value="#{msg.tipo}" style="font-weight:bold" />
+					<h:outputText value="#{msg.tipo}:" style="font-weight:bold" />
 					<h:outputText value="#{funcionarioBean.funcionarioSelecionado.tipo}" />
 	                
-	                <h:outputText value="#{msg.obs}" style="font-weight:bold" />
+	                <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
 					<p:inputTextarea size="500" autoResize="false" readonly="true" disabled="true"
 						value="#{funcionarioBean.funcionarioSelecionado.obs}" />
 				</h:panelGrid>
@@ -234,68 +234,68 @@
 					<p:inputText required="true" label="#{msg.nome}" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.nome}" />
 						
-					<h:outputText value="#{msg.cargo}" />
+					<h:outputText value="#{msg.cargo}:" />
 					<p:inputText label="#{msg.cargo}" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.cargo}" />
 						
-					<h:outputText value="#{msg.admissao}" />	
+					<h:outputText value="#{msg.admissao}:" />	
 					<p:calendar id="admissao" label="#{msg.admissao}" 
 						value="#{funcionarioBean.funcionarioSelecionado.admissao}"
 						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
 						
-					<h:outputText value="#{msg.salario}" />
+					<h:outputText value="#{msg.salario}:" />
 					<p:inputText label="#{msg.salario}" size="10" 
 						value="#{funcionarioBean.funcionarioSelecionado.salario}" >
 						<f:converter converterId="valorConverter" />
 	                </p:inputText>
 	                
-	                <h:outputText value="#{msg.cpf}"/>
+	                <h:outputText value="#{msg.cpf}:"/>
 					<p:inputMask label="#{msg.cpf}" mask="999.999.999-99" size="14"  
 						value="#{funcionarioBean.funcionarioSelecionado.cpf}" />
 						
-					<h:outputText value="#{msg.pis}" />
+					<h:outputText value="#{msg.pis}:" />
 						<p:inputMask label="#{msg.pis}" mask="999.99999.99-9" size="14"  
 						value="#{funcionarioBean.funcionarioSelecionado.pis}" />
 						
-					<h:outputText value="#{msg.endereco}" />
+					<h:outputText value="#{msg.endereco}:" />
 					<p:inputText label="#{msg.endereco}" maxlength="100" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.endereco}" />
 						
-	                <h:outputText value="#{msg.fone1}" />
+	                <h:outputText value="#{msg.fone1}:" />
 					<p:inputMask label="#{msg.fone1}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionarioSelecionado.fone1}" />
 						
-					<h:outputText value="#{msg.fone2}" />
+					<h:outputText value="#{msg.fone2}:" />
 					<p:inputMask label="#{msg.fone2}" mask="(99) 9999-9999" size="14" 
 						value="#{funcionarioBean.funcionarioSelecionado.fone2}" />
 						
-					<h:outputText value="#{msg.email}" />
+					<h:outputText value="#{msg.email}:" />
 					<p:inputText label="#{msg.email}" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.email}" >
 						<f:validator validatorId="emailValidator" />
 		  			</p:inputText>
 						
-					<h:outputText value="#{msg.banco}" />
+					<h:outputText value="#{msg.banco}:" />
 					<p:inputText label="#{msg.banco}" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.banco}" >
 						<f:converter converterId="toUpperCaseConverter" />
 	                </p:inputText>
 						
-					<h:outputText value="#{msg.agencia}" />
+					<h:outputText value="#{msg.agencia}:" />
 					<p:inputText label="#{msg.agencia}" size="16" 
 						value="#{funcionarioBean.funcionarioSelecionado.agencia}" />
 						
-					<h:outputText value="#{msg.conta}" />
+					<h:outputText value="#{msg.conta}:" />
 					<p:inputText label="#{msg.conta}" size="16" 
 						value="#{funcionarioBean.funcionarioSelecionado.conta}" />
 						
-					<h:outputText value="#{msg.tipo}" />
+					<h:outputText value="#{msg.tipo}:" />
 					<p:inputText label="#{msg.tipo}" size="45" 
 						value="#{funcionarioBean.funcionarioSelecionado.tipo}" >
 						<f:converter converterId="toUpperCaseConverter" />
 	                </p:inputText>
 	                
-	                <h:outputText value="#{msg.obs}" />
+	                <h:outputText value="#{msg.obs}:" />
 					<p:inputTextarea label="#{msg.obs}" size="500" 
 						value="#{funcionarioBean.funcionarioSelecionado.obs}" />
                 </h:panelGrid>
