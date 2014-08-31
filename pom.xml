@@ -34,9 +34,9 @@
 
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>dark-hive</artifactId>
-			<version>1.0.10</version>
+			<artifactId>afterwork</artifactId>
 			<scope>provided</scope>
+			<version>1.0.10</version>
 		</dependency>
 
 		<dependency>
@@ -71,6 +71,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>3.6.10.Final</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- <dependency> <groupId>.org.slf4j</groupId> <artifactId>slf4j-api</artifactId> 
 			<version>1.7.5</version> </dependency> -->

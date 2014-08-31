@@ -13,7 +13,10 @@
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>dark-hive</param-value>
+		<!-- <param-value>dark-hive</param-value>  -->
+		<!-- <param-value>sam</param-value>  -->
+		<!-- <param-value>sunny</param-value>  -->
+		<param-value>afterwork</param-value>
 	</context-param>
 
 	<welcome-file-list>
