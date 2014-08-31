@@ -64,20 +64,19 @@
 				<p:column style="width:5px;text-align: center">
 		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
 		             title="#{msg.visualizar}" icon="ui-icon-search">
-		                <f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+		                <f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionada}" />
 		            </p:commandButton>
 	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
 	                title="#{msg.editar}" icon="ui-icon-document">
-						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionada}" />
 		            </p:commandButton>
                     <p:commandButton id="deleteButton"
 						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
-						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+						<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionada}" />
 		            </p:commandButton>
 				</p:column>
 		
 			</p:dataTable>
-		
 			
 		</div>
 	</h:form>
@@ -90,22 +89,22 @@
 				<h:outputText value="#{msg.nome}: *" />
 				<p:inputText id="nome" label="#{msg.nome}" value="#{contaBean.conta.nome}" required="true" size="45" />
 				
-				<h:outputText value="#{msg.valor}" />
+				<h:outputText value="#{msg.valor}:" />
 				<p:inputText label="#{msg.valor}" size="10" 
 					value="#{contaBean.conta.valor}" >
 					<f:converter converterId="valorConverter" />
                 </p:inputText>
 				
-				<h:outputText value="#{msg.vencimento}" />	
+				<h:outputText value="#{msg.vencimento}:" />	
 					<p:calendar id="vencimento" label="#{msg.vencimento}" value="#{contaBean.conta.vencimento}"
 						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
 						
-				<h:outputLabel value="Situação:" />
+				<h:outputLabel value="#{msg.situacao}:" />
 				<p:selectOneMenu value="#{contaBean.conta.situacao}">
 					<f:selectItems value="#{contaBean.situacao}" var="situacao" itemLabel="#{situacao.nome}" itemValue="#{situacao.nome}" />
 				</p:selectOneMenu>
 						
-                <h:outputText value="#{msg.obs}" />
+                <h:outputText value="#{msg.obs}:" />
 				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{contaBean.conta.obs}" />
             </h:panelGrid>
                 
@@ -126,11 +125,23 @@
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				<h:outputText value="#{msg.nome}:" style="font-weight:bold" />
-				<h:outputText value="#{contaBean.contaSelecionado.nome}" />
+				<h:outputText value="#{contaBean.contaSelecionada.nome}" />
+				
+				<h:outputText value="#{msg.valor}" />
+				<h:outputText value="#{contaBean.contaSelecionada.valor}" >
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>  
+				
+				<h:outputText value="#{msg.vencimento}:" />	
+				<h:outputText value="#{contaBean.contaSelecionada.vencimento}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+				</h:outputText>
 						
-                
-                <h:outputText value="#{msg.obs}" style="font-weight:bold" />
-				<p:inputTextarea size="500" value="#{contaBean.contaSelecionado.obs}" readonly="true" disabled="true" />
+				<h:outputLabel value="#{msg.situacao}:" />
+				<h:outputText value="#{contaBean.contaSelecionada.situacao}"/>
+						
+                <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
+				<p:inputTextarea size="500" value="#{contaBean.contaSelecionada.obs}" readonly="true" disabled="true" />
             </h:panelGrid>
 			
 		</p:dialog>
@@ -142,6 +153,27 @@
 			id="editDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+				<h:outputText value="#{msg.nome}: *" />
+				<p:inputText id="nome" label="#{msg.nome}" value="#{contaBean.contaSelecionada.nome}" required="true" size="45" />
+				
+				<h:outputText value="#{msg.valor}:" />
+				<p:inputText label="#{msg.valor}" size="10" 
+					value="#{contaBean.contaSelecionada.valor}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+				
+				<h:outputText value="#{msg.vencimento}:" />	
+					<p:calendar id="vencimento" label="#{msg.vencimento}" value="#{contaBean.contaSelecionada.vencimento}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputLabel value="#{msg.situacao}:" />
+				<p:selectOneMenu value="#{contaBean.contaSelecionada.situacao}">
+					<f:selectItems value="#{contaBean.situacao}" var="situacao" itemLabel="#{situacao.nome}" itemValue="#{situacao.nome}" />
+				</p:selectOneMenu>
+						
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{contaBean.contaSelecionada.obs}" />
 			
             </h:panelGrid>
 			
@@ -164,7 +196,7 @@
 
 			<p:commandButton id="confirm" immediate="true" value="#{msg.sim}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:contas :form:growl" ajax="false"
 				oncomplete="PF('confirmation').hide()" actionListener="#{contaBean.excluir}" >
-				<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionado}" />
+				<f:setPropertyActionListener value="#{conta}" target="#{contaBean.contaSelecionada}" />
 			</p:commandButton>
 			<p:commandButton id="decline" value="#{msg.nao}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
 		</p:confirmDialog>

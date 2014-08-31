@@ -33,7 +33,7 @@ public class ContaBean implements Serializable {
 
 	private ContaDao contaDao;
 	private Conta conta;
-	private Conta contaSelecionado;
+	private Conta contaSelecionada;
 	private List<Conta> contas;
 	private List<Conta> filteredContas;
 	
@@ -41,7 +41,7 @@ public class ContaBean implements Serializable {
 	public void init() {
 		contaDao = new ContaDaoImp();
 		preparaNovaConta();
-		contaSelecionado = new Conta();
+		contaSelecionada = new Conta();
 		carregaContas();
 	}
 	
@@ -74,8 +74,8 @@ public class ContaBean implements Serializable {
 		boolean erro = false;
 		String erroMsg = null;
 		try {
-			preparaConta(contaSelecionado);
-			contaDao.editar(contaSelecionado);
+			preparaConta(contaSelecionada);
+			contaDao.editar(contaSelecionada);
 		} catch (Exception e) {
 			erro = true;
 			erroMsg = e.getMessage();
@@ -118,7 +118,7 @@ public class ContaBean implements Serializable {
 		boolean erro = false;
 		String erroMsg = null;
 		try {
-			contaDao.excluir(contaSelecionado);
+			contaDao.excluir(contaSelecionada);
 		} catch (Exception e) {
 			erro = true;
 			erroMsg = e.getMessage();
@@ -157,12 +157,12 @@ public class ContaBean implements Serializable {
 		this.conta = conta;
 	}
 	
-	public Conta getContaSelecionado() {
-		return contaSelecionado;
+	public Conta getContaSelecionada() {
+		return contaSelecionada;
 	}
 
-	public void setContaSelecionado(Conta contaSelecionado) {
-		this.contaSelecionado = contaSelecionado;
+	public void setContaSelecionada(Conta contaSelecionada) {
+		this.contaSelecionada = contaSelecionada;
 	}
 	
 	public List<Conta> getContas() {
@@ -197,6 +197,11 @@ public class ContaBean implements Serializable {
     
     
     public void onCellEdit(Conta conta) {
+    	try {
+			contaDao.editar(conta);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	System.out.println(conta.getSituacao());
     }
 }
