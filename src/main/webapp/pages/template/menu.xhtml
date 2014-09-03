@@ -10,23 +10,23 @@
 	<h:form id="formMenu">
 
 		<p:menubar>
-			<p:menuitem value="Home" url="/pages/home.jsf" icon="ui-icon-contact" />
+			<p:menuitem value="#{msg.home}" url="/pages/home.jsf" icon="ui-icon-contact" />
 			<p:menuitem id="funcionarios" value="#{msg.funcionarios}" action="funcionarios" ajax="false" immediate="true" icon="ui-icon-person" />
 			<p:menuitem id="pontos" value="#{msg.pontos}" action="pontos" ajax="false" immediate="true" icon="ui-icon-check" rendered="#{usuarioBean.usuario.auth.isEncrr}" />
-			<p:menuitem id="cc" value="Pagamentos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
-			<p:menuitem id="clientes" value="Clientes" action="clientes" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
-			<p:menuitem id="fornecedores" value="Fornecedores" action="fornecedores"  ajax="false" immediate="true" icon="ui-icon-wrench" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
-			<p:menuitem id="contas" value="Contas" action="contas" ajax="false" immediate="true" icon="ui-icon-document" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
-			<p:menuitem id="gg" value="Veículos" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="cc" value="#{msg.pagamentos}" action="home" ajax="false" immediate="true" icon="ui-icon-help" disabled="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="clientes" value="#{msg.clientes}" action="clientes" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="fornecedores" value="#{msg.fornecedores}" action="fornecedores"  ajax="false" immediate="true" icon="ui-icon-wrench" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="contas" value="#{msg.contas}" action="contas" ajax="false" immediate="true" icon="ui-icon-document" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:menuitem id="veiculos" value="#{msg.veiculos}" action="veiculos" ajax="false" immediate="true" icon="ui-icon-key" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
 			
-			<p:menuitem id="miusuarios" value="Usuários" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isAdmin}" />
+			<p:menuitem id="miusuarios" value="#{msg.usuarios}" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isAdmin}" />
 			
-			<p:submenu id="smajuda" label="Ajuda" icon="ui-icon-help">
-				<p:menuitem id="misuporte" value="Suporte" onclick="PF('suporteDialog').show()" immediate="true" />
-				<p:menuitem id="misobre" value="Sobre" onclick="PF('sobreDialog').show()" immediate="true" />
+			<p:submenu id="smajuda" label="#{msg.ajuda}" icon="ui-icon-help">
+				<p:menuitem id="misuporte" value="#{msg.suporte}" onclick="PF('suporteDialog').show()" immediate="true" />
+				<p:menuitem id="misobre" value="#{msg.sobre}" onclick="PF('sobreDialog').show()" immediate="true" />
 			</p:submenu>
 			
-			<p:menuitem id="misair" value="Sair" onclick="PF('confirmExit').show()" icon="ui-icon-power" immediate="true" />
+			<p:menuitem id="misair" value="#{msg.sair}" onclick="PF('confirmExit').show()" icon="ui-icon-power" immediate="true" />
 			
 		</p:menubar>
 		

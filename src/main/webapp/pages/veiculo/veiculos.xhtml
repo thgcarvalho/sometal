@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="right">
+			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{veiculoBean.preparaNovoVeiculo}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
+		
+		<div align="center">
+		
+			<p:dataTable id="veiculos" var="veiculo"
+				emptyMessage="#{msg.veiculo_nenhum}" 
+				value="#{veiculoBean.veiculos}" rowKey="#{veiculo.veiculo}"
+				filteredValue="#{veiculoBean.filteredVeiculos}"
+				paginator="true" rows="14" rendered="#{veiculoBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.veiculos}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.marca}" style="width:25px"
+					filterBy="#{veiculo.marca}" filterMatchMode="contains">
+					<h:outputText value="#{veiculo.marca}" />
+				</p:column>
+
+				<p:column headerText="#{msg.modelo}" style="width:25px"
+					filterBy="#{veiculo.modelo}" filterMatchMode="contains">
+					<h:outputText value="#{veiculo.modelo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.placa}" style="width:25px"
+					filterBy="#{veiculo.placa}" filterMatchMode="contains">
+					<h:outputText value="#{veiculo.placa}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.cor}" style="width:25px"
+					filterBy="#{veiculo.cor}" filterMatchMode="contains">
+					<h:outputText value="#{veiculo.cor}" />
+				</p:column>
+				
+				<p:column style="width:5px;text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{veiculo}" target="#{veiculoBean.veiculoSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{veiculo}" target="#{veiculoBean.veiculoSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{veiculo}" target="#{veiculoBean.veiculoSelecionado}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- ADD Dialog -->
+	<h:form id="formAdd" enctype="multipart/form-data">
+		<p:dialog header="#{msg.veiculo_novo}" widgetVar="addDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.placa}: *" />
+				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="999-9999"  />
+                
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{veiculoBean.veiculo.obs}" />
+            </h:panelGrid>
+                
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{veiculoBean.criar}" 
+					update=":form:veiculos :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+	</h:form>
+	
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="#{msg.veiculo_detalhes}" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false" >
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.placa}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.placa}" />
+						
+                <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
+				<p:inputTextarea size="500" value="#{veiculoBean.veiculoSelecionado.obs}" readonly="true" disabled="true" />
+            </h:panelGrid>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="#{msg.veiculo_editar}" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.placa}: *" />
+				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculoSelecionado.placa}" required="true" mask="999-9999"  />
+						
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{veiculoBean.veiculoSelecionado.obs}" />
+            </h:panelGrid>
+			
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{veiculoBean.editar}" 
+					update=":form:veiculos :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+		
+	</h:form>
+		
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
+		<p:confirmDialog id="confirmDialog"
+			message="#{msg.veiculo_confirma_excluir}" header="#{msg.veiculo_excluir}" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
+
+			<p:commandButton id="confirm" immediate="true" value="#{msg.sim}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:veiculos :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{veiculoBean.excluir}" >
+				<f:setPropertyActionListener value="#{veiculo}" target="#{veiculoBean.veiculoSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="#{msg.nao}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
+		</p:confirmDialog>
+	</h:form>
+	
+	</ui:define>
+</ui:composition>

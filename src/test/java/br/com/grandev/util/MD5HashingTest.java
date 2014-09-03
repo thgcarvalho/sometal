@@ -1,4 +1,4 @@
-package br.com.grandev;
+package br.com.grandev.util;
 
 import static org.junit.Assert.*;
 

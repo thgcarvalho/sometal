@@ -1,4 +1,4 @@
-package br.com.grandev;
+package br.com.grandev.model;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +35,7 @@ public class FolhaDePontoTest {
 		horasPorPeriodo = FolhaDePonto.horasTrabalhadas(cEntrada, cSaida);
         assertEquals(new BigDecimal("2"), horasPorPeriodo);
         horasPorDia = horasPorDia.add(horasPorPeriodo);
-        System.out.println("P1 = " + horasPorPeriodo + " \t\t Acumudado(" + horasPorDia + ")");
+        //System.out.println("P1 = " + horasPorPeriodo + " \t\t Acumudado(" + horasPorDia + ")");
         
     	// p2
 		cEntrada.setTimeInMillis(sdf.parse("9:15").getTime());
@@ -43,7 +43,7 @@ public class FolhaDePontoTest {
 		horasPorPeriodo = FolhaDePonto.horasTrabalhadas(cEntrada, cSaida);
         assertEquals(new BigDecimal("2.75"), horasPorPeriodo);
         horasPorDia = horasPorDia.add(horasPorPeriodo);
-        System.out.println("P2 = " + horasPorPeriodo + " \t Acumudado(" + horasPorDia + ")");
+        //System.out.println("P2 = " + horasPorPeriodo + " \t Acumudado(" + horasPorDia + ")");
         
     	// p3
 		cEntrada.setTimeInMillis(sdf.parse("1:00").getTime());
@@ -51,7 +51,7 @@ public class FolhaDePontoTest {
 		horasPorPeriodo = FolhaDePonto.horasTrabalhadas(cEntrada, cSaida);
         assertEquals(new BigDecimal("2"), horasPorPeriodo);
         horasPorDia = horasPorDia.add(horasPorPeriodo);
-        System.out.println("P3 = " + horasPorPeriodo + " \t\t Acumudado(" + horasPorDia + ")");
+        //System.out.println("P3 = " + horasPorPeriodo + " \t\t Acumudado(" + horasPorDia + ")");
         
     	// p4
 		cEntrada.setTimeInMillis(sdf.parse("3:15").getTime());
@@ -59,9 +59,9 @@ public class FolhaDePontoTest {
 		horasPorPeriodo = FolhaDePonto.horasTrabalhadas(cEntrada, cSaida);
         assertEquals(new BigDecimal("1.75"), horasPorPeriodo);
         horasPorDia = horasPorDia.add(horasPorPeriodo);
-        System.out.println("P4 = " + horasPorPeriodo + " \t Acumudado(" + horasPorDia + ")");
+        //System.out.println("P4 = " + horasPorPeriodo + " \t Acumudado(" + horasPorDia + ")");
         
-        System.out.println("TOTAL=" + horasPorDia);
+        //System.out.println("TOTAL=" + horasPorDia);
 	}
 
 }

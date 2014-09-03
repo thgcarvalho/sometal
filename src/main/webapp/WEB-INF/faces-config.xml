@@ -85,6 +85,17 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<!-- CLIENTES -->
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>veiculos</from-outcome>
+			<to-view-id>/pages/veiculo/veiculos.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
 	<!-- USUARIOS -->
 
 	<navigation-rule>
