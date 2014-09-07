@@ -28,8 +28,8 @@ public class Veiculo implements Serializable {
 	private String modelo;
 	private String cor;
 	private String combustivel;
-	private String anoFab;
-	private String anoMod;
+	private int anoFab;
+	private int anoMod;
 	private String obs;
 	
 	public Long getId() {
@@ -80,16 +80,16 @@ public class Veiculo implements Serializable {
 	public void setCombustivel(String combustivel) {
 		this.combustivel = combustivel;
 	}
-	public String getAnoFab() {
+	public int getAnoFab() {
 		return anoFab;
 	}
-	public void setAnoFab(String anoFab) {
+	public void setAnoFab(int anoFab) {
 		this.anoFab = anoFab;
 	}
-	public String getAnoMod() {
+	public int getAnoMod() {
 		return anoMod;
 	}
-	public void setAnoMod(String anoMod) {
+	public void setAnoMod(int anoMod) {
 		this.anoMod = anoMod;
 	}
 	public String getObs() {

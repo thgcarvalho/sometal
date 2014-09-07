@@ -7,6 +7,7 @@ import static br.com.grandev.util.FacesUtils.addInfoMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +16,8 @@ import javax.faces.bean.ViewScoped;
 
 import br.com.grandev.dao.VeiculoDao;
 import br.com.grandev.daoImp.VeiculoDaoImp;
+import br.com.grandev.model.Data;
+import br.com.grandev.model.DataAtual;
 import br.com.grandev.model.Veiculo;
 
 /**
@@ -32,13 +35,80 @@ public class VeiculoBean implements Serializable {
 	private Veiculo veiculoSelecionado;
 	private List<Veiculo> veiculos;
 	private List<Veiculo> filteredVeiculos;
+	private List<Integer> anos;
+	private final Data data;
+	
+	public VeiculoBean() {
+		this(new DataAtual());
+	}
+	
+	public VeiculoBean(Data data) {
+		this.data = data;
+	}
+	
+	public enum Cor {
+		AMARELO("Amarelo"), 
+		AZUL("Azul"), 
+		BEGE("Bege"), 
+		BRANCO("Branco"),
+		CINZA("Cinza"),
+		DOURADO("Dourado"),
+		GRAFITE("Grafite"),
+		LARANJA("Laranja"),
+		MARROM("Marrom"),
+		PINK("Pink"),
+		PRATA("Prata"),
+		PRETO("Preto"),
+		ROXO("Roxo"),
+		VERDE("Verde"),
+		VERMELHO("Vermelho"),
+		TURQUESA("Turquesa"),
+		OUTRA("Outra");
+		
+		private Cor(String nome) {
+			this.nome = nome;
+		}
+		String nome;
+		public String getNome() {
+			return nome;
+		}
+	}
+	
+	public enum Combustivel {
+		ALCOOL("Álcool"),
+		GAS("Gás"),
+		GASOLINA("Gasolina"), 
+		FLEX("Flex");
+		
+		private Combustivel(String nome) {
+			this.nome = nome;
+		}
+		String nome;
+		public String getNome() {
+			return nome;
+		}
+	}
+	
+	public void carregaDatas() {
+		Calendar calendar = this.data.hoje();
+		this.anos = new ArrayList<Integer>();
+		// next year
+		calendar.add(Calendar.YEAR, 1);
+		this.anos.add(calendar.get(Calendar.YEAR));
+		
+		for (int i = 0; i < 20; i++) {
+			calendar.add(Calendar.YEAR, -1);
+			this.anos.add(calendar.get(Calendar.YEAR));
+		}
+	}
 	
 	@PostConstruct
 	public void init() {
 		veiculoDao = new VeiculoDaoImp();
-		preparaNovoVeiculo();
 		veiculoSelecionado = new Veiculo();
+		preparaNovoVeiculo();
 		carregaVeiculos();
+		carregaDatas();
 	}
 	
 	public void preparaNovoVeiculo() {
@@ -159,5 +229,17 @@ public class VeiculoBean implements Serializable {
     public void setFilteredVeiculos(List<Veiculo> filteredVeiculos) {  
         this.filteredVeiculos = filteredVeiculos;  
     }
+    
+	public Cor[] getCores() {
+		return Cor.values();
+	}
+	
+	public Combustivel[] getCombustiveis() {
+		return Combustivel.values();
+	}
+	
+	public List<Integer> getAnos() {
+        return anos;
+    } 
     
 }

@@ -12,8 +12,8 @@ CREATE TABLE veiculos
   modelo character varying(45),
   cor character varying(45),
   combustivel character varying(45),
-  anoFab date,
-  anoMod date,
+  anofab integer,
+  anomod integer,
   obs character varying(250),
   CONSTRAINT veiculos_pkey PRIMARY KEY (id)
 )

@@ -73,8 +73,41 @@
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				<h:outputText value="#{msg.placa}: *" />
-				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="999-9999"  />
-                
+				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.chassi}:" />
+				<p:inputText label="#{msg.chassi}" size="17" maxlength="17" value="#{veiculoBean.veiculo.chassi}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.renavam}:" />
+				<p:inputMask label="#{msg.renavam}" value="#{veiculoBean.veiculo.renavam}" mask="99999999999" />
+				
+				<h:outputText value="#{msg.marca}:" />
+				<p:inputText label="#{msg.marca}" size="45" maxlength="45" value="#{veiculoBean.veiculo.marca}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.modelo}:" />
+				<p:inputText label="#{msg.modelo}" size="45" maxlength="45" value="#{veiculoBean.veiculo.modelo}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputLabel value="#{msg.cor}:" />
+				<p:selectOneMenu value="#{veiculoBean.veiculo.cor}">
+					<f:selectItems value="#{veiculoBean.cores}" var="cor" itemLabel="#{cor.nome}" itemValue="#{cor.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.combustivel}:" />
+				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{veiculoBean.veiculo.combustivel}">
+					<f:selectItems value="#{veiculoBean.combustiveis}" var="combustivel" itemLabel="#{combustivel.nome}" itemValue="#{combustivel.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.ano_fab}:" />	
+				<p:selectOneMenu value="#{veiculoBean.veiculo.anoFab}">
+					<f:selectItems value="#{veiculoBean.anos}" var="ano" itemLabel="#{ano}" itemValue="#{ano}" />
+					<p:spacer width="100" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.ano_mod}:" />	
+				<p:selectOneMenu value="#{veiculoBean.veiculo.anoMod}" >
+					<f:selectItems value="#{veiculoBean.anos}" var="ano" itemLabel="#{ano}" itemValue="#{ano}" />
+				</p:selectOneMenu>
+				
                 <h:outputText value="#{msg.obs}:" />
 				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{veiculoBean.veiculo.obs}" />
             </h:panelGrid>

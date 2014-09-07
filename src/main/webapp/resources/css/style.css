@@ -3,11 +3,15 @@ td {
 }
 
 .header {
-	font-family: Arial; 
-	font-size : 12pt; 
-	font-weight : bold;
+	font-family: Arial;
+	font-size: 12pt;
+	font-weight: bold;
 	text-align: right;
 	color: silver;
 	font-size: 12pt;
 	font-weight: bold;
+}
+
+input.upper {
+	text-transform: uppercase;
 }
