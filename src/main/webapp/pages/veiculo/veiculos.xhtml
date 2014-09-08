@@ -73,7 +73,7 @@
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				<h:outputText value="#{msg.placa}: *" />
-				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
+				<p:inputMask label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
 				
 				<h:outputText value="#{msg.chassi}:" />
 				<p:inputText label="#{msg.chassi}" size="17" maxlength="17" value="#{veiculoBean.veiculo.chassi}" converter="toUpperCaseConverter" styleClass="upper" />
@@ -109,7 +109,7 @@
 				</p:selectOneMenu>
 				
                 <h:outputText value="#{msg.obs}:" />
-				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{veiculoBean.veiculo.obs}" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{veiculoBean.veiculo.obs}" />
             </h:panelGrid>
                 
 			<div align="center">
@@ -130,6 +130,30 @@
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				<h:outputText value="#{msg.placa}:" style="font-weight:bold" />
 				<h:outputText value="#{veiculoBean.veiculoSelecionado.placa}" />
+				
+				<h:outputText value="#{msg.chassi}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.chassi}" />
+				
+				<h:outputText value="#{msg.renavam}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.renavam}" />
+				
+				<h:outputText value="#{msg.marca}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.marca}" />
+				
+				<h:outputText value="#{msg.modelo}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.modelo}" />
+				
+				<h:outputText value="#{msg.cor}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.cor}" />
+				
+				<h:outputText value="#{msg.combustivel}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.combustivel}" />
+				
+				<h:outputText value="#{msg.ano_fab}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.anoFab}" />
+				
+				<h:outputText value="#{msg.ano_mod}:" style="font-weight:bold" />
+				<h:outputText value="#{veiculoBean.veiculoSelecionado.anoMod}" />
 						
                 <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
 				<p:inputTextarea size="500" value="#{veiculoBean.veiculoSelecionado.obs}" readonly="true" disabled="true" />
@@ -145,10 +169,43 @@
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 				<h:outputText value="#{msg.placa}: *" />
-				<p:inputMask id="placa" label="#{msg.placa}" value="#{veiculoBean.veiculoSelecionado.placa}" required="true" mask="999-9999"  />
-						
+				<p:inputMask label="#{msg.placa}" value="#{veiculoBean.veiculoSelecionado.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.chassi}:" />
+				<p:inputText label="#{msg.chassi}" size="17" maxlength="17" value="#{veiculoBean.veiculoSelecionado.chassi}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.renavam}:" />
+				<p:inputMask label="#{msg.renavam}" value="#{veiculoBean.veiculoSelecionado.renavam}" mask="99999999999" />
+				
+				<h:outputText value="#{msg.marca}:" />
+				<p:inputText label="#{msg.marca}" size="45" maxlength="45" value="#{veiculoBean.veiculoSelecionado.marca}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.modelo}:" />
+				<p:inputText label="#{msg.modelo}" size="45" maxlength="45" value="#{veiculoBean.veiculoSelecionado.modelo}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputLabel value="#{msg.cor}:" />
+				<p:selectOneMenu value="#{veiculoBean.veiculoSelecionado.cor}">
+					<f:selectItems value="#{veiculoBean.cores}" var="cor" itemLabel="#{cor.nome}" itemValue="#{cor.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.combustivel}:" />
+				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{veiculoBean.veiculoSelecionado.combustivel}">
+					<f:selectItems value="#{veiculoBean.combustiveis}" var="combustivel" itemLabel="#{combustivel.nome}" itemValue="#{combustivel.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.ano_fab}:" />	
+				<p:selectOneMenu value="#{veiculoBean.veiculoSelecionado.anoFab}">
+					<f:selectItems value="#{veiculoBean.anos}" var="ano" itemLabel="#{ano}" itemValue="#{ano}" />
+					<p:spacer width="100" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.ano_mod}:" />	
+				<p:selectOneMenu value="#{veiculoBean.veiculoSelecionado.anoMod}" >
+					<f:selectItems value="#{veiculoBean.anos}" var="ano" itemLabel="#{ano}" itemValue="#{ano}" />
+				</p:selectOneMenu>
+				
                 <h:outputText value="#{msg.obs}:" />
-				<p:inputTextarea id="obs" label="#{msg.obs}" size="500" value="#{veiculoBean.veiculoSelecionado.obs}" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{veiculoBean.veiculoSelecionado.obs}" />
             </h:panelGrid>
 			
 			<div align="center">
