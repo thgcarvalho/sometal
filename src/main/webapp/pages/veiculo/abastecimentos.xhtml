@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	<p:growl id="growl" showDetail="true" />  
+		<center>
+		
+		<p:panel header="Filtro" style="margin-bottom:10px;">  
+	        <h:panelGrid columns="8" cellpadding="5">  
+	        	<h:outputText value="#{msg.veiculo}:" />
+	            <p:selectOneMenu label="#{msg.veiculo}" value="#{abastecimentoBean.condominioSel}" converter="VeiculoConverter" >
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="#{msg.data_de}:" />
+				<p:calendar label="#{msg.data_de}" value="#{abastecimentoBean.dataDeSel}" showButtonPanel="true" 
+					maxlength="8" size="10" locale="pt" />
+
+				<h:outputText value="#{msg.data_ate}:" />
+				<p:calendar label="#{msg.data_ate}" value="#{abastecimentoBean.dataAteSel}" showButtonPanel="true" 
+					maxlength="8" size="10" locale="pt" />
+
+	        </h:panelGrid>  
+	  
+	        <p:separator />  
+	          
+	        <p:commandButton value="#{msg.filtrar}:" update="contas" actionListener="#{abastecimentoBean.carregaAbastecimentos}" id="btnFilter" />  
+   	 	</p:panel>
+		
+		
+		<p:dataTable var="abastecimento" value="#{abastecimentoBean.abastecimentos}" scrollable="true" scrollHeight="200" id="contas"
+			emptyMessage="#{msg.abastecimento_nenhum}:" rendered="#{abastecimentoBean != null}" >
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.abastecimentos}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.data}">
+				<h:outputText value="#{abastecimento.data}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{msg.valor}">
+					<h:outputText value="#{conta.valor}">
+						<f:convertNumber locale="pt_BR"/>  
+					</h:outputText>  
+				</p:column>
+				
+			</p:dataTable>
+		</center>
+
+	</ui:define>
+</ui:composition>
