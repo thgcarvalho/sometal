@@ -9,4 +9,5 @@ import br.com.grandev.model.Veiculo;
  */
 public interface VeiculoDao extends DaoGenerico<Veiculo, Long> {
 
+	public Veiculo findByPlaca(String submittedValue);
 }

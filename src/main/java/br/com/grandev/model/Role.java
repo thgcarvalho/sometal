@@ -75,6 +75,6 @@ public class Role implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.userName + " " + this.roleName;
+		return this.roleName;
 	}
 }

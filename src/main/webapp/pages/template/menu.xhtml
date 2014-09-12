@@ -17,7 +17,11 @@
 			<p:menuitem id="clientes" value="#{msg.clientes}" action="clientes" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
 			<p:menuitem id="fornecedores" value="#{msg.fornecedores}" action="fornecedores"  ajax="false" immediate="true" icon="ui-icon-wrench" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
 			<p:menuitem id="contas" value="#{msg.contas}" action="contas" ajax="false" immediate="true" icon="ui-icon-document" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
-			<p:menuitem id="veiculos" value="#{msg.veiculos}" action="veiculos" ajax="false" immediate="true" icon="ui-icon-key" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+			<p:submenu id="veiculos" label="#{msg.veiculos}" icon="ui-icon-key">
+				<p:menuitem id="miveiculos" value="#{msg.veiculos}" action="veiculos" ajax="false" immediate="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
+				<p:menuitem id="miabastecimento" value="#{msg.abastecimentos}" action="abastecimentos" ajax="false" immediate="true" rendered="#{usuarioBean.usuario.auth.isEscrt}"  />
+			</p:submenu>
+			
 			
 			<p:menuitem id="miusuarios" value="#{msg.usuarios}" action="usuarios" actionListener="#{usuarioBean.carregaUsuarios}" ajax="false" immediate="true" icon="ui-icon-person" rendered="#{usuarioBean.usuario.auth.isAdmin}" />
 			

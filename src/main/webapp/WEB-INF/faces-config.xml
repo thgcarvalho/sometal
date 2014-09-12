@@ -85,13 +85,18 @@
 		</navigation-case>
 	</navigation-rule>
 	
-	<!-- CLIENTES -->
+	<!-- VEICULOS -->
 
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>veiculos</from-outcome>
 			<to-view-id>/pages/veiculo/veiculos.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>abastecimentos</from-outcome>
+			<to-view-id>/pages/veiculo/abastecimentos.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 	</navigation-rule>
@@ -128,10 +133,13 @@
 		<converter-id>valorConverter</converter-id>
 		<converter-class>br.com.grandev.converter.ValorConverter</converter-class>
 	</converter>
-	
 	<converter>
 		<converter-id>toUpperCaseConverter</converter-id>
 		<converter-class>br.com.grandev.converter.ToUpperCaseConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>VeiculoConverter</converter-id>
+		<converter-class>br.com.grandev.converter.VeiculoConverter</converter-class>
 	</converter>
 	
 	 <validator>

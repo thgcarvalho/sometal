@@ -6,36 +6,45 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	template="/pages/template/template.xhtml">
-
+	
 	<ui:define name="corpo">
-	<p:growl id="growl" showDetail="true" />  
-		<center>
+
+	<h:form id="form">
+		<div align="center">
 		
 		<p:panel header="Filtro" style="margin-bottom:10px;">  
 	        <h:panelGrid columns="8" cellpadding="5">  
-	        	<h:outputText value="#{msg.veiculo}:" />
-	            <p:selectOneMenu label="#{msg.veiculo}" value="#{abastecimentoBean.condominioSel}" converter="VeiculoConverter" >
+	        	<h:outputText value="#{msg.abastecimento}:" />
+	            <p:selectOneMenu label="#{msg.abastecimento}" value="#{abastecimentoBean.veiculoSel}" converter="VeiculoConverter" >
 					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
 				</p:selectOneMenu>
 
-				<h:outputText value="#{msg.data_de}:" />
-				<p:calendar label="#{msg.data_de}" value="#{abastecimentoBean.dataDeSel}" showButtonPanel="true" 
+				<h:outputText value="#{msg.de}:" />
+				<p:calendar label="#{msg.de}" value="#{abastecimentoBean.dataDeSel}" showButtonPanel="true" 
 					maxlength="8" size="10" locale="pt" />
 
-				<h:outputText value="#{msg.data_ate}:" />
-				<p:calendar label="#{msg.data_ate}" value="#{abastecimentoBean.dataAteSel}" showButtonPanel="true" 
+				<h:outputText value="#{msg.ate}:" />
+				<p:calendar label="#{msg.ate}" value="#{abastecimentoBean.dataAteSel}" showButtonPanel="true" 
 					maxlength="8" size="10" locale="pt" />
 
 	        </h:panelGrid>  
 	  
 	        <p:separator />  
 	          
-	        <p:commandButton value="#{msg.filtrar}:" update="contas" actionListener="#{abastecimentoBean.carregaAbastecimentos}" id="btnFilter" />  
+	        <p:commandButton value="#{msg.filtrar}:" update="abastecimentos" actionListener="#{abastecimentoBean.carregaAbastecimentos}" id="btnFilter" />  
    	 	</p:panel>
+   	 	</div>
+   	 	
+		<p:growl id="growl" showDetail="true" />
 		
+		<div align="right">
+			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{abastecimentoBean.preparaNovoVeiculo}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
 		
-		<p:dataTable var="abastecimento" value="#{abastecimentoBean.abastecimentos}" scrollable="true" scrollHeight="200" id="contas"
-			emptyMessage="#{msg.abastecimento_nenhum}:" rendered="#{abastecimentoBean != null}" >
+		<div align="center">
+		
+			<p:dataTable var="abastecimento" value="#{abastecimentoBean.abastecimentos}" scrollable="true" scrollHeight="200" id="abastecimentos"
+				emptyMessage="#{msg.abastecimento_nenhum}:" rendered="#{abastecimentoBean != null}" >
 				
 				<f:facet name="header">
 					<h:outputText value="#{msg.abastecimentos}" />
@@ -47,14 +56,94 @@
 				</h:outputText>
 				</p:column>
 				
+				<p:column headerText="#{msg.marca}" >
+					<h:outputText value="#{abastecimento.veiculo.marca}" />
+				</p:column>
+	
+				<p:column headerText="#{msg.modelo}" >
+					<h:outputText value="#{abastecimento.veiculo.modelo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.placa}" >
+					<h:outputText value="#{abastecimento.veiculo.placa}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.cor}" >
+					<h:outputText value="#{abastecimento.veiculo.cor}" />
+				</p:column>
+				
 				<p:column headerText="#{msg.valor}">
-					<h:outputText value="#{conta.valor}">
+					<h:outputText value="#{abastecimento.valor}">
 						<f:convertNumber locale="pt_BR"/>  
 					</h:outputText>  
 				</p:column>
-				
 			</p:dataTable>
-		</center>
+		</div>
+	</h:form>
+	
+	<!-- ADD Dialog -->
+	<h:form id="formAdd" enctype="multipart/form-data">
+		<p:dialog header="#{msg.abastecimento_novo}" widgetVar="addDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{abastecimentoBean.abastecimento.obs}" />
+            </h:panelGrid>
+                
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{abastecimentoBean.criar}" 
+					update=":form:abastecimentos :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+	</h:form>
+	
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="#{msg.abastecimento_detalhes}" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false" >
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+            </h:panelGrid>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="#{msg.abastecimento_editar}" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+            </h:panelGrid>
+			
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{abastecimentoBean.editar}" 
+					update=":form:abastecimentos :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+		
+	</h:form>
+		
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
+		<p:confirmDialog id="confirmDialog"
+			message="#{msg.abastecimento_confirma_excluir}" header="#{msg.abastecimento_excluir}" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
 
-	</ui:define>
+			<p:commandButton id="confirm" immediate="true" value="#{msg.sim}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:abastecimentos :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{abastecimentoBean.excluir}" >
+				<f:setPropertyActionListener value="#{abastecimento}" target="#{abastecimentoBean.abastecimentoSelecionado}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="#{msg.nao}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
+		</p:confirmDialog>
+	</h:form>
+
+    </ui:define>
 </ui:composition>

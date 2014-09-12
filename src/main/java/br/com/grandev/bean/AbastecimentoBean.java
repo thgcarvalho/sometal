@@ -30,7 +30,6 @@ public class AbastecimentoBean implements Serializable {
 	private Calendar dataAteSel;
 	private Abastecimento abastecimento;
 	private List<Abastecimento> abastecimentos;
-	private List<Veiculo> veiculos;
 	private BigDecimal valorTotal;
 	
 	@PostConstruct
@@ -73,23 +72,13 @@ public class AbastecimentoBean implements Serializable {
 		this.dataAteSel = dataAteSel;
 	} 
 	
-	public Veiculo getVeiuculo() {
-		if (veiculoSel == null) {
-			veiculoSel = new Veiculo();
-		}
-		return veiculoSel;
-	}
-
-	public void setVeiuculo(Veiculo veiculoSel) {
-		this.veiculoSel = veiculoSel;
-	}
 	
-	public List<Veiculo> getVeiuculos() {
-		return veiculos;
+	public List<Abastecimento> getAbastecimentos() {
+		return abastecimentos;
 	}
 
-	public void setVeiuculos(List<Veiculo> veiculos) {
-		this.veiculos = veiculos;
+	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
+		this.abastecimentos = abastecimentos;
 	}
 	
 	public BigDecimal getValorTotal() {

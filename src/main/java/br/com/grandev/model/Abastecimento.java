@@ -5,9 +5,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -23,10 +26,13 @@ public class Abastecimento implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "veiculo_id", referencedColumnName = "id", insertable = true, updatable = true)
+	private Veiculo veiculo;
 	private Date data;
 	private String notaFiscal;
 	private BigDecimal valor;
-	private BigDecimal litros;
+	private int litros;
 	private String combustível;
 	private BigDecimal km;
 	private String obs;
@@ -36,6 +42,12 @@ public class Abastecimento implements Serializable {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
 	}
 	public Date getData() {
 		return data;
@@ -55,10 +67,10 @@ public class Abastecimento implements Serializable {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public BigDecimal getLitros() {
+	public int getLitros() {
 		return litros;
 	}
-	public void setLitros(BigDecimal litros) {
+	public void setLitros(int litros) {
 		this.litros = litros;
 	}
 	public String getCombustível() {
