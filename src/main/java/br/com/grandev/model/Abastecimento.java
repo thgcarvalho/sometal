@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ public class Abastecimento implements Serializable {
 	@JoinColumn(name = "veiculo_id", referencedColumnName = "id", insertable = true, updatable = true)
 	private Veiculo veiculo;
 	private Date data;
+	@Column(name="nota_fiscal")
 	private String notaFiscal;
 	private BigDecimal valor;
 	private int litros;

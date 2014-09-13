@@ -1,7 +1,8 @@
 package br.com.grandev.daoImp;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -22,18 +23,27 @@ public class AbastecimentoDaoImp extends DaoGenericoImp<Abastecimento, Long> imp
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Abastecimento> todasOsAbastecimentos(Veiculo veiculo, Calendar dataDe, Calendar dataAte) {
+	public List<Abastecimento> todasOsAbastecimentos(Veiculo veiculo, Date dataDe, Date dataAte) {
 		List<Abastecimento> abastecimentos = new ArrayList<Abastecimento>();
+		Abastecimento abastecimento = null;
 		
 		String strQuery = "SELECT a FROM Abastecimento a"
-				+ "	WHERE a.veiculo = :veiuculo and a.data >= :dataDe and a.data <= :dataAte";
+				+ "	WHERE a.data >= :dataDe and a.data <= :dataAte";
 		EntityManager em = JPAUtil.getEntityManager();
 		Query query = em.createQuery(strQuery, Abastecimento.class);
-		query.setParameter("veiuculo", veiculo);
 		query.setParameter("dataDe", dataDe);
 		query.setParameter("dataAte", dataAte);
 		abastecimentos = query.getResultList();
 		em.close();
+		// remvove os abastecimentos dos veículos que não estão no filtro
+		if (veiculo != null) {
+			for (Iterator<Abastecimento> iterator = abastecimentos.iterator(); iterator.hasNext();) {
+				abastecimento = iterator.next();
+				if (!abastecimento.getVeiculo().equals(veiculo)) {
+					iterator.remove();
+				}
+			}
+		}
 		return abastecimentos;
 	}
 }

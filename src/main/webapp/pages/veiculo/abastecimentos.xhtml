@@ -14,8 +14,8 @@
 		
 		<p:panel header="Filtro" style="margin-bottom:10px;">  
 	        <h:panelGrid columns="8" cellpadding="5">  
-	        	<h:outputText value="#{msg.abastecimento}:" />
-	            <p:selectOneMenu label="#{msg.abastecimento}" value="#{abastecimentoBean.veiculoSel}" converter="VeiculoConverter" >
+	        	<h:outputText value="#{msg.veiculo}:" />
+	            <p:selectOneMenu label="#{msg.veiculo}:" value="#{abastecimentoBean.veiculoSel}" converter="VeiculoConverter" >
 					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
 				</p:selectOneMenu>
 
@@ -38,7 +38,7 @@
 		<p:growl id="growl" showDetail="true" />
 		
 		<div align="right">
-			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{abastecimentoBean.preparaNovoVeiculo}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{abastecimentoBean.preparaNovoAbastecimento}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
 		</div>
 		
 		<div align="center">
@@ -86,6 +86,36 @@
 		<p:dialog header="#{msg.abastecimento_novo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+			    <h:outputText value="#{msg.veiculo}:*" />
+	            <p:selectOneMenu label="#{msg.veiculo}:" value="#{abastecimentoBean.abastecimento.veiculo}" converter="VeiculoConverter" >
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.modelo} - #{veiculo.placa}" itemValue="#{veiculo}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.data}:" />	
+				<p:calendar label="#{msg.data}" value="#{abastecimentoBean.abastecimento.data}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputText value="#{msg.nota_fiscal}:" />
+				<p:inputText label="#{msg.nota_fiscal}:" size="45" maxlength="45" value="#{abastecimentoBean.abastecimento.notaFiscal}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.valor}:" />
+				<p:inputText label="#{msg.valor}" size="10" value="#{abastecimentoBean.abastecimento.valor}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <h:outputText value="#{msg.litros}:" />
+				<p:inputText label="#{msg.litros}:" size="10" maxlength="10" value="#{abastecimentoBean.abastecimento.litros}" />
+				
+				<h:outputText value="#{msg.combustivel}:" />
+				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{veiculoBean.veiculo.combustivel}">
+					<f:selectItems value="#{abastecimentoBean.combustiveis}" var="combustivel" itemLabel="#{combustivel.nome}" itemValue="#{combustivel.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.km}:" />
+				<p:inputText label="#{msg.km}" size="10" value="#{abastecimentoBean.abastecimento.km}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
 				
                 <h:outputText value="#{msg.obs}:" />
 				<p:inputTextarea label="#{msg.obs}" size="500" value="#{abastecimentoBean.abastecimento.obs}" />

@@ -76,6 +76,7 @@ public class VeiculoBean implements Serializable {
 	
 	public enum Combustivel {
 		ALCOOL("Álcool"),
+		DIESEL("Diesel"),
 		GAS("Gás"),
 		GASOLINA("Gasolina"), 
 		FLEX("Flex");

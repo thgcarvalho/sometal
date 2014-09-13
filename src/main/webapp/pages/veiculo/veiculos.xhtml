@@ -72,7 +72,7 @@
 		<p:dialog header="#{msg.veiculo_novo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-				<h:outputText value="#{msg.placa}: *" />
+				<h:outputText value="#{msg.placa}:*" />
 				<p:inputMask label="#{msg.placa}" value="#{veiculoBean.veiculo.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
 				
 				<h:outputText value="#{msg.chassi}:" />
@@ -167,7 +167,7 @@
 			id="editDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
-				<h:outputText value="#{msg.placa}: *" />
+				<h:outputText value="#{msg.placa}:*" />
 				<p:inputMask label="#{msg.placa}" value="#{veiculoBean.veiculoSelecionado.placa}" required="true" mask="aaa-9999" converter="toUpperCaseConverter" styleClass="upper" />
 				
 				<h:outputText value="#{msg.chassi}:" />
