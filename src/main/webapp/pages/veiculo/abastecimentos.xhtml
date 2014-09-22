@@ -10,44 +10,50 @@
 	<ui:define name="corpo">
 
 	<h:form id="form">
+	
+		<p:growl id="growl" showDetail="true" />
+		
 		<div align="center">
 		
 		<p:panel header="Filtro" style="margin-bottom:10px;">  
 	        <h:panelGrid columns="8" cellpadding="5">  
 	        	<h:outputText value="#{msg.veiculo}:" />
 	            <p:selectOneMenu label="#{msg.veiculo}:" value="#{abastecimentoBean.veiculoSel}" converter="VeiculoConverter" >
-					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
+	            	<f:selectItem itemLabel="" itemValue="" />
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo}" itemValue="#{veiculo}" />
 				</p:selectOneMenu>
 
 				<h:outputText value="#{msg.de}:" />
 				<p:calendar label="#{msg.de}" value="#{abastecimentoBean.dataDeSel}" showButtonPanel="true" 
-					maxlength="8" size="10" locale="pt" />
+					maxlength="8" size="10" locale="pt" rendered="true" />
 
 				<h:outputText value="#{msg.ate}:" />
 				<p:calendar label="#{msg.ate}" value="#{abastecimentoBean.dataAteSel}" showButtonPanel="true" 
-					maxlength="8" size="10" locale="pt" />
+					maxlength="8" size="10" locale="pt" rendered="true" />
 
 	        </h:panelGrid>  
 	  
 	        <p:separator />  
 	          
-	        <p:commandButton value="#{msg.filtrar}:" update="abastecimentos" actionListener="#{abastecimentoBean.carregaAbastecimentos}" id="btnFilter" />  
+	        <p:commandButton value="#{msg.carregar}" update="abastecimentos growl" actionListener="#{abastecimentoBean.carregaAbastecimentos}" id="btnFilter" />  
    	 	</p:panel>
    	 	</div>
    	 	
-		<p:growl id="growl" showDetail="true" />
-		
 		<div align="right">
 			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{abastecimentoBean.preparaNovoAbastecimento}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
 		</div>
 		
 		<div align="center">
 		
-			<p:dataTable var="abastecimento" value="#{abastecimentoBean.abastecimentos}" scrollable="true" scrollHeight="200" id="abastecimentos"
-				emptyMessage="#{msg.abastecimento_nenhum}:" rendered="#{abastecimentoBean != null}" >
-				
+			<p:dataTable id="abastecimentos" var="abastecimento" value="#{abastecimentoBean.abastecimentos}" 
+				rowKey="#{abastecimento.id}" filteredValue="#{abastecimentoBean.filteredAbastecimentos}"
+				emptyMessage="#{msg.abastecimento_nenhum}"
+				paginator="true" rows="20" rendered="#{abastecimentoBean != null}">
+		
 				<f:facet name="header">
 					<h:outputText value="#{msg.abastecimentos}" />
+					<br />
+					<h:outputText value="[Consumo de #{abastecimentoBean.consumo} KM por litro]" />
 				</f:facet>
 				
 				<p:column headerText="#{msg.data}">
@@ -56,33 +62,52 @@
 				</h:outputText>
 				</p:column>
 				
-				<p:column headerText="#{msg.marca}" >
-					<h:outputText value="#{abastecimento.veiculo.marca}" />
+				<p:column headerText="#{msg.veiculo}">
+					<h:outputText value="#{abastecimento.veiculo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.combustivel}">
+					<h:outputText value="#{abastecimento.combustivel}" />
 				</p:column>
 	
-				<p:column headerText="#{msg.modelo}" >
-					<h:outputText value="#{abastecimento.veiculo.modelo}" />
-				</p:column>
-				
-				<p:column headerText="#{msg.placa}" >
-					<h:outputText value="#{abastecimento.veiculo.placa}" />
-				</p:column>
-				
-				<p:column headerText="#{msg.cor}" >
-					<h:outputText value="#{abastecimento.veiculo.cor}" />
-				</p:column>
-				
 				<p:column headerText="#{msg.valor}">
 					<h:outputText value="#{abastecimento.valor}">
-						<f:convertNumber locale="pt_BR"/>  
+						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
 					</h:outputText>  
+				</p:column>
+				
+				<p:column headerText="#{msg.litros}">
+					<h:outputText value="#{abastecimento.litros}">
+						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+					</h:outputText>  
+				</p:column>
+				
+				<p:column headerText="#{msg.km}">
+					<h:outputText value="#{abastecimento.km}">
+						<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+					</h:outputText>  
+				</p:column>
+				
+				<p:column style="text-align: center">
+		            <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		            	title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{abastecimento}" target="#{abastecimentoBean.abastecimentoSelecionado}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                	title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{abastecimento}" target="#{abastecimentoBean.abastecimentoSelecionado}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{abastecimento}" target="#{abastecimentoBean.abastecimentoSelecionado}" />
+		            </p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</div>
 	</h:form>
 	
 	<!-- ADD Dialog -->
-	<h:form id="formAdd" enctype="multipart/form-data">
+	<h:form id="formAdd">
 		<p:dialog header="#{msg.abastecimento_novo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
@@ -108,7 +133,7 @@
 				<p:inputText label="#{msg.litros}:" size="10" maxlength="10" value="#{abastecimentoBean.abastecimento.litros}" />
 				
 				<h:outputText value="#{msg.combustivel}:" />
-				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{veiculoBean.veiculo.combustivel}">
+				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{abastecimentoBean.abastecimento.combustivel}">
 					<f:selectItems value="#{abastecimentoBean.combustiveis}" var="combustivel" itemLabel="#{combustivel.nome}" itemValue="#{combustivel.nome}" />
 				</p:selectOneMenu>
 				
@@ -137,6 +162,38 @@
 			 id="viewDialog" modal="true" resizable="false" >
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+				<h:outputText value="#{msg.veiculo}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.veiculo}" />
+				
+				<h:outputText value="#{msg.data}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.data}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+			
+				<h:outputText value="#{msg.nota_fiscal}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.notaFiscal}" />
+				
+				<h:outputText value="#{msg.valor}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.valor}">
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>
+				
+				<h:outputText value="#{msg.litros}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.litros}">
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>
+				
+				<h:outputText value="#{msg.combustivel}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.combustivel}" />
+				
+				<h:outputText value="#{msg.km}:" style="font-weight:bold" />
+				<h:outputText value="#{abastecimentoBean.abastecimentoSelecionado.km}">
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>
+				
+                <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
+				<p:inputTextarea size="500" value="#{abastecimentoBean.abastecimentoSelecionado.obs}" readonly="true" disabled="true" />
             </h:panelGrid>
 			
 		</p:dialog>
@@ -148,6 +205,38 @@
 			id="editDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			  	<h:outputText value="#{msg.veiculo}:*" />
+	            <p:selectOneMenu label="#{msg.veiculo}:" value="#{abastecimentoBean.abastecimentoSelecionado.veiculo}" converter="VeiculoConverter" >
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.modelo} - #{veiculo.placa}" itemValue="#{veiculo}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.data}:" />	
+				<p:calendar label="#{msg.data}" value="#{abastecimentoBean.abastecimentoSelecionado.data}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputText value="#{msg.nota_fiscal}:" />
+				<p:inputText label="#{msg.nota_fiscal}:" size="45" maxlength="45" value="#{abastecimentoBean.abastecimentoSelecionado.notaFiscal}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<h:outputText value="#{msg.valor}:" />
+				<p:inputText label="#{msg.valor}" size="10" value="#{abastecimentoBean.abastecimentoSelecionado.valor}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <h:outputText value="#{msg.litros}:" />
+				<p:inputText label="#{msg.litros}:" size="10" maxlength="10" value="#{abastecimentoBean.abastecimentoSelecionado.litros}" />
+				
+				<h:outputText value="#{msg.combustivel}:" />
+				<p:selectOneMenu label="#{msg.combustivel}" size="45" value="#{abastecimentoBean.abastecimentoSelecionado.combustivel}">
+					<f:selectItems value="#{abastecimentoBean.combustiveis}" var="combustivel" itemLabel="#{combustivel.nome}" itemValue="#{combustivel.nome}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.km}:" />
+				<p:inputText label="#{msg.km}" size="10" value="#{abastecimentoBean.abastecimentoSelecionado.km}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+				
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{abastecimentoBean.abastecimentoSelecionado.obs}" />
             </h:panelGrid>
 			
 			<div align="center">

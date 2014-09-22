@@ -13,10 +13,9 @@ public class VeiculoConverter implements Converter {
 
 	public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
 		try {
-			System.out.println("try condconv = " + submittedValue);
-			VeiculoDaoImp condominioDao = new VeiculoDaoImp();
-			Veiculo condominio = condominioDao.findByPlaca(submittedValue);
-			return condominio;
+			VeiculoDaoImp veiculoDao = new VeiculoDaoImp();
+			Veiculo veiculo = veiculoDao.findByPlaca(submittedValue);
+			return veiculo;
 		} catch (NumberFormatException exception) {
 			exception.printStackTrace();
 			throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de convercao", "Veículo inválido"));

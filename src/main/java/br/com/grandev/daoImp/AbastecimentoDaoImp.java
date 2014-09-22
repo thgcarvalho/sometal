@@ -28,7 +28,8 @@ public class AbastecimentoDaoImp extends DaoGenericoImp<Abastecimento, Long> imp
 		Abastecimento abastecimento = null;
 		
 		String strQuery = "SELECT a FROM Abastecimento a"
-				+ "	WHERE a.data >= :dataDe and a.data <= :dataAte";
+				+ "	WHERE a.data >= :dataDe and a.data <= :dataAte"
+				+ " order by a.data";
 		EntityManager em = JPAUtil.getEntityManager();
 		Query query = em.createQuery(strQuery, Abastecimento.class);
 		query.setParameter("dataDe", dataDe);

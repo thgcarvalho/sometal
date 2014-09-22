@@ -34,8 +34,8 @@ public class Abastecimento implements Serializable {
 	@Column(name="nota_fiscal")
 	private String notaFiscal;
 	private BigDecimal valor;
-	private int litros;
-	private String combustível;
+	private BigDecimal litros;
+	private String combustivel;
 	private BigDecimal km;
 	private String obs;
 	
@@ -69,17 +69,17 @@ public class Abastecimento implements Serializable {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public int getLitros() {
+	public BigDecimal getLitros() {
 		return litros;
 	}
-	public void setLitros(int litros) {
+	public void setLitros(BigDecimal litros) {
 		this.litros = litros;
 	}
-	public String getCombustível() {
-		return combustível;
+	public String getCombustivel() {
+		return combustivel;
 	}
-	public void setCombustível(String combustível) {
-		this.combustível = combustível;
+	public void setCombustivel(String combustivel) {
+		this.combustivel = combustivel;
 	}
 	public BigDecimal getKm() {
 		return km;

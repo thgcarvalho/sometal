@@ -7,6 +7,7 @@ import static br.com.grandev.util.FacesUtils.addInfoMessage;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 import br.com.grandev.dao.AbastecimentoDao;
 import br.com.grandev.daoImp.AbastecimentoDaoImp;
@@ -26,7 +27,7 @@ import br.com.grandev.model.Veiculo;
  * 
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class AbastecimentoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -38,6 +39,7 @@ public class AbastecimentoBean implements Serializable {
 	private Abastecimento abastecimento;
 	private Abastecimento abastecimentoSelecionado;
 	private List<Abastecimento> abastecimentos;
+	private List<Abastecimento> filteredAbastecimentos;
 	private BigDecimal valorTotal;
 	
 	public enum Combustivel {
@@ -68,6 +70,7 @@ public class AbastecimentoBean implements Serializable {
 		veiculoSel = null;
 		dataDeSel = primeiroDiaDaSDataAtual.getTime();
 		dataAteSel = dataAtual.getTime();
+		carregaAbastecimentos();
 	}
 	
 	public void preparaNovoAbastecimento() {
@@ -80,6 +83,7 @@ public class AbastecimentoBean implements Serializable {
 		for (Abastecimento abastecimento : abastecimentos) {
 			valorTotal = valorTotal.add(abastecimento.getValor());
 		}
+		filteredAbastecimentos = abastecimentos;
 	}
 	
 	public Veiculo getVeiculoSel() {
@@ -106,6 +110,12 @@ public class AbastecimentoBean implements Serializable {
 	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
 		this.abastecimentos = abastecimentos;
 	}
+	public List<Abastecimento> getFilteredAbastecimentos() {
+		return filteredAbastecimentos;
+	}
+	public void setFilteredAbastecimentos(List<Abastecimento> filteredAbastecimentos) {
+		this.filteredAbastecimentos = filteredAbastecimentos;
+	}
 	public BigDecimal getValorTotal() {
 		return this.valorTotal;
 	}
@@ -123,6 +133,31 @@ public class AbastecimentoBean implements Serializable {
 	}
 	public Combustivel[] getCombustiveis() {
 		return Combustivel.values();
+	}
+	public BigDecimal getConsumo() {
+		BigDecimal totalKM = BigDecimal.ZERO;
+		BigDecimal totalDeLitros = BigDecimal.ZERO;
+		BigDecimal primeiraKM = BigDecimal.ZERO;
+		BigDecimal ultimaKM = BigDecimal.ZERO;
+		BigDecimal consumo = BigDecimal.ZERO;
+		Abastecimento abastecimento;
+		
+		for (int i = 0; i < abastecimentos.size(); i++) {
+			abastecimento = abastecimentos.get(i);
+			if (i == 0) {
+				primeiraKM = abastecimento.getKm();
+			}
+			if (i == abastecimentos.size() - 1) {
+				ultimaKM = abastecimento.getKm();
+				break;
+			}
+			totalDeLitros = totalDeLitros.add(abastecimento.getLitros());
+		}
+		totalKM = ultimaKM.subtract(primeiraKM);
+		if (totalKM != BigDecimal.ZERO && totalDeLitros != BigDecimal.ZERO) {
+			consumo = totalKM.divide(totalDeLitros, 2, RoundingMode.HALF_UP);
+		}
+		return consumo;
 	}
 	
 	public String editar() {

@@ -100,6 +100,11 @@ public class Veiculo implements Serializable {
 	}
 	
 	@Override
+	public String toString() {
+		return this.modelo + " " + this.cor + " " + this.placa;
+	}
+	
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
