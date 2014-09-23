@@ -9,7 +9,7 @@ CREATE TABLE contas
   valor numeric(10,2),
   vencimento date,
   situacao character varying(45),
-  obs character varying(250),
+  obs character varying(500),
   CONSTRAINT conta_pkey PRIMARY KEY (id)
 )
 WITH (

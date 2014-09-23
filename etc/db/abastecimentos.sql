@@ -12,7 +12,7 @@ CREATE TABLE abastecimentos
   litros integer,
   combustivel character varying(45),
   km numeric(10,0),
-  obs character varying(250),
+  obs character varying(500),
   CONSTRAINT abastecimentos_pkey PRIMARY KEY (id),
   CONSTRAINT abastecimentos_veiculo_id_fkey FOREIGN KEY (veiculo_id)
       REFERENCES veiculos (id) MATCH SIMPLE

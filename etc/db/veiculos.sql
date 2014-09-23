@@ -14,7 +14,7 @@ CREATE TABLE veiculos
   combustivel character varying(45),
   anofab integer,
   anomod integer,
-  obs character varying(250),
+  obs character varying(500),
   CONSTRAINT veiculos_pkey PRIMARY KEY (id)
 )
 WITH (
