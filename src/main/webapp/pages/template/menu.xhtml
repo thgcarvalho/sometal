@@ -20,6 +20,7 @@
 			<p:submenu id="veiculos" label="#{msg.veiculos}" icon="ui-icon-key">
 				<p:menuitem id="miveiculos" value="#{msg.veiculos}" action="veiculos" ajax="false" immediate="true" rendered="#{usuarioBean.usuario.auth.isEscrt}" />
 				<p:menuitem id="miabastecimento" value="#{msg.abastecimentos}" action="abastecimentos" ajax="false" immediate="true" rendered="#{usuarioBean.usuario.auth.isEscrt}"  />
+				<p:menuitem id="miviagem" value="#{msg.viagens}" action="viagens" ajax="false" immediate="true" rendered="#{usuarioBean.usuario.auth.isEscrt}"  />
 			</p:submenu>
 			
 			

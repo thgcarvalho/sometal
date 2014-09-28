@@ -1,27 +1,27 @@
--- Table: viajens
+-- Table: viagens
 
--- DROP TABLE viajens;
+-- DROP TABLE viagens;
 
-CREATE TABLE viajens
+CREATE TABLE viagens
 (
   id serial NOT NULL,
   veiculo_id bigint NOT NULL,
   data date,
   motorista character varying(45),
-  saida date,
+  saida timestamp with time zone,
   km_saida numeric(10,0),
-  chegada date,
+  chegada timestamp with time zone,
   km_chegada numeric(10,0),
   destino character varying(45),
   motivo character varying(45),
   obs character varying(500),
-  CONSTRAINT viajens_pkey PRIMARY KEY (id),
-  CONSTRAINT viajens_veiculo_id_fkey FOREIGN KEY (veiculo_id)
+  CONSTRAINT viagens_pkey PRIMARY KEY (id),
+  CONSTRAINT viagens_veiculo_id_fkey FOREIGN KEY (veiculo_id)
       REFERENCES veiculos (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE viajens
+ALTER TABLE viagens
   OWNER TO postgres;

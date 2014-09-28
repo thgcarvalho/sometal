@@ -14,12 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.grandev.util.DataUtil;
+
 /**
  * @author Thiago Carvalho
  * 
  */
 @Entity
-@Table(name = "abastecimentos")
+@Table(name = "viagens")
 public class Viagem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -107,5 +109,8 @@ public class Viagem implements Serializable {
 	}
 	public void setObs(String obs) {
 		this.obs = obs;
+	}
+	public String getDataFormatada() {
+		return DataUtil.formatarData(this.data);
 	}
 }

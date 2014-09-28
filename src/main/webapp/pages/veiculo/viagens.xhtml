@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/template.xhtml">
+
+	<ui:define name="corpo">
+	
+	<h:form id="form">
+		<p:growl id="growl" showDetail="true" />
+		
+		<div align="right">
+			<p:commandButton value="#{msg.adicionar}" title="#{msg.adicionar}" actionListener="#{viagemBean.preparaNovaViagem}" icon="ui-icon-plus" onclick="PF('addDialog').show();" />
+		</div>
+		
+		<div align="center">
+		
+			<p:dataTable id="viagens" var="viagem"
+				emptyMessage="#{msg.viagem_nenhum}" 
+				value="#{viagemBean.viagens}" rowKey="#{viagem.id}"
+				filteredValue="#{viagemBean.filteredViagens}"
+				paginator="true" rows="14" rendered="#{viagemBean != null}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msg.viagens}" />
+				</f:facet>
+				
+				<p:column headerText="#{msg.data}" filterBy="#{viagem.dataFormatada}">
+				<h:outputText value="#{viagem.data}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{msg.veiculo}" filterBy="#{viagem.veiculo}">
+					<h:outputText value="#{viagem.veiculo}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.motorista}" filterBy="#{viagem.motorista}">
+					<h:outputText value="#{viagem.motorista}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.destino}" filterBy="#{viagem.destino}">
+					<h:outputText value="#{viagem.destino}" />
+				</p:column>
+	
+				<p:column style="text-align: center">
+		             <p:commandButton id="viewButton" update=":formView:viewDialog" oncomplete="PF('viewDialog').show()" 
+		             title="#{msg.visualizar}" icon="ui-icon-search">
+		                <f:setPropertyActionListener value="#{viagem}" target="#{viagemBean.viagemSelecionada}" />
+		            </p:commandButton>
+	                <p:commandButton id="editButton" update=":formEdit:editDialog" oncomplete="PF('editDialog').show()" 
+	                title="#{msg.editar}" icon="ui-icon-document">
+						<f:setPropertyActionListener value="#{viagem}" target="#{viagemBean.viagemSelecionada}" />
+		            </p:commandButton>
+                    <p:commandButton id="deleteButton"
+						title="#{msg.excluir}" icon="ui-icon-trash" onclick="PF('deleteDialog').show()">
+						<f:setPropertyActionListener value="#{viagem}" target="#{viagemBean.viagemSelecionada}" />
+		            </p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+		</div>
+	</h:form>
+		
+	<!-- ADD Dialog -->
+	<h:form id="formAdd">
+		<p:dialog header="#{msg.viagem_novo}" widgetVar="addDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+			
+				<h:outputText value="#{msg.veiculo}:*" />
+	            <p:selectOneMenu label="#{msg.veiculo}:" value="#{viagemBean.viagem.veiculo}" converter="VeiculoConverter" >
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.modelo} - #{veiculo.placa}" itemValue="#{veiculo}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.data}:" />	
+				<p:calendar label="#{msg.data}" value="#{viagemBean.viagem.data}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputText value="#{msg.motorista}:" />
+				<p:inputText label="#{msg.motorista}:" size="45" maxlength="45" value="#{viagemBean.viagem.motorista}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<p:outputLabel value="#{msg.saida}:" />
+        		<p:calendar label="#{msg.saida}:" value="#{viagemBean.viagem.saida}" pattern="MM/dd/yyyy HH:mm:ss" />
+
+				<h:outputText value="#{msg.km_saida}:" />
+				<p:inputText label="#{msg.km_saida}" size="10" value="#{viagemBean.viagem.kmSaida}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <p:outputLabel value="#{msg.chegada}:" />
+        		<p:calendar label="#{msg.chegada}:" value="#{viagemBean.viagem.chegada}" pattern="MM/dd/yyyy HH:mm:ss" />
+                
+                <h:outputText value="#{msg.km_chegada}:" />
+				<p:inputText label="#{msg.km_chegada}" size="10" value="#{viagemBean.viagem.kmChegada}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <h:outputText value="#{msg.destino}:" />
+				<p:inputText label="#{msg.destino}:" size="45" maxlength="45" value="#{viagemBean.viagem.destino}" />
+			
+				<h:outputText value="#{msg.motivo}:" />
+				<p:inputText label="#{msg.motivo}:" size="45" maxlength="45" value="#{viagemBean.viagem.motivo}" />
+				
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{viagemBean.viagem.obs}" />
+            </h:panelGrid>
+                
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{viagemBean.criar}" 
+					update=":form:viagens :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+	</h:form>
+	
+	<!-- VIEW Dialog -->
+	<h:form id="formView">
+		<p:dialog header="#{msg.viagem_detalhes}" widgetVar="viewDialog"
+			 id="viewDialog" modal="true" resizable="false" >
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.veiculo}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.veiculo}" />
+				
+				<h:outputText value="#{msg.data}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.data}">
+					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				
+				<h:outputText value="#{msg.motorista}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.motorista}" />
+				
+				<h:outputText value="#{msg.saida}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.saida}">
+					<f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				
+				<h:outputText value="#{msg.km_saida}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.kmSaida}">
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>
+				
+				<h:outputText value="#{msg.chegada}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.chegada}">
+					<f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" timeZone="#{initParam.timezone}" />
+				</h:outputText>
+				
+				<h:outputText value="#{msg.km_chegada}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.kmChegada}">
+					<f:convertNumber pattern="#,##0.00" locale="pt_BR"/>  
+				</h:outputText>
+				
+				<h:outputText value="#{msg.destino}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.destino}" />
+				
+				<h:outputText value="#{msg.motivo}:" style="font-weight:bold" />
+				<h:outputText value="#{viagemBean.viagemSelecionada.motivo}" />
+						
+                <h:outputText value="#{msg.obs}:" style="font-weight:bold" />
+				<p:inputTextarea size="500" value="#{viagemBean.viagemSelecionada.obs}" readonly="true" disabled="true" />
+            </h:panelGrid>
+			
+		</p:dialog>
+	</h:form>
+	
+	<!-- EDIT Dialog -->
+	<h:form id="formEdit">
+		<p:dialog header="#{msg.viagem_editar}" widgetVar="editDialog" 
+			id="editDialog" modal="true" resizable="false">
+			
+			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+				<h:outputText value="#{msg.veiculo}:*" />
+			    <p:selectOneMenu label="#{msg.veiculo}:" value="#{viagemBean.viagemSelecionada.veiculo}" converter="VeiculoConverter" >
+					<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo" itemLabel="#{veiculo.modelo} - #{veiculo.placa}" itemValue="#{veiculo}" />
+				</p:selectOneMenu>
+				
+				<h:outputText value="#{msg.data}:" />	
+				<p:calendar label="#{msg.data}" value="#{viagemBean.viagemSelecionada.data}"
+						showButtonPanel="true" maxlength="8" size="10" locale="pt"/>
+						
+				<h:outputText value="#{msg.motorista}:" />
+				<p:inputText label="#{msg.motorista}:" size="45" maxlength="45" value="#{viagemBean.viagemSelecionada.motorista}" converter="toUpperCaseConverter" styleClass="upper" />
+				
+				<p:outputLabel value="#{msg.saida}:" />
+        		<p:calendar label="#{msg.saida}:" value="#{viagemBean.viagemSelecionada.saida}" pattern="MM/dd/yyyy HH:mm:ss" />
+
+				<h:outputText value="#{msg.km_saida}:" />
+				<p:inputText label="#{msg.km_saida}" size="10" value="#{viagemBean.viagemSelecionada.kmSaida}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <p:outputLabel value="#{msg.chegada}:" />
+        		<p:calendar label="#{msg.chegada}:" value="#{viagemBean.viagemSelecionada.chegada}" pattern="MM/dd/yyyy HH:mm:ss" />
+                
+                <h:outputText value="#{msg.km_chegada}:" />
+				<p:inputText label="#{msg.km_chegada}" size="10" value="#{viagemBean.viagemSelecionada.kmChegada}" >
+					<f:converter converterId="valorConverter" />
+                </p:inputText>
+                
+                <h:outputText value="#{msg.destino}:" />
+				<p:inputText label="#{msg.destino}:" size="45" maxlength="45" value="#{viagemBean.viagemSelecionada.destino}" />
+			
+				<h:outputText value="#{msg.motivo}:" />
+				<p:inputText label="#{msg.motivo}:" size="45" maxlength="45" value="#{viagemBean.viagemSelecionada.motivo}" />
+				
+                <h:outputText value="#{msg.obs}:" />
+				<p:inputTextarea label="#{msg.obs}" size="500" value="#{viagemBean.viagemSelecionada.obs}" />
+            </h:panelGrid>
+			
+			<div align="center">
+				<br />
+				<h:panelGrid id="btn" columns="1"> 
+					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{viagemBean.editar}" 
+					update=":form:viagens :form:growl" />
+				</h:panelGrid>
+			</div>
+		</p:dialog>
+		
+	</h:form>
+		
+	<!-- DELETE Dialog -->
+	<h:form id="formDel">
+		<p:confirmDialog id="confirmDialog"
+			message="#{msg.viagem_confirma_excluir}" header="#{msg.viagem_excluir}" 
+			severity="alert" widgetVar="deleteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="explode" >
+
+			<p:commandButton id="confirm" immediate="true" value="#{msg.sim}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update=":form:viagens :form:growl" ajax="false"
+				oncomplete="PF('confirmation').hide()" actionListener="#{viagemBean.excluir}" >
+				<f:setPropertyActionListener value="#{viagem}" target="#{viagemBean.viagemSelecionada}" />
+			</p:commandButton>
+			<p:commandButton id="decline" value="#{msg.nao}" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmation').hide()" />
+		</p:confirmDialog>
+	</h:form>
+	
+	</ui:define>
+</ui:composition>

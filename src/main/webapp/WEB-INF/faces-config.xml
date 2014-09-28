@@ -99,6 +99,11 @@
 			<to-view-id>/pages/veiculo/abastecimentos.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>viagens</from-outcome>
+			<to-view-id>/pages/veiculo/viagens.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 	</navigation-rule>
 	
 	<!-- USUARIOS -->
