@@ -26,9 +26,10 @@ import br.com.grandev.model.Funcionario;
 public class PhotoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private boolean debug = false;
 	
 	public StreamedContent loadPhoto(Funcionario funcionario) {
-		System.out.println("PhotoBean.loadPhoto=" + funcionario);
+		if(debug){System.out.println("PhotoBean.loadPhoto=" + funcionario);}
 		StreamedContent scPhoto = new DefaultStreamedContent();
 		String strPhoto = "";
 		try {
@@ -37,9 +38,9 @@ public class PhotoBean implements Serializable {
 			} else {
 				strPhoto = "C:\\Users\\tcarvalho\\sometal\\files\\sometal\\FOTOS\\sem_foto.jpg";
 			}
-			System.out.println("FL=" + strPhoto);
+			if(debug){System.out.println("FL=" + strPhoto);}
 			final File filePhoto = new File(strPhoto);
-			System.out.println("EXISTE=" + filePhoto.exists());
+			if(debug){System.out.println("EXISTE=" + filePhoto.exists());}
 			final FileInputStream fileInputStream = new FileInputStream(filePhoto);
 			final InputStream is = new BufferedInputStream(fileInputStream);
 			scPhoto = new DefaultStreamedContent(is);
@@ -47,7 +48,7 @@ public class PhotoBean implements Serializable {
 			e.printStackTrace();
 			addErrorMessage(MSG_ERROR, "Erro ao carregar foto!");
 		}
-		System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto));
+		if(debug){System.out.println("SC=" + (scPhoto == null ? "null" : scPhoto));}
 		return scPhoto;
 	}
 

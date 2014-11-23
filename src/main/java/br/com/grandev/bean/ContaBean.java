@@ -195,13 +195,11 @@ public class ContaBean implements Serializable {
         }
     }
     
-    
     public void onCellEdit(Conta conta) {
     	try {
 			contaDao.editar(conta);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	System.out.println(conta.getSituacao());
     }
 }

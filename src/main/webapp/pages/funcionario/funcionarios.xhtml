@@ -63,7 +63,7 @@
 	</h:form>
 		
 	<!-- ADD Dialog -->
-	<h:form id="formAdd" enctype="multipart/form-data">
+	<h:form id="formAdd" enctype="multipart/form-data" >
 		<p:dialog header="#{msg.funcionario_novo} - #{funcionarioBean.funcionario.codigo}" widgetVar="addDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
@@ -149,7 +149,7 @@
 			<div align="center">
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
-					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{funcionarioBean.criar}" 
+					<h:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{funcionarioBean.criar}" 
 					update=":form:funcionarios :form:growl" />
 				</h:panelGrid>
 			</div>
