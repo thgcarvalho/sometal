@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import br.com.grandev.acesso.ControleDeRegistros.Status;
+
 /**
  * @author Thiago Carvalho
  * 
@@ -18,6 +20,7 @@ public class Registro implements Serializable {
 	private Date hora;
 	private String tipo;
 	private String origen;
+	private Status status;
 
 	public Registro() {
 	}
@@ -77,6 +80,14 @@ public class Registro implements Serializable {
 
 	public void setOrigen(String origen) {
 		this.origen = origen;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override
@@ -144,6 +155,6 @@ public class Registro implements Serializable {
 				+ ", hora=" + (hora == null ? "null" : sdfHM.format(hora)) + ", tipo=" + tipo 
 				+ ", origen=" + origen + "]";
 	}
-	
+
 
 }

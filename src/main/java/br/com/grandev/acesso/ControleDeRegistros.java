@@ -5,12 +5,24 @@ import java.util.List;
 
 public class ControleDeRegistros {
 
+	private static final String LOGNAME = "ControleDeRegistros";
 	private List<Registro> registrosDasCatracas = new ArrayList<Registro>();
 	private List<Registro> registrosGerenciados = new ArrayList<Registro>();
 	private List<Registro> registrosNaoEnviados = new ArrayList<Registro>();
 	
+	public enum Status {
+		NAOENVIADO(0), ENVIADO(1), FALHA(2);
+		int status;
+		private Status(int status) {
+			this.status = status;
+		}
+		public int getNome() {
+			return status;
+		}
+	}
+	
 	public ControleDeRegistros() {
-		Display.print("------------------------------------");
+		DisplayMessage.display(LOGNAME, "------------------------------------");
 	}
 	
 	public void gerenciarRegistros() {
@@ -20,23 +32,26 @@ public class ControleDeRegistros {
 	}
 	
 	private void coletar() {
-		Display.print("Iniciando a coleta de dados...");
+		DisplayMessage.display(LOGNAME, "Iniciando a coleta de dados...");
 		// TODO coletar registros das catracas
 		// TODO coletar registros gerenciados
 	}
 	
-	private void analizar() {
+	public void analizar() {
 		boolean enviado = false;
-		Display.print("Analizando dados...");
-		Display.print(registrosDasCatracas.size()  + " registros coletados");
-		Display.print(registrosGerenciados.size()  + " registros gerenciados");
+		DisplayMessage.display(LOGNAME, "Analizando dados...");
+		DisplayMessage.display(LOGNAME, registrosDasCatracas.size()  + " registros coletados");
+		DisplayMessage.display(LOGNAME, registrosGerenciados.size()  + " registros gerenciados");
 		if (registrosDasCatracas.size() == registrosGerenciados.size()) {
-			Display.print("Não houve alterações!");
+			DisplayMessage.display(LOGNAME, "Não houve alterações!");
 		}
 		
 		for (Registro catraca : registrosDasCatracas) {
 			enviado = false;
 			for (Registro gerenciado : registrosGerenciados) {
+				if (gerenciado.getStatus() != null && gerenciado.getStatus().equals(Status.FALHA)) {
+					continue;
+				}
 				if (catraca.equals(gerenciado)) {
 					enviado = true;
 					break;
@@ -44,13 +59,16 @@ public class ControleDeRegistros {
 			}
 			if (!enviado) {
 				registrosNaoEnviados.add(catraca);
-				Display.print("Registro novo = " + catraca);
+				DisplayMessage.display(LOGNAME, "Registro pendente --> " + catraca);
 			}
 		}
 	}
 	
-	private void enviar() {
-		Display.print("Enviando dados...");
+	public void enviar() {
+		DisplayMessage.display(LOGNAME, "Enviando dados...");
+		for (Registro pendente : registrosNaoEnviados) {
+			pendente.setStatus(Status.ENVIADO);
+		}
 	}
 
 	public List<Registro> getRegistrosDasCatracas() {
@@ -75,5 +93,9 @@ public class ControleDeRegistros {
 	
 	public void setRegistrosNaoEnviados(List<Registro> registrosNaoEnviados) {
 		this.registrosNaoEnviados = registrosNaoEnviados;
+	}
+	
+	public Status[] getStatus() {
+		return Status.values();
 	}
 }
