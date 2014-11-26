@@ -150,7 +150,7 @@
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
 					<h:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{funcionarioBean.criar}" 
-					update=":form:funcionarios :form:growl" />
+						update=":form:funcionarios :form:growl" />
 				</h:panelGrid>
 			</div>
 			
@@ -224,8 +224,8 @@
 	</h:form>
 	
 	<!-- EDIT Dialog -->
-	<h:form id="formEdit">
-		<p:dialog header="#{msg.funcionario_editar}" widgetVar="editDialog" 
+	<h:form id="formEdit" enctype="multipart/form-data">
+		<p:dialog header="#{msg.funcionario_editar} - #{funcionarioBean.funcionarioSelecionado.codigo}" widgetVar="editDialog" 
 			id="editDialog" modal="true" resizable="false">
 			
 			<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
@@ -313,8 +313,8 @@
 			<div align="center">
 				<br />
 				<h:panelGrid id="btn" columns="1"> 
-					<p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{funcionarioBean.editar}" 
-					update=":form:funcionarios :form:growl" />
+					<h:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-disk" action="#{funcionarioBean.editar}" 
+						update=":form:funcionarios :form:growl" />
 				</h:panelGrid>
 			</div>
 				
