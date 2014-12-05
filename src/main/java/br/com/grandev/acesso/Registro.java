@@ -15,7 +15,7 @@ public class Registro implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private Long codigo;
+	private int codigo;
 	private Date data;
 	private Date hora;
 	private String tipo;
@@ -25,7 +25,7 @@ public class Registro implements Serializable {
 	public Registro() {
 	}
 
-	public Registro(Long codigo, Date data, Date hora, String tipo,
+	public Registro(int codigo, Date data, Date hora, String tipo,
 			String origen) {
 		this.codigo = codigo;
 		this.data = data;
@@ -42,11 +42,11 @@ public class Registro implements Serializable {
 		this.id = id;
 	}
 
-	public Long getCodigo() {
+	public int getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 
@@ -89,12 +89,14 @@ public class Registro implements Serializable {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+	
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + codigo;
 		return result;
 	}
 
@@ -110,11 +112,7 @@ public class Registro implements Serializable {
 			return false;
 		}
 		Registro other = (Registro) obj;
-		if (codigo == null) {
-			if (other.codigo != null) {
-				return false;
-			}
-		} else if (!codigo.equals(other.codigo)) {
+		if (codigo != other.codigo) {
 			return false;
 		}
 		if (data == null) {

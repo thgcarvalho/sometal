@@ -15,7 +15,12 @@ public class ClientSocket {
     public static final String NETWORK_UNREACHABLE = "Falha na conexão!";
     public static final String HTTP_200 = "Sucesso";
     public static final String HTTP_500 = "Erro interno do servidor";
-    private String strUId = "sede";
+    private String strUId = "Empresa";
+    
+    public static void main(String[] args) {
+		ClientSocket cs = new ClientSocket();
+		cs.sendData("112222", "1344", 1234);
+	}
     
     protected String sendData(String data, String hora, int codigo) {
         String strResp;

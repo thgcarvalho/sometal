@@ -21,8 +21,13 @@ public class ControleDeRegistros {
 		}
 	}
 	
+	public static void main(String[] args) {
+		ControleDeRegistros cdr = new ControleDeRegistros();
+		cdr.enviar();
+	}
+	
 	public ControleDeRegistros() {
-		DisplayMessage.display(LOGNAME, "------------------------------------");
+		printSM();
 	}
 	
 	public void gerenciarRegistros() {
@@ -69,6 +74,9 @@ public class ControleDeRegistros {
 		for (Registro pendente : registrosNaoEnviados) {
 			pendente.setStatus(Status.ENVIADO);
 		}
+		ClientSocket cs = new ClientSocket();
+		cs.sendData("112222", "1344", 1234);
+		printGD();
 	}
 
 	public List<Registro> getRegistrosDasCatracas() {
@@ -97,5 +105,33 @@ public class ControleDeRegistros {
 	
 	public Status[] getStatus() {
 		return Status.values();
+	}
+	
+	private void printSM() {
+		System.out.println();
+		System.out.println(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. ");
+		System.out.println(" | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |");
+		System.out.println(" | |    _______   | || |     ____     | || | ____    ____ | || |  _________   | || |  _________   | || |      __      | || |   _____      | |");
+		System.out.println(" | |   /  ___  |  | || |   .'    `.   | || ||_   \\  /   _|| || | |_   ___  |  | || | |  _   _  |  | || |     /  \\     | || |  |_   _|     | |");
+		System.out.println(" | |  |  (__ \\_|  | || |  /  .--.  \\  | || |  |   \\/   |  | || |   | |_  \\_|  | || | |_/ | | \\_|  | || |    / /\\ \\    | || |    | |       | |");
+		System.out.println(" | |   '.___`-.   | || |  | |    | |  | || |  | |\\  /| |  | || |   |  _|  _   | || |     | |      | || |   / ____ \\   | || |    | |   _   | |");
+		System.out.println(" | |  |`\\____) |  | || |  \\  `--'  /  | || | _| |_\\/_| |_ | || |  _| |___/ |  | || |    _| |_     | || | _/ /    \\ \\_ | || |   _| |__/ |  | |");
+		System.out.println(" | |  |_______.'  | || |   `.____.'   | || ||_____||_____|| || | |_________|  | || |   |_____|    | || ||____|  |____|| || |  |________|  | |");
+		System.out.println(" | |              | || |              | || |              | || |              | || |              | || |              | || |              | |");
+		System.out.println(" | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |");
+		System.out.println("  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'"); 
+		System.out.println();
+		
+	}
+	
+	private void printGD() {
+		System.out.println();
+		System.out.println("    _____                 _____        			");
+		System.out.println("   / ____|               |  __ \\            	");
+		System.out.println("  | |  __ _ __ __ _ _ __ | |  | | _____   __	");
+		System.out.println("  | | |_ | '__/ _` | '_ \\| |  | |/ _ \\ \\ / /	");
+		System.out.println("  | |__| | | | (_| | | | | |__| |  __/\\ V / 	");
+		System.out.println("   \\_____|_|  \\__,_|_| |_|_____/ \\___| \\_/  ");
+		System.out.println();
 	}
 }

@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ReadProperties {
-	private static final String PROP_FILE_NAME = "download.properties";
+	private static final String PROP_FILE_NAME = "socket.properties";
 
 	// local
 	public static final String LOCAL_JDBC = "local_JdbcClassName";

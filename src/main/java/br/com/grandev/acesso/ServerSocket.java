@@ -28,31 +28,30 @@ public class ServerSocket {
 	static private java.net.ServerSocket oSSock = null;
 	static private boolean blDebug = true;
 	static private boolean blTest = false;
-	static private SimpleDateFormat sdfLog = null;
-	static private SimpleDateFormat sdfYMD = null;
+	static private SimpleDateFormat sdfDMY = null;
 	static private SimpleDateFormat sdfHMS = null;
 
 	public static void main(String[] cmdline) {
 		Connection connSQL = null;
-		sdfYMD = new SimpleDateFormat("yyyyMMdd");
-		sdfYMD.setLenient(false);
-		sdfHMS = new SimpleDateFormat("HHmmss");
+		sdfDMY = new SimpleDateFormat("dd/MM/YYYY");
+		sdfDMY.setLenient(false);
+		sdfHMS = new SimpleDateFormat("HH:mm:ss");
 		sdfHMS.setLenient(false);
 
-		System.out.println(sdfLog.format(new Date()) + "Starting PDAServer...");
+		System.out.println(sdfHMS.format(new Date()) + " Starting ServerSocket...");
 
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
 		if (!getCmdLine(cmdline)){
-			System.out.println(sdfLog.format(new Date()) + "Parametri riga di comando invalidi. Startup continuera comunque");
+			System.out.println(sdfHMS.format(new Date()) + " Parametri riga di comando invalidi. Startup continuera comunque");
 		}
 
-		System.out.println(sdfLog.format(new Date()) + "Checking SQL connection...");
+		System.out.println(sdfHMS.format(new Date()) + " Checking SQL connection...");
 		Properties propDown = null;
 		try {
 			propDown = ReadProperties.load();
-			System.out.println(sdfLog.format(new Date()) + "   jdbc classname=" + propDown.getProperty(ReadProperties.WEB_JDBC));
-			System.out.println(sdfLog.format(new Date()) + "   jdbc connstr=" + propDown.getProperty(ReadProperties.WEB_CONNSTR));
+			System.out.println(sdfHMS.format(new Date()) + "   jdbc classname=" + propDown.getProperty(ReadProperties.WEB_JDBC));
+			System.out.println(sdfHMS.format(new Date()) + "   jdbc connstr=" + propDown.getProperty(ReadProperties.WEB_CONNSTR));
 			Class.forName(propDown.getProperty(ReadProperties.WEB_JDBC));
 			connSQL = DriverManager.getConnection(propDown.getProperty(ReadProperties.WEB_CONNSTR),
 					propDown.getProperty(ReadProperties.WEB_USER), propDown.getProperty(ReadProperties.WEB_PASSWORD));
@@ -68,15 +67,15 @@ public class ServerSocket {
 			System.exit(8);
 		}
 
-		System.out.print(sdfLog.format(new Date()) + "Creating socket...");
+		System.out.print(sdfHMS.format(new Date()) + " Creating socket...");
 		try {
-			oSSock = new java.net.ServerSocket((blTest?IPORT_TEST:IPORT_PROD), IBACKLOG, null);
+			oSSock = new java.net.ServerSocket((blTest ? IPORT_TEST : IPORT_PROD), IBACKLOG, null);
 		} catch(IOException oExcp) {
-			System.out.println(sdfLog.format(new Date()) + "Exception main - socket creation:");
+			System.out.println(sdfHMS.format(new Date()) + " Exception main - socket creation:");
 			oExcp.printStackTrace();
 			System.exit(8);
 		}
-		System.out.println("done");
+		System.out.println("Done");
 
 		Server oServer = new Server();
 		Thread oThread = new Thread(oServer);
@@ -95,7 +94,7 @@ public class ServerSocket {
 				blTest = true;
 				continue;
 			}
-			System.out.println(sdfLog.format(new Date()) + "Invalid parameter: " + args[i]);
+			System.out.println(sdfHMS.format(new Date()) + "Invalid parameter: " + args[i]);
 			return(false);
 		}
 		return(true);
@@ -109,41 +108,41 @@ public class ServerSocket {
 			try{
 				while(true){
 					if (blDebug){
-						System.out.println(sdfLog.format(new Date()) + "entering accept");
+						System.out.println(sdfHMS.format(new Date()) + " Entering accept");
 					}
 
 					oSock = oSSock.accept();
 
 					if (blDebug){
-						System.out.println(sdfLog.format(new Date()) + "connection accepted");
+						System.out.println(sdfHMS.format(new Date()) + " Connection accepted");
 					}
 
-					PDAConnection oConn = new PDAConnection(oSock);
+					AndroidConnection oConn = new AndroidConnection(oSock);
 					Thread oThread = new Thread(oConn);
 					oThread.start();
 
 				}  // while true
 			} catch(SocketTimeoutException oExcp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			} catch(SocketException oExcp) {
 				if (oExcp.getMessage().equals("Socket closed")){
-					System.out.println(sdfLog.format(new Date()) + "Socket was closed - program will end");
+					System.out.println(sdfHMS.format(new Date()) + " Socket was closed - program will end");
 				}else{
-					System.out.println(sdfLog.format(new Date()) + "Exception Server.run:" + oExcp.getMessage());
+					System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:" + oExcp.getMessage());
 					oExcp.printStackTrace();
 				}
 			} catch(IllegalBlockingModeException oExcp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			} catch(IOException oExcp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			}
 		}
 	}
 
-	static public class PDAConnection implements Runnable {
+	static public class AndroidConnection implements Runnable {
 		private Socket oSock = null;
 		private PrintWriter pw = null;
 		private BufferedReader br = null;
@@ -157,12 +156,12 @@ public class ServerSocket {
 		private String strHrId = null;
 		private Connection connSQL = null;
 
-		public PDAConnection(Socket inpSock){
+		public AndroidConnection(Socket inpSock){
 			oSock = inpSock;
 			inetRemote = oSock.getInetAddress();
 			iRemotePort = oSock.getPort();
 
-			System.out.print(sdfLog.format(new Date()) + "Creating SQL connection...");
+			System.out.print(sdfHMS.format(new Date()) + " Creating SQL connection...");
 			Properties propDown = null;
 			try{
 				propDown = ReadProperties.load();
@@ -170,15 +169,15 @@ public class ServerSocket {
 				connSQL = DriverManager.getConnection(propDown.getProperty(ReadProperties.WEB_CONNSTR),
 						propDown.getProperty(ReadProperties.WEB_USER), propDown.getProperty(ReadProperties.WEB_PASSWORD));
 			} catch(ClassNotFoundException excp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception main - socket creation:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception main - socket creation:");
 				excp.printStackTrace();
 				System.exit(8);
 			} catch(IOException excp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception main - socket creation:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception main - socket creation:");
 				excp.printStackTrace();
 				System.exit(8);
 			} catch (SQLException excp) {
-				System.out.println(sdfLog.format(new Date()) + "Exception main - socket creation:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception main - socket creation:");
 				excp.printStackTrace();
 				System.exit(8);
 			}
@@ -191,7 +190,7 @@ public class ServerSocket {
 			boolean blStateOK = false;
 			// start listening
 			if (blDebug){
-				System.out.println(sdfLog.format(new Date()) + "connection with=" + inetRemote.getHostAddress() +
+				System.out.println(sdfHMS.format(new Date()) + " connection with=" + inetRemote.getHostAddress() +
 						" port=" + iRemotePort);
 			}
 			clearConnectionData();
@@ -201,7 +200,7 @@ public class ServerSocket {
 
 				while((strLine = br.readLine()) != null){
 					if (blDebug){
-						System.out.println(sdfLog.format(new Date())  + " uid=" + strUId + " termid=" + strTermId +
+						System.out.println(sdfHMS.format(new Date())  + " uid=" + strUId + " termid=" + strTermId +
 								" dtid=" + strDtId + " hrid=" + strHrId +
 								" read=" + strLine);
 					}
@@ -221,7 +220,6 @@ public class ServerSocket {
 					if (!(strarrTokens[0].equals("HELO") ||
 							strarrTokens[0].equals("QUIT") ||
 							strarrTokens[0].equals("RESTART") ||
-
 							strarrTokens[0].equals(IDENTIFIER_SAVEDATA)
 
 							)){
@@ -274,22 +272,22 @@ public class ServerSocket {
 
 				oSock.close();
 				if (blDebug){
-					System.out.println(sdfLog.format(new Date()) + "connection closed with=" + inetRemote.getHostAddress() +
+					System.out.println(sdfHMS.format(new Date()) + " connection closed with=" + inetRemote.getHostAddress() +
 							" port=" + iRemotePort + " uid=" + strUId + " termid=" + strTermId +
 							" dtid=" + strDtId + " hrid=" + strHrId);
 				}
 				connSQL.close();
 			}catch(SocketTimeoutException oExcp){
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			}catch(IllegalBlockingModeException oExcp){
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			}catch(IOException oExcp){
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			}catch(SQLException oExcp){
-				System.out.println(sdfLog.format(new Date()) + "Exception Server.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception Server.run:");
 				oExcp.printStackTrace();
 			}
 		}
@@ -311,10 +309,10 @@ public class ServerSocket {
 			strUId = strarrTokens[1];
 			strTermId = strarrTokens[2];
 			oDate = new Date();
-			strDtId = sdfYMD.format(oDate);
+			strDtId = sdfDMY.format(oDate);
 			strHrId = sdfHMS.format(oDate);
 			if (blDebug){
-				System.out.println(sdfLog.format(new Date()) + "HELO uid=" + strUId + " termid=" + strTermId +
+				System.out.println(sdfHMS.format(new Date()) + "HELO uid=" + strUId + " termid=" + strTermId +
 						" dtid=" + strDtId + " hrid=" + strHrId);
 			}
 			if (strUId.length() > 30){
@@ -361,11 +359,11 @@ public class ServerSocket {
 			
 			articolo = strarrTokens[1];
 			oDate = new Date();
-			strDtId = sdfYMD.format(oDate);
+			strDtId = sdfDMY.format(oDate);
 			strHrId = sdfHMS.format(oDate);
 			
 			if (blDebug) {
-				DisplayMessage.display(LOGNAME, sdfLog.format(new Date()) + " " + IDENTIFIER_SAVEDATA 
+				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + " " + IDENTIFIER_SAVEDATA 
 						+ " dtid=" + strDtId + " hrid=" + strHrId);
 			}
 			
@@ -382,7 +380,7 @@ public class ServerSocket {
 				} // while
 				stmtArtDesc.close();
 			} catch (Exception excp) {
-				DisplayMessage.display(LOGNAME, sdfLog.format(new Date()) + "Exception connecting sql:");
+				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + "Exception connecting sql:");
 				excp.printStackTrace();
 				pw.write("501 exception: " + excp.getMessage() + "\n");
 				pw.flush();
@@ -390,11 +388,11 @@ public class ServerSocket {
 			}
 			
 			if (blDebug) {
-				DisplayMessage.display(LOGNAME, sdfLog.format(new Date()) + " " + IDENTIFIER_SAVEDATA + " art=" + articolo + " desc=" + descArt);
+				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + " " + IDENTIFIER_SAVEDATA + " art=" + articolo + " desc=" + descArt);
 			}
 
 			if (blFound) {
-				pw.write("200 <" + descArt + ">\n");
+				pw.write("200 " + descArt + "\n");
 				pw.flush();
 			} else {
 				pw.write("500 Not found\n");
@@ -420,7 +418,6 @@ public class ServerSocket {
 
 		private static String checkNull(String strIn) {
 			StringBuffer sb = new StringBuffer();
-
 			if (strIn == null) {
 				return ("");
 			} else {
@@ -438,20 +435,20 @@ public class ServerSocket {
 		}
 	}
 
-	static public class ShutdownHook extends Thread{
+	static public class ShutdownHook extends Thread {
 
 		public ShutdownHook(){
 			super();
 		}
 
 		public void run(){
-			System.out.println(sdfLog.format(new Date()) + "Shutting down PDAServer...");
+			System.out.println(sdfHMS.format(new Date()) + " Shutting down ServerSocket...");
 			try{
 				if (oSSock != null){
 					oSSock.close();
 				}
 			} catch(IOException oExcp){
-				System.out.println(sdfLog.format(new Date()) + "Exception ShutdownHook.run:");
+				System.out.println(sdfHMS.format(new Date()) + " Exception ShutdownHook.run:");
 				oExcp.printStackTrace();
 			}
 		}

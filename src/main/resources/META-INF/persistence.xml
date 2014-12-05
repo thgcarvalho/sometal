@@ -14,10 +14,10 @@
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/sometal" />
+			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/grandevc_sometal" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
-			<property name="hibernate.connection.username" value="postgres" />
-			<property name="hibernate.connection.password" value="postgres" />
+			<property name="hibernate.connection.username" value="grandevc" />
+			<property name="hibernate.connection.password" value="deD@23dG$$12" />
 
 			<property name="hibernate.c3p0.min_size" value="5" />
 			<property name="hibernate.c3p0.max_size" value="20" />
@@ -39,10 +39,10 @@
 		
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/users" />
+			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/grandevc_users" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
-			<property name="hibernate.connection.username" value="postgres" />
-			<property name="hibernate.connection.password" value="postgres" />
+			<property name="hibernate.connection.username" value="grandevc" />
+			<property name="hibernate.connection.password" value="deD@23dG$$12" />
 
 			<property name="hibernate.c3p0.min_size" value="5" />
 			<property name="hibernate.c3p0.max_size" value="20" />
