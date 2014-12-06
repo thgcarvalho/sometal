@@ -1,0 +1,66 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          serversocket
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Service for access control
+# Description:       Controls employee access data
+### END INIT INFO
+#
+# Author:       Thiago Carvalho <tcarvalho@grandev.com.br>
+#
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+LOG=/var/log/serversocket.log
+#PIDFILE=/var/run/serversocket.pid
+CLASSPATH=/usr/local/javaclass/postgresql-9.1-901-1.jdbc4.jar:/home/sometal
+DAEMON="/usr/local/jdk1.7/bin/java -cp $CLASSPATH br/com/grandev/acesso/ServerSocket --debug"
+
+# /hoest -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+getpidserversocket(){
+  PID=`ps ax --format pid,cmd | grep java | grep ServerSocket | grep -v "su grandevc"`
+  OLDIFS=$IFS
+  IFS=" "
+  pid=
+  for pid in $PID
+  do
+    break
+  done
+  IFS=$OLDIFS
+}
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting ServerSocket"
+        #start_daemon -p $PIDFILE $DAEMON
+        su grandevc -c "$DAEMON" >> $LOG 2>&1 &
+        log_end_msg $?
+    ;;
+  stop)
+        log_daemon_msg "Stopping ServerSocket"
+        getpidserversocket
+        kill -TERM $pid
+        log_end_msg $?
+    ;;
+  kill)
+        log_daemon_msg "Killing ServerSocket"
+        getpidserversocket
+        kill -KILL $pid
+        log_end_msg $?
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/serversocket {start|stop|kill|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
