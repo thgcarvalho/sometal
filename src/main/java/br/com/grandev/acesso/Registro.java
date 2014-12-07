@@ -1,8 +1,6 @@
 package br.com.grandev.acesso;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import br.com.grandev.acesso.ControleDeRegistros.Status;
 
@@ -16,8 +14,8 @@ public class Registro implements Serializable {
 
 	private Long id;
 	private int codigo;
-	private Date data;
-	private Date hora;
+	private int data;
+	private int hora;
 	private String tipo;
 	private String origen;
 	private Status status;
@@ -25,7 +23,7 @@ public class Registro implements Serializable {
 	public Registro() {
 	}
 
-	public Registro(int codigo, Date data, Date hora, String tipo,
+	public Registro(int codigo, int data, int hora, String tipo,
 			String origen) {
 		this.codigo = codigo;
 		this.data = data;
@@ -50,19 +48,19 @@ public class Registro implements Serializable {
 		this.codigo = codigo;
 	}
 
-	public Date getData() {
+	public int getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(int data) {
 		this.data = data;
 	}
 
-	public Date getHora() {
+	public int getHora() {
 		return hora;
 	}
 
-	public void setHora(Date hora) {
+	public void setHora(int hora) {
 		this.hora = hora;
 	}
 
@@ -115,18 +113,10 @@ public class Registro implements Serializable {
 		if (codigo != other.codigo) {
 			return false;
 		}
-		if (data == null) {
-			if (other.data != null) {
-				return false;
-			}
-		} else if (!data.equals(other.data)) {
+		if (data != other.data) {
 			return false;
 		}
-		if (hora == null) {
-			if (other.hora != null) {
-				return false;
-			}
-		} else if (!hora.equals(other.hora)) {
+		if (hora != other.hora) {
 			return false;
 		}
 		if (origen == null) {
@@ -147,12 +137,9 @@ public class Registro implements Serializable {
 	}
 
 	public String toString() {
-		SimpleDateFormat sdfHM = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/YYYY");
-		return "Registro [codigo=" + codigo + ", data=" + (data == null ? "null" : sdfDMY.format(data))
-				+ ", hora=" + (hora == null ? "null" : sdfHM.format(hora)) + ", tipo=" + tipo 
+		return "Registro [codigo=" + codigo + ", data=" + data
+				+ ", hora=" + hora + ", tipo=" + tipo 
 				+ ", origen=" + origen + "]";
 	}
-
 
 }

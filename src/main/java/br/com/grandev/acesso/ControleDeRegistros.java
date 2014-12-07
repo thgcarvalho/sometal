@@ -3,6 +3,8 @@ package br.com.grandev.acesso;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.grandev.acesso.service.ClientSocket;
+
 public class ControleDeRegistros {
 
 	private static final String LOGNAME = "ControleDeRegistros";
@@ -70,12 +72,13 @@ public class ControleDeRegistros {
 	}
 	
 	public void enviar() {
+		ClientSocket cs = new ClientSocket();
 		DisplayMessage.display(LOGNAME, "Enviando dados...");
 		for (Registro pendente : registrosNaoEnviados) {
 			pendente.setStatus(Status.ENVIADO);
+			cs.sendData(pendente.getData(), pendente.getHora(), pendente.getCodigo());
 		}
-		ClientSocket cs = new ClientSocket();
-		cs.sendData("112222", "1344", 1234);
+		cs.sendData(112222, 1344, 1234);
 		printGD();
 	}
 

@@ -1,4 +1,4 @@
-package br.com.grandev.acesso;
+package br.com.grandev.acesso.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +17,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+
+import br.com.grandev.acesso.DisplayMessage;
+import br.com.grandev.acesso.ReadProperties;
 
 public class ServerSocket {
 	private static final String LOGNAME = "ServerSocket";
@@ -213,7 +216,7 @@ public class ServerSocket {
 
 					strarrTokens = strLine.split(" ");
 					if (strarrTokens.length == 0){
-						quit(strarrTokens);
+						quit();
 					} // if toks = 0
 
 					strarrTokens[0] = strarrTokens[0].toUpperCase();
@@ -221,7 +224,6 @@ public class ServerSocket {
 							strarrTokens[0].equals("QUIT") ||
 							strarrTokens[0].equals("RESTART") ||
 							strarrTokens[0].equals(IDENTIFIER_SAVEDATA)
-
 							)){
 						pw.write("500 unrecognized command" + " uid=" + strUId + " termid=" + strTermId +
 								" dtid=" + strDtId + " hrid=" + strHrId + "\n");
@@ -230,14 +232,14 @@ public class ServerSocket {
 					}
 
 					if (strarrTokens[0].equals("QUIT")){
-						if(quit(strarrTokens)){
+						if(quit()){
 							iProtState = ISTATE_CONNECTED;
 						}
 						break;
 					}  // quit
 
 					if (strarrTokens[0].equals("RESTART")){
-						if(restart(strarrTokens)){
+						if(restart()){
 							iProtState = ISTATE_CONNECTED;
 						}
 						continue;
@@ -401,14 +403,14 @@ public class ServerSocket {
 			return (true);
 		}
 		
-		private boolean quit(String[] strarrTokens){
+		private boolean quit(){
 			pw.write("201 closing connection" + " uid=" + strUId + " termid=" + strTermId +
 					" dtid=" + strDtId + " hrid=" + strHrId + "\n");
 			pw.flush();
 			return(true);
 		}
 
-		private boolean restart(String[] strarrTokens){
+		private boolean restart() {
 			pw.write("200 restarting connection" + " uid=" + strUId + " termid=" + strTermId +
 					" dtid=" + strDtId + " hrid=" + strHrId + "\n");
 			pw.flush();

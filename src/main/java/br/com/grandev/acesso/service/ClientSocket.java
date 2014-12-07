@@ -1,4 +1,4 @@
-package br.com.grandev.acesso;
+package br.com.grandev.acesso.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import br.com.grandev.acesso.DisplayMessage;
 
 public class ClientSocket {
 
@@ -17,12 +19,12 @@ public class ClientSocket {
     public static final String HTTP_500 = "Erro interno do servidor";
     private String strUId = "Empresa";
     
-    public static void main(String[] args) {
-		ClientSocket cs = new ClientSocket();
-		cs.sendData("112222", "1344", 1234);
-	}
+//    public static void main(String[] args) {
+//		ClientSocket cs = new ClientSocket();
+//		cs.sendData("112222", "1344", 1234);
+//	}
     
-    protected String sendData(String data, String hora, int codigo) {
+    public String sendData(int data, int hora, int codigo) {
         String strResp;
         BufferedReader br;
         PrintWriter pw;
