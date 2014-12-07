@@ -1,8 +1,13 @@
 package br.com.grandev.acesso;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.grandev.acesso.dao.ConnectionFactory;
 import br.com.grandev.acesso.service.ClientSocket;
 
 public class ControleDeRegistros {
@@ -40,8 +45,42 @@ public class ControleDeRegistros {
 	
 	private void coletar() {
 		DisplayMessage.display(LOGNAME, "Iniciando a coleta de dados...");
-		// TODO coletar registros das catracas
-		// TODO coletar registros gerenciados
+		Connection conn = ConnectionFactory.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement("select NumInner, Tipo, Data, Cartao, Status"
+					+ " from tb_INNER");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Inner inner = new Inner();
+				inner.setNumInner(rs.getInt(1));
+				inner.setTipo(rs.getString(2));
+				inner.setData(rs.getDate(3));
+				inner.setCartao(rs.getString(4));
+				inner.setStatus(rs.getInt(5));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (rs != null) {
+					rs.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void analizar() {

@@ -1,0 +1,1 @@
+CREATE TABLE [tb_INNER] (	[NumInner] [int] NULL ,	[Tipo] [char] (3) NULL ,	[Data] [datetime] NULL ,	[Cartao] [char] (16) NULL )	-- Table: "tb_INNER"-- DROP TABLE "tb_INNER";CREATE TABLE "tb_INNER"(  "NumInner" integer,  "Tipo" character varying(3),  "Data" date,  "Cartao" character varying(16))WITH (  OIDS=FALSE);ALTER TABLE "tb_INNER"  OWNER TO postgres;

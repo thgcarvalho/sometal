@@ -4,17 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import br.com.grandev.acesso.Registro;
+import br.com.grandev.acesso.Inner;
 
-public class RegistroDao {
+public class InnerDao {
 
-	public void insert(Registro registro) {
+	public void insert(Inner inner) {
 		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement("insert into lockheader values(?,?)");
-			ps.setString(1, registro.getTipo());
-			ps.setString(2, registro.getTipo());
+			ps = conn.prepareStatement("insert into tb_INNER values(?,?,?,?)");
+			ps.setInt(1, inner.getNumInner());
+			ps.setString(2, inner.getTipo());
+			ps.setDate(3, (java.sql.Date) inner.getData());
+			ps.setString(4, inner.getCartao());
 			int i = ps.executeUpdate();
 			if (i != 0) {
 				System.out.println("Inserted");
@@ -41,13 +43,18 @@ public class RegistroDao {
 		}
 	}
 	
-	public void update(Registro registro) {
+	public void update(Inner inner) {
 		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement ps = null;
+		
 		try {
-			ps = conn.prepareStatement("update lockheader set function=? where id=?");
-			ps.setString(1, registro.getTipo());
-			ps.setString(2, registro.getTipo());
+			ps = conn.prepareStatement("update tb_INNER set statu=? where"
+					+ " NumInner=? and Tipo=? and Data=? and Cartao=?");
+			ps.setInt(1, inner.getStatus());
+			ps.setInt(2, inner.getNumInner());
+			ps.setString(3, inner.getTipo());
+			ps.setDate(4, (java.sql.Date) inner.getData());
+			ps.setString(5, inner.getCartao());
 			int i = ps.executeUpdate();
 			if (i != 0) {
 				System.out.println("updated");
@@ -74,12 +81,16 @@ public class RegistroDao {
 		}
 	}
 	
-	public void delete(Registro registro) {
+	public void delete(Inner inner) {
 		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement("delete lockheader where id=?");
-			ps.setString(1, registro.getTipo());
+			ps = conn.prepareStatement("delete tb_INNER where"
+					+ " NumInner=? and Tipo=? and Data=? and Cartao=?");
+			ps.setInt(1, inner.getNumInner());
+			ps.setString(2, inner.getTipo());
+			ps.setDate(3, (java.sql.Date) inner.getData());
+			ps.setString(4, inner.getCartao());
 			int i = ps.executeUpdate();
 			if (i != 0) {
 				System.out.println("deleted");

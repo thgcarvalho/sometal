@@ -12,7 +12,6 @@ public class Registro implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
 	private int codigo;
 	private int data;
 	private int hora;
@@ -23,21 +22,12 @@ public class Registro implements Serializable {
 	public Registro() {
 	}
 
-	public Registro(int codigo, int data, int hora, String tipo,
-			String origen) {
+	public Registro(int codigo, int data, int hora, String tipo, String origen) {
 		this.codigo = codigo;
 		this.data = data;
 		this.hora = hora;
 		this.tipo = tipo;
 		this.origen = origen;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public int getCodigo() {
@@ -87,8 +77,6 @@ public class Registro implements Serializable {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	
-
 
 	@Override
 	public int hashCode() {
