@@ -10,6 +10,16 @@ public class Inner {
 	private String cartao;
 	private int status;
 	
+	public Inner() {}
+	
+	public Inner(int numInner, String tipo, Date data, String cartao, int status) {
+		this.numInner = numInner;
+		this.tipo = tipo;
+		this.data = data;
+		this.cartao = cartao;
+		this.status = status;
+	}
+	
 	public int getNumInner() {
 		return numInner;
 	}

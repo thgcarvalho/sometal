@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import br.com.grandev.acesso.DisplayMessage;
+import br.com.grandev.acesso.Status;
 
 public class ClientSocket {
 
@@ -19,16 +20,12 @@ public class ClientSocket {
     public static final String HTTP_500 = "Erro interno do servidor";
     private String strUId = "Empresa";
     
-//    public static void main(String[] args) {
-//		ClientSocket cs = new ClientSocket();
-//		cs.sendData("112222", "1344", 1234);
-//	}
-    
-    public String sendData(int data, int hora, int codigo) {
+    public Status sendData(String origem, String tipo, int data, int hora, int codigo) {
         String strResp;
         BufferedReader br;
         PrintWriter pw;
         Socket socket;
+        Status status = Status.NAOENVIADO;
 
         try {
             if (blDebug) {
@@ -44,7 +41,7 @@ public class ClientSocket {
             pw.write("HELO " + strUId + " " + InetAddress.getLocalHost().getHostName() + "\n");
             pw.flush();
             
-            pw.write("SENDDATA " + data + " " + hora + " " + codigo + "\n");
+            pw.write("SENDDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
             pw.flush();
             
             while ((strResp = br.readLine()) != null) {
@@ -59,6 +56,7 @@ public class ClientSocket {
     			}
     			if (strResp.substring(0, 3).equals("200")) {
     				strResp  = HTTP_200;
+    				status = Status.ENVIADO;
     				break;
     			}
     			if (strResp.length() > 3 && strResp.substring(0, 3).equals("500")) {
@@ -75,7 +73,7 @@ public class ClientSocket {
         	DisplayMessage.display(LOGNAME, "Exception..." + oExcp.getMessage());
             strResp = NETWORK_UNREACHABLE ;
         }
-        return strResp;
+        return status;
     }
 
 }

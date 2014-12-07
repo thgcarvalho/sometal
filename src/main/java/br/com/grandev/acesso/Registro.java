@@ -2,8 +2,6 @@ package br.com.grandev.acesso;
 
 import java.io.Serializable;
 
-import br.com.grandev.acesso.ControleDeRegistros.Status;
-
 /**
  * @author Thiago Carvalho
  * 

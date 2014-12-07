@@ -1,80 +1,66 @@
 package br.com.grandev.acesso;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
 
-import br.com.grandev.acesso.ControleDeRegistros.Status;
+import br.com.grandev.acesso.dao.InnerDao;
 
 public class ControleDeRegistrosTest {
 
 	@Test
 	public void deveIdentificarRegistroNovo() {
-		int data = 20141222;
-		int hora = 1212;
-		Registro c1 = new Registro(1001, data, hora, "01", "C01");
-		Registro c2 = new Registro(1002, data, hora, "02", "C01");
-		Registro c3 = new Registro(1003, data, hora, "01", "C01");
+		Date data = new Date();
+		Inner i1 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i2 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i3 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i4 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.NAOENVIADO.getCodigo());
+		Inner i5 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.NAOENVIADO.getCodigo());
 		
-		Registro g1 = new Registro(1001, data, hora, "01", "C01");
-		Registro g2 = new Registro(1002, data, hora, "02", "C01");
+		List<Inner> inners = new ArrayList<Inner>();
+		inners.add(i1);
+		inners.add(i2);
+		inners.add(i3);
+		inners.add(i4);
+		inners.add(i5);
 		
-		List<Registro> registrosDasCatracas = new ArrayList<Registro>();
-		registrosDasCatracas.add(c1);
-		registrosDasCatracas.add(c2);
-		registrosDasCatracas.add(c3);
+		InnerDao daoFalso = mock(InnerDao.class);
+		when(daoFalso.getAll()).thenReturn(inners);
 		
-		List<Registro> registrosGerenciados = new ArrayList<Registro>();
-		registrosGerenciados.add(g1);
-		registrosGerenciados.add(g2);
+		ControleDeRegistros cdr = new ControleDeRegistros(daoFalso);
 		
-		ControleDeRegistros cdr = new ControleDeRegistros();
-		cdr.setRegistrosDasCatracas(registrosDasCatracas);
-		cdr.setRegistrosGerenciados(registrosGerenciados);
-		
-		cdr.analizar();
-		
-		assertEquals(3, cdr.getRegistrosDasCatracas().size());
-		assertEquals(2, cdr.getRegistrosGerenciados().size());
-		assertEquals(1, cdr.getRegistrosNaoEnviados().size());
+		assertEquals(5, cdr.getInners().size());
+		assertEquals(2, cdr.getInnersPendentes().size());
 	}
 	
 	@Test
 	public void deveIdentificarRegistroComFalhaNoEnvio() {
-		int data = 20141222;
-		int hora = 1212;
-		Registro c1 = new Registro(1011, data, hora, "01", "C01");
-		Registro c2 = new Registro(1012, data, hora, "02", "C01");
-		Registro c3 = new Registro(1013, data, hora, "01", "C01");
+		Date data = new Date();
+		Inner i1 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i2 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i3 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.FALHA.getCodigo());
+		Inner i4 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
+		Inner i5 = new Inner(1,Tipo.ENTRADA.getCodigo(), data, "1001", Status.ENVIADO.getCodigo());
 		
-		Registro g1 = new Registro(1011, data, hora, "01", "C01");
-		g1.setStatus(Status.ENVIADO);
-		Registro g2 = new Registro(1012, data, hora, "02", "C01"); 
-		g2.setStatus(Status.FALHA);
-		Registro g3 = new Registro(1013, data, hora, "01", "C01");
-		g3.setStatus(Status.ENVIADO);
+		List<Inner> inners = new ArrayList<Inner>();
+		inners.add(i1);
+		inners.add(i2);
+		inners.add(i3);
+		inners.add(i4);
+		inners.add(i5);
 		
-		List<Registro> registrosDasCatracas = new ArrayList<Registro>();
-		registrosDasCatracas.add(c1);
-		registrosDasCatracas.add(c2);
-		registrosDasCatracas.add(c3);
+		InnerDao daoFalso = mock(InnerDao.class);
+		when(daoFalso.getAll()).thenReturn(inners);
 		
-		List<Registro> registrosGerenciados = new ArrayList<Registro>();
-		registrosGerenciados.add(g1);
-		registrosGerenciados.add(g2);
-		registrosGerenciados.add(g3);
+		ControleDeRegistros cdr = new ControleDeRegistros(daoFalso);
 		
-		ControleDeRegistros cdr = new ControleDeRegistros();
-		cdr.setRegistrosDasCatracas(registrosDasCatracas);
-		cdr.setRegistrosGerenciados(registrosGerenciados);
-		
-		cdr.analizar();
-		
-		assertEquals(3, cdr.getRegistrosDasCatracas().size());
-		assertEquals(3, cdr.getRegistrosGerenciados().size());
-		assertEquals(1, cdr.getRegistrosNaoEnviados().size());
+		assertEquals(5, cdr.getInners().size());
+		assertEquals(1, cdr.getInnersPendentes().size());
 	}
 }

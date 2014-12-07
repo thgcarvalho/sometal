@@ -3,6 +3,8 @@ package br.com.grandev.acesso;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import br.com.grandev.acesso.dao.InnerDao;
+
 public class RotinaDeRegistros {
 
 	private static final long TEMPO = (1000 * 10);
@@ -14,8 +16,8 @@ public class RotinaDeRegistros {
 			TimerTask tarefa = new TimerTask() {
 				public void run() {
 					try {
-						ControleDeRegistros cdr = new ControleDeRegistros();
-						cdr.gerenciarRegistros();
+						ControleDeRegistros cdr = new ControleDeRegistros(new InnerDao());
+						cdr.enviar();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
