@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import br.com.grandev.acesso.DisplayMessage;
-import br.com.grandev.acesso.Status;
+import br.com.grandev.acesso.model.Status;
 
 public class ClientSocket {
 

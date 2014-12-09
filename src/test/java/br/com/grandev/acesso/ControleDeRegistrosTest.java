@@ -11,6 +11,9 @@ import java.util.List;
 import org.junit.Test;
 
 import br.com.grandev.acesso.dao.InnerDao;
+import br.com.grandev.acesso.model.Inner;
+import br.com.grandev.acesso.model.Status;
+import br.com.grandev.acesso.model.Tipo;
 
 public class ControleDeRegistrosTest {
 

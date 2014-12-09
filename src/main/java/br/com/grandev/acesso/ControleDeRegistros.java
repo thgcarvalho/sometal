@@ -5,8 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.grandev.acesso.dao.InnerDao;
+import br.com.grandev.acesso.model.Inner;
+import br.com.grandev.acesso.model.Status;
 import br.com.grandev.acesso.service.ClientSocket;
 
+/**
+ * @author Thiago Carvalho
+ * 
+ */
 public class ControleDeRegistros {
 
 	private static final String LOGNAME = "ControleDeRegistros";

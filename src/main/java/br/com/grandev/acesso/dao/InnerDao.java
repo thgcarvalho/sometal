@@ -7,13 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.grandev.acesso.Inner;
+import br.com.grandev.acesso.model.Inner;
 
+/**
+ * @author Thiago Carvalho
+ * 
+ */
 public class InnerDao {
 	
-	
 	public List<Inner> getAll() {
-		Connection conn = ConnectionFactory.getConnection();
+		Connection conn = LocalConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		List<Inner> inners = new ArrayList<Inner>();
@@ -56,7 +59,7 @@ public class InnerDao {
 	}
 
 	public void insert(Inner inner) {
-		Connection conn = ConnectionFactory.getConnection();
+		Connection conn = LocalConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement("insert into \"tb_INNER\" values(?,?,?,?)");
@@ -91,7 +94,7 @@ public class InnerDao {
 	}
 	
 	public void update(Inner inner) {
-		Connection conn = ConnectionFactory.getConnection();
+		Connection conn = LocalConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		
 		try {
@@ -129,7 +132,7 @@ public class InnerDao {
 	}
 	
 	public void delete(Inner inner) {
-		Connection conn = ConnectionFactory.getConnection();
+		Connection conn = LocalConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement("delete \"tb_INNER\" where"

@@ -11,8 +11,6 @@ import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +18,14 @@ import java.util.Properties;
 
 import br.com.grandev.acesso.DisplayMessage;
 import br.com.grandev.acesso.ReadProperties;
+import br.com.grandev.acesso.dao.RegistroDao;
+import br.com.grandev.acesso.dao.WebConnectionFactory;
+import br.com.grandev.acesso.model.Registro;
 
+/**
+ * @author Thiago Carvalho
+ * 
+ */
 public class ServerSocket {
 	private static final String LOGNAME = "ServerSocket";
 	static private final int IPORT_PROD = 7788;
@@ -35,7 +40,6 @@ public class ServerSocket {
 	static private SimpleDateFormat sdfHMS = null;
 
 	public static void main(String[] cmdline) {
-		Connection connSQL = null;
 		sdfDMY = new SimpleDateFormat("dd/MM/YYYY");
 		sdfDMY.setLenient(false);
 		sdfHMS = new SimpleDateFormat("HH:mm:ss");
@@ -46,27 +50,11 @@ public class ServerSocket {
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
 		if (!getCmdLine(cmdline)){
-			System.out.println(sdfHMS.format(new Date()) + " Parametri riga di comando invalidi. Startup continuera comunque");
+			System.out.println(sdfHMS.format(new Date()) + " Command line parameters disabled. Startup will continue anyway");
 		}
 
 		System.out.println(sdfHMS.format(new Date()) + " Checking SQL connection...");
-		Properties propDown = null;
-		try {
-			propDown = ReadProperties.load();
-			System.out.println(sdfHMS.format(new Date()) + "   jdbc classname=" + propDown.getProperty(ReadProperties.WEB_JDBC));
-			System.out.println(sdfHMS.format(new Date()) + "   jdbc connstr=" + propDown.getProperty(ReadProperties.WEB_CONNSTR));
-			Class.forName(propDown.getProperty(ReadProperties.WEB_JDBC));
-			connSQL = DriverManager.getConnection(propDown.getProperty(ReadProperties.WEB_CONNSTR),
-					propDown.getProperty(ReadProperties.WEB_USER), propDown.getProperty(ReadProperties.WEB_PASSWORD));
-			connSQL.close();
-		} catch(ClassNotFoundException excp) {
-			excp.printStackTrace();
-			System.exit(8);
-		} catch(IOException excp) {
-			excp.printStackTrace();
-			System.exit(8);
-		} catch(SQLException excp) {
-			excp.printStackTrace();
+		if (WebConnectionFactory.getConnection() == null) {
 			System.exit(8);
 		}
 
@@ -344,11 +332,16 @@ public class ServerSocket {
 		}
 
 		private boolean saveData(String[] strarrTokens) {
-			String articolo = null;
-			String descArt = null;
+			String origem;
+			String tipo;
+			String data;
+			String hora;
+			String codigo;
 			Date oDate = null;
-			boolean blFound = false;
-			if (strarrTokens.length != 2) {
+			SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
+			
+			if (strarrTokens.length != 6) {
 				pw.write("501 invalid syntax: " + IDENTIFIER_SAVEDATA + "\n");
 				pw.flush();
 				if (blDebug) {
@@ -359,7 +352,12 @@ public class ServerSocket {
 			
 			DisplayMessage.display(LOGNAME, "\t\t" + IDENTIFIER_SAVEDATA +" ISTATE_IDENTIFIED");
 			
-			articolo = strarrTokens[1];
+			origem = strarrTokens[1];
+			tipo = strarrTokens[2];
+			data = strarrTokens[3];
+			hora = strarrTokens[4];
+			codigo = strarrTokens[5];
+			
 			oDate = new Date();
 			strDtId = sdfDMY.format(oDate);
 			strHrId = sdfHMS.format(oDate);
@@ -370,17 +368,16 @@ public class ServerSocket {
 			}
 			
 			try {
-				PreparedStatement stmtArtDesc = connSQL.prepareStatement("select mpdsc"
-						+ " from cs_articoli" 
-						+ " where mitem = ? and mcosc = ?");
-				stmtArtDesc.setString(1, articolo);
-				ResultSet rsArtDesc = stmtArtDesc.executeQuery();
-				while (rsArtDesc.next()) {
-					descArt = checkNull(rsArtDesc.getString(1));
-					blFound = true;
-					break;
-				} // while
-				stmtArtDesc.close();
+				RegistroDao registroDao = new RegistroDao();
+				Registro registro = new Registro();
+				registro.setOrigem(origem);
+				registro.setTipo(tipo);
+				registro.setData(YMD.parse(data));
+				registro.setHora(HMS.parse(hora));
+				registro.setCodigo(Integer.parseInt(codigo));
+				registroDao.insert(registro);
+				pw.write("200 OK\n");
+				pw.flush();
 			} catch (Exception excp) {
 				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + "Exception connecting sql:");
 				excp.printStackTrace();
@@ -390,16 +387,9 @@ public class ServerSocket {
 			}
 			
 			if (blDebug) {
-				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + " " + IDENTIFIER_SAVEDATA + " art=" + articolo + " desc=" + descArt);
+				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + " " + IDENTIFIER_SAVEDATA + " codigo=" + codigo);
 			}
 
-			if (blFound) {
-				pw.write("200 " + descArt + "\n");
-				pw.flush();
-			} else {
-				pw.write("500 Not found\n");
-				pw.flush();
-			}
 			return (true);
 		}
 		
@@ -418,25 +408,7 @@ public class ServerSocket {
 			return(true);
 		}
 
-		private static String checkNull(String strIn) {
-			StringBuffer sb = new StringBuffer();
-			if (strIn == null) {
-				return ("");
-			} else {
-				char[] chArr = strIn.trim().toCharArray();
-				byte[] byArr = null;
-				for(int i = 0; i < chArr.length; i++) {
-					byArr = Character.toString(chArr[i]).getBytes();
-					if(byArr.length > 1) {
-						continue;
-					}
-					sb.append(chArr[i]);
-				}
-				return (sb.toString());
-			}
-		}
 	}
-
 	static public class ShutdownHook extends Thread {
 
 		public ShutdownHook(){

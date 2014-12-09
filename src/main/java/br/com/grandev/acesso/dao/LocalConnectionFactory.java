@@ -4,16 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionFactory {
+public class LocalConnectionFactory {
     //static reference to itself
-    private static ConnectionFactory instance = new ConnectionFactory();
+    private static LocalConnectionFactory instance = new LocalConnectionFactory();
     public static final String URL = "jdbc:postgresql://localhost:5432/grandevc_sometal";
     public static final String USER = "postgres";
     public static final String PASSWORD = "postgres";
     public static final String DRIVER_CLASS = "org.postgresql.Driver"; 
      
     //private constructor
-    private ConnectionFactory() {
+    private LocalConnectionFactory() {
         try {
             Class.forName(DRIVER_CLASS);
         } catch (ClassNotFoundException e) {

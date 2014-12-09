@@ -1,4 +1,4 @@
-package br.com.grandev.acesso;
+package br.com.grandev.acesso.model;
 
 import java.util.Date;
 
