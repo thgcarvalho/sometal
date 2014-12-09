@@ -19,7 +19,7 @@ public class InnerDao {
 		List<Inner> inners = new ArrayList<Inner>();
 		Inner inner = null;
 		try {
-			ps = conn.prepareStatement("select \"NumInner\", \"Tipo\", \"Data\", \"Cartao\", \"Situacao\""
+			ps = conn.prepareStatement("select \"NumInner\", \"Tipo\", \"Data\", \"Cartao\", \"Status\""
 					+ " from \"tb_INNER\"");
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -59,7 +59,7 @@ public class InnerDao {
 		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement("insert into tb_INNER values(?,?,?,?)");
+			ps = conn.prepareStatement("insert into \"tb_INNER\" values(?,?,?,?)");
 			ps.setInt(1, inner.getNumInner());
 			ps.setString(2, inner.getTipo());
 			ps.setDate(3, (java.sql.Date) inner.getData());
@@ -95,8 +95,8 @@ public class InnerDao {
 		PreparedStatement ps = null;
 		
 		try {
-			ps = conn.prepareStatement("update tb_INNER set statu=? where"
-					+ " NumInner=? and Tipo=? and Data=? and Cartao=?");
+			ps = conn.prepareStatement("update \"tb_INNER\" set \"Status\"=? where"
+					+ " \"NumInner\"=? and \"Tipo\"=? and \"Data\"=? and \"Cartao\"=?");
 			ps.setInt(1, inner.getStatus());
 			ps.setInt(2, inner.getNumInner());
 			ps.setString(3, inner.getTipo());
@@ -132,8 +132,8 @@ public class InnerDao {
 		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement("delete tb_INNER where"
-					+ " NumInner=? and Tipo=? and Data=? and Cartao=?");
+			ps = conn.prepareStatement("delete \"tb_INNER\" where"
+					+ " \"NumInner\"=? and \"Tipo\"=? and \"Data\"=? and \"Cartao\"=?");
 			ps.setInt(1, inner.getNumInner());
 			ps.setString(2, inner.getTipo());
 			ps.setDate(3, (java.sql.Date) inner.getData());

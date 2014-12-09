@@ -18,18 +18,22 @@ public class ClientSocket {
     public static final String NETWORK_UNREACHABLE = "Falha na conexão!";
     public static final String HTTP_200 = "Sucesso";
     public static final String HTTP_500 = "Erro interno do servidor";
+    public static final String HTTP_501 = "Invalid syntax"; 
+    public static final String HTTP_502 = "Invalid parameter"; 
     private String strUId = "Empresa";
     
     public Status sendData(String origem, String tipo, int data, int hora, int codigo) {
-        String strResp;
+        String heloResp;
+        String sendResp;
         BufferedReader br;
         PrintWriter pw;
         Socket socket;
         Status status = Status.NAOENVIADO;
+        boolean OK_200 = false;
 
         try {
             if (blDebug) {
-                DisplayMessage.display(LOGNAME, "SENDDATA");
+                DisplayMessage.display(LOGNAME, "sendData");
             }
 
             socket = new Socket();
@@ -41,37 +45,66 @@ public class ClientSocket {
             pw.write("HELO " + strUId + " " + InetAddress.getLocalHost().getHostName() + "\n");
             pw.flush();
             
-            pw.write("SENDDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
-            pw.flush();
-            
-            while ((strResp = br.readLine()) != null) {
+            while ((heloResp = br.readLine()) != null) {
     		    if (blDebug) {
-                    DisplayMessage.display(LOGNAME, "WHILE=" + strResp);
+                    DisplayMessage.display(LOGNAME, "heloResp=" + heloResp);
                 }
-    			if (strResp.length() < 4) {
+    			if (heloResp.substring(0, 3).equals("200")) {
+    				heloResp  = HTTP_200;
+    				OK_200 = true;
     				break;
     			}
-    			if (strResp.substring(3, 4).equals(" ")) {
+    			if (heloResp.substring(0, 3).equals("500")) {
+    				heloResp = HTTP_500;
     				break;
     			}
-    			if (strResp.substring(0, 3).equals("200")) {
-    				strResp  = HTTP_200;
-    				status = Status.ENVIADO;
+    			if (heloResp.substring(0, 3).equals("501")) {
+    				heloResp = HTTP_501;
     				break;
     			}
-    			if (strResp.length() > 3 && strResp.substring(0, 3).equals("500")) {
-    				strResp = HTTP_500;
+    			if (heloResp.substring(0, 3).equals("502")) {
+    				heloResp = HTTP_502;
     				break;
     			}
     		}
             
-            if (blDebug) {
-            	DisplayMessage.display(LOGNAME, "SENDDATA/Response=" + strResp);
+            if (OK_200) {
+	            pw.write("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
+	            pw.flush();
+	            
+	            while ((sendResp = br.readLine()) != null) {
+	    		    if (blDebug) {
+	                    DisplayMessage.display(LOGNAME, "sendResp=" + sendResp);
+	                }
+	    			if (sendResp.length() < 4) {
+	    				break;
+	    			}
+	    			if (sendResp.substring(3, 4).equals(" ")) {
+	    				break;
+	    			}
+	    			if (sendResp.substring(0, 3).equals("200")) {
+	    				sendResp  = HTTP_200;
+	    				status = Status.ENVIADO;
+	    				break;
+	    			}
+	    			if (sendResp.substring(0, 3).equals("500")) {
+	    				sendResp = HTTP_500;
+	    				status = Status.FALHA;
+	    				break;
+	    			}
+	    		}
+	            
+	            if (blDebug) {
+	            	DisplayMessage.display(LOGNAME, "sendResp/2=" + sendResp);
+	            }
+            } else {
+            	status = Status.FALHA;
             }
             socket.close();
         } catch (IOException oExcp) {
         	DisplayMessage.display(LOGNAME, "Exception..." + oExcp.getMessage());
-            strResp = NETWORK_UNREACHABLE ;
+        	DisplayMessage.display(LOGNAME, NETWORK_UNREACHABLE);
+            status = Status.FALHA;
         }
         return status;
     }

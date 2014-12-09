@@ -1,5 +1,6 @@
 package br.com.grandev.acesso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +51,14 @@ public class ControleDeRegistros {
 		int hora;
 		int codigo;
 		Status status = null;
+		SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
 		
 		for (Inner inner : this.innersPendentes) {
 			origem = String.valueOf(inner.getNumInner());
 			tipo = inner.getTipo();
-			data = 20141222;
-			hora = 121212;
+			data = Integer.parseInt(YMD.format(inner.getData()));
+			hora = Integer.parseInt(HMS.format(inner.getData()));;
 			codigo = Integer.parseInt(inner.getCartao());
 			
 			status = cs.sendData(origem, tipo, data, hora, codigo);
