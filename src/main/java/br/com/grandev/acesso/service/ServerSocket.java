@@ -16,11 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import br.com.grandev.acesso.DisplayMessage;
-import br.com.grandev.acesso.ReadProperties;
 import br.com.grandev.acesso.dao.RegistroDao;
 import br.com.grandev.acesso.dao.WebConnectionFactory;
 import br.com.grandev.acesso.model.Registro;
+import br.com.grandev.acesso.util.DisplayMessage;
+import br.com.grandev.acesso.util.ReadProperties;
 
 /**
  * @author Thiago Carvalho

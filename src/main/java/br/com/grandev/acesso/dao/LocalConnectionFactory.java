@@ -7,10 +7,15 @@ import java.sql.SQLException;
 public class LocalConnectionFactory {
     //static reference to itself
     private static LocalConnectionFactory instance = new LocalConnectionFactory();
-    public static final String URL = "jdbc:postgresql://localhost:5432/grandevc_sometal";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "postgres";
-    public static final String DRIVER_CLASS = "org.postgresql.Driver"; 
+//    public static final String URL = "jdbc:postgresql://localhost:5432/grandevc_sometal";
+//    public static final String USER = "postgres";
+//    public static final String PASSWORD = "postgres";
+//    public static final String DRIVER_CLASS = "org.postgresql.Driver"; 
+    
+    public static final String URL = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + "C:\\Program Files (x86)\\Gerenciador de Inners 5\\INNER5.MDB";
+    public static final String USER = "datatop";
+    public static final String PASSWORD = "datatop";
+    public static final String DRIVER_CLASS = "sun.jdbc.odbc.JdbcOdbcDriver"; 
      
     //private constructor
     private LocalConnectionFactory() {

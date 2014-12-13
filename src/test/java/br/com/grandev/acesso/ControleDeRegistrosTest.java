@@ -14,6 +14,7 @@ import br.com.grandev.acesso.dao.InnerDao;
 import br.com.grandev.acesso.model.Inner;
 import br.com.grandev.acesso.model.Status;
 import br.com.grandev.acesso.model.Tipo;
+import br.com.grandev.acesso.util.ControleDeRegistros;
 
 public class ControleDeRegistrosTest {
 

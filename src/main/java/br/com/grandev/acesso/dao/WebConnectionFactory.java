@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import br.com.grandev.acesso.ReadProperties;
+import br.com.grandev.acesso.util.ReadProperties;
 
 public class WebConnectionFactory {
     //static reference to itself

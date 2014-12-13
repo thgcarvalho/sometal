@@ -1,4 +1,4 @@
-package br.com.grandev.acesso;
+package br.com.grandev.acesso.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

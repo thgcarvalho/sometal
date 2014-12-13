@@ -1,4 +1,4 @@
-package br.com.grandev.acesso;
+package br.com.grandev.acesso.util;
 
 import java.util.Timer;
 import java.util.TimerTask;
