@@ -375,9 +375,13 @@ public class ServerSocket {
 				registro.setData(YMD.parse(data));
 				registro.setHora(HMS.parse(hora));
 				registro.setCodigo(Integer.parseInt(codigo));
-				registroDao.insert(registro);
-				pw.write("200 OK\n");
-				pw.flush();
+				if (registroDao.insert(registro)) {
+					pw.write("200 OK\n");
+					pw.flush();
+				} else {
+					pw.write("501 record was not saved\n");
+					pw.flush();
+				}
 			} catch (Exception excp) {
 				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + "Exception connecting sql:");
 				excp.printStackTrace();

@@ -5,7 +5,7 @@
 CREATE TABLE registro
 (
   id serial NOT NULL,
-   origen character varying(16),
+  origen character varying(16),
   tipo character varying(3),
   data date,
   hora time without time zone,

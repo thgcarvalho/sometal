@@ -32,6 +32,7 @@ import br.com.grandev.acesso.dao.InnerDao;
 import br.com.grandev.acesso.model.Inner;
 import br.com.grandev.acesso.service.Service;
 import br.com.grandev.acesso.util.ControleDeRegistros;
+import br.com.grandev.acesso.model.Status;
 
 public class ControleDeRegistrosSE implements Runnable {
    // Connect status constants
@@ -78,61 +79,119 @@ public class ControleDeRegistrosSE implements Runnable {
    public static BufferedReader in = null;
    public static PrintWriter out = null;
    
+   private static boolean blDebug = true;
+   
+   public static boolean helo() {
+	   boolean helo_200 = false;
+	   String heloResp;
+		try {
+			//sendString("HELO " + "Empresa" + " " + InetAddress.getLocalHost().getHostName() + "\n");
+			out.print("HELO " + "Empresa" + " " + InetAddress.getLocalHost().getHostName() + "\n");
+			out.flush();
+
+			while ((heloResp = in.readLine()) != null) {
+				if (blDebug) {
+					appendToChatBox("DEBUG: " + "HeloResp " + heloResp + "\n");
+				}
+				if (heloResp.substring(0, 3).equals("200")) {
+					helo_200 = true;
+					break;
+				}
+				if (heloResp.substring(0, 3).equals("500")) {
+					break;
+				}
+				if (heloResp.substring(0, 3).equals("501")) {
+					break;
+				}
+				if (heloResp.substring(0, 3).equals("502")) {
+					break;
+				}
+			}
+		} catch (UnknownHostException exp) {
+			appendToChatBox("EXP: " + exp.getMessage() + "\n");
+			exp.printStackTrace();
+		} catch (IOException exp) {
+			appendToChatBox("EXP: " + exp.getMessage() + "\n");
+			exp.printStackTrace();
+		}
+		changeStatusTS(NULL, true);
+		return helo_200;
+	}
+   
    public static void send() {
 		String origem;
 		String tipo;
 		int data;
 		int hora;
 		int codigo;
+		InnerDao innerDao = new InnerDao();
+        String sendResp;
+        Status status = Status.NAOENVIADO;
 		SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
+		//SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
 		
 		ControleDeRegistros cdr = new ControleDeRegistros(new InnerDao());
 		List<Inner> innersPendentes = cdr.getInnersPendentes();
 		
-		appendToChatBox("OUTGOING: " + "Send" + "\n");
-		try {
-			sendString("HELO " + "Empresa" + " " + InetAddress.getLocalHost().getHostName() + "\n");
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		
-		
-		for (Inner inner : innersPendentes) {
-			origem = String.valueOf(inner.getNumInner());
-			tipo = inner.getTipo();
-			data = Integer.parseInt(YMD.format(inner.getData()));
-			hora = Integer.parseInt(HMS.format(inner.getData()));;
-			codigo = Integer.parseInt(inner.getCartao());
-			
-			// Send the string
-			sendString("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
-			
-//            while ((sendResp = br.readLine()) != null) {
-//    		    if (blDebug) {
-//                    DisplayMessage.display(LOGNAME, "sendResp=" + sendResp);
-//                }
-//    			if (sendResp.length() < 4) {
-//    				break;
-//    			}
-//    			if (sendResp.substring(3, 4).equals(" ")) {
-//    				break;
-//    			}
-//    			if (sendResp.substring(0, 3).equals("200")) {
-//    				sendResp  = HTTP_200;
-//    				status = Status.ENVIADO;
-//    				break;
-//    			}
-//    			if (sendResp.substring(0, 3).equals("500")) {
-//    				sendResp = HTTP_500;
-//    				status = Status.FALHA;
-//    				break;
-//    			}
+		if (helo()) {
+			for (Inner inner : innersPendentes) {
+				origem = String.valueOf(inner.getNumInner());
+				tipo = inner.getTipo();
+				data = Integer.parseInt(YMD.format(inner.getData()));
+				hora = 121212;// Integer.parseInt(HMS.format(inner.getData()));;
+				codigo = Integer.parseInt(inner.getCartao());
 
+				// Send the string
+				out.print("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
+				out.flush();
+				appendToChatBox("OUT: " + "SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
 
-//			inner.setStatus(status.getCodigo());
-//			innerDao.update(inner);
+				try {
+					while ((sendResp = in.readLine()) != null) {
+						if (blDebug) {
+							appendToChatBox("DEBUG: " + "SendResp " + sendResp + "\n");
+						}
+						if (sendResp.substring(0, 3).equals("200")) {
+							if (blDebug) {
+								appendToChatBox("DEBUG: " + sendResp + "\n");
+							}
+							status = Status.ENVIADO;
+							break;
+						}
+						if (sendResp.substring(0, 3).equals("500")) {
+							if (blDebug) {
+								appendToChatBox("DEBUG: " + sendResp+ "\n");
+							}
+							status = Status.FALHA;
+							break;
+						}
+						if (sendResp.substring(0, 3).equals("501")) {
+							if (blDebug) {
+								appendToChatBox("DEBUG: " + sendResp + "\n");
+							}
+							status = Status.FALHA;
+							break;
+						}
+						if (sendResp.substring(0, 3).equals("502")) {
+							if (blDebug) {
+								appendToChatBox("DEBUG: " + sendResp + "\n");
+							}
+							status = Status.FALHA;
+							break;
+						}
+					}
+					inner.setStatus(status.getCodigo());
+					innerDao.update(inner);
+					appendToChatBox("INFO: " + "UPDATE " + status + "\n");
+				} catch (IOException exp) {
+					appendToChatBox("EXP: " + exp.getMessage() + "\n");
+					exp.printStackTrace();
+				}
+			}
+		} else {
+			appendToChatBox("OUT: " + "HELO NOT 200" + "\n");
 		}
+		changeStatusTS(NULL, true);
 	}
    
 
@@ -312,6 +371,7 @@ public class ControleDeRegistrosSE implements Runnable {
    /////////////////////////////////////////////////////////////////
 
    // Add text to send-buffer
+   @SuppressWarnings("unused")
    private static void sendString(String s) {
       synchronized (toSend) {
          toSend.append(s + "\n");
@@ -400,7 +460,7 @@ public class ControleDeRegistrosSE implements Runnable {
 
    // The main procedure
    public static void main(String args[]) {
-      String s;
+      //String s;
 
       initGUI();
       
@@ -435,30 +495,29 @@ public class ControleDeRegistrosSE implements Runnable {
 
          case CONNECTED:
             try {
-               // Send data
-               if (toSend.length() != 0) {
-                  out.print(toSend); 
-                  out.flush();
-                  toSend.setLength(0);
-                  changeStatusTS(NULL, true);
-               }
-
-               // Receive data
-               if (in.ready()) {
-                  s = in.readLine();
-                  if ((s != null) &&  (s.length() != 0)) {
-                     // Check if it is the end of a trasmission
-                     if (s.equals(END_CHAT_SESSION)) {
-                        changeStatusTS(DISCONNECTING, true);
-                     } else {
-                    	// Otherwise, receive what text
-                        appendToChatBox("INCOMING: " + s + "\n");
-                        changeStatusTS(NULL, true);
-                     }
-                  }
-               }
-            }
-            catch (IOException e) {
+//               // Send data
+//               if (toSend.length() != 0) {
+//                  out.print(toSend); 
+//                  out.flush();
+//                  toSend.setLength(0);
+//                  changeStatusTS(NULL, true);
+//               }
+//
+//               // Receive data
+//               if (in.ready()) {
+//                  s = in.readLine();
+//                  if ((s != null) &&  (s.length() != 0)) {
+//                     // Check if it is the end of a trasmission
+//                     if (s.equals(END_CHAT_SESSION)) {
+//                        changeStatusTS(DISCONNECTING, true);
+//                     } else {
+//                    	// Otherwise, receive what text
+//                        appendToChatBox("IN: " + s + "\n");
+//                        changeStatusTS(NULL, true);
+//                     }
+//                  }
+//               }
+            } catch (Exception e) { //IOException
                cleanUp();
                changeStatusTS(DISCONNECTED, false);
             }

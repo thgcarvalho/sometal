@@ -20,11 +20,6 @@ public class ControleDeRegistros {
 	private List<Inner> innersPendentes;
 	private InnerDao innerDao;
 	
-	public static void main(String[] args) {
-		ControleDeRegistros cdr = new ControleDeRegistros(new InnerDao());
-		cdr.enviar();
-	}
-	
 	public ControleDeRegistros(InnerDao innerDao) {
 		printSM();
 		this.innerDao = innerDao;
