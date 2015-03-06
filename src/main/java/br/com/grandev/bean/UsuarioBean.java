@@ -87,15 +87,17 @@ public class UsuarioBean implements Serializable {
 			userName = fc.getExternalContext().getUserPrincipal().getName();
 			// usuario atual
 			usuarioAtual = usuarioDao.findByUserName(userName);
-			usuarioAtual.setRoles(getRolesDoUsuario(userName));
-			usuarioAtual.setSenha(getSenhaDoUsuario(userName));
-			session.setAttribute("user", usuarioAtual);
+			
+			if (usuarioAtual != null) {
+				usuarioAtual.setRoles(getRolesDoUsuario(userName));
+				usuarioAtual.setSenha(getSenhaDoUsuario(userName));
+				session.setAttribute("user", usuarioAtual);
+				Date data = GregorianCalendar.getInstance().getTime();
+				System.out.println("\nLOGIN:" + this.usuarioAtual + " " + this.usuarioAtual.getRoles() + " " + sdf.format(data));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		Date data = GregorianCalendar.getInstance().getTime();
-		System.out.println("\nLOGIN:" + this.usuarioAtual + " " + this.usuarioAtual.getRoles() + " " + sdf.format(data));
 	}
 	
 	public List<String> getRoles() {

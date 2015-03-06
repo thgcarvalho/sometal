@@ -59,12 +59,5 @@
 	    	</h:panelGrid>
 		</p:dialog>
 		
-		<!-- EXIT Dialog -->
-		<p:confirmDialog id="confirmationExit" message="#{facesContext.externalContext.userPrincipal.name}, você deseja sair do sistema?" header="Sair do Sistema?" 
-			severity="alert" widgetVar="confirmExit" modal="true" showEffect="fade" hideEffect="explode" >  
-	 		<p:commandButton id="confirmExit" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" oncomplete="cconfirmExit.hide()" actionListener="#{usuarioBean.logout}" immediate="true" /> 
-	 		<p:commandButton id="declineExit" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('confirmExit').hide()" />   
-		</p:confirmDialog>
-
 	</h:form>
 </ui:composition>

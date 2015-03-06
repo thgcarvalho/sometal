@@ -44,11 +44,11 @@ public class ControleDeRegistrosSE implements Runnable {
 
 	// Other constants
 	public final static String statusMessages[] = {
-			" Error! Could not connect!", 
-			" Disconnected", 
-			" Disconnecting...",
-			" Connecting...", 
-			" Connected" };
+			" Erro! Não foi possível se conectar!", 
+			" Desconectado", 
+			" Desconectando...",
+			" Conectando...", 
+			" Conectado" };
 	
    public final static ControleDeRegistrosSE tcpObj = new ControleDeRegistrosSE();
    public final static String END_CHAT_SESSION =
