@@ -38,12 +38,12 @@ public class TCPChat implements Runnable {
 
 	// Other constants
 	public final static String statusMessages[] = {
-			" Error! Could not connect!", 
-			" Disconnected", 
-			" Disconnecting...",
-			" Connecting...", 
-			" Connected" };
-	
+			" Erro! Não foi possível se conectar!", 
+			" Desconectado", 
+			" Desconectando...",
+			" Conectando...", 
+			" Conectado" };
+		
    public final static TCPChat tcpObj = new TCPChat();
    public final static String END_CHAT_SESSION =
       new Character((char)0).toString(); // Indicates the end of a session

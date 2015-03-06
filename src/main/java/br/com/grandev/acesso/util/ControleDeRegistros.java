@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.grandev.acesso.dao.InnerDao;
-import br.com.grandev.acesso.model.Inner;
+import br.com.grandev.acesso.dao.BilheteDao;
+import br.com.grandev.acesso.model.Bilhete;
 import br.com.grandev.acesso.model.Status;
 import br.com.grandev.acesso.service.ClientSocket;
 
@@ -16,28 +16,28 @@ import br.com.grandev.acesso.service.ClientSocket;
 public class ControleDeRegistros {
 
 	private static final String LOGNAME = "ControleDeRegistros";
-	private List<Inner> inners;
-	private List<Inner> innersPendentes;
-	private InnerDao innerDao;
+	private List<Bilhete> bilhetes;
+	private List<Bilhete> bilhetesPendentes;
+	private BilheteDao bilheteDao;
 	
-	public ControleDeRegistros(InnerDao innerDao) {
+	public ControleDeRegistros(BilheteDao bilheteDao) {
 		printSM();
-		this.innerDao = innerDao;
-		this.inners = coletar();
-		this.innersPendentes = identificarPendentes();
+		this.bilheteDao = bilheteDao;
+		this.bilhetes = coletar();
+		this.bilhetesPendentes = identificarPendentes();
 	}
 	
-	private List<Inner> coletar() {
+	private List<Bilhete> coletar() {
 		DisplayMessage.display(LOGNAME, "Iniciando a coleta de dados...");
-		return this.innerDao.getAll();
+		return this.bilheteDao.getAll();
 	
 	}
 	
-	private List<Inner> identificarPendentes() {
-		List<Inner> pendentes = new ArrayList<Inner>();
-		for (Inner inner : this.inners) {
-			if (inner.getStatus() != Status.ENVIADO.getCodigo()) {
-				pendentes.add(inner);
+	private List<Bilhete> identificarPendentes() {
+		List<Bilhete> pendentes = new ArrayList<Bilhete>();
+		for (Bilhete bilhete : this.bilhetes) {
+			if (bilhete.getStatus() != Status.ENVIADO.getCodigo()) {
+				pendentes.add(bilhete);
 			}
 		}
 		return pendentes;
@@ -55,30 +55,30 @@ public class ControleDeRegistros {
 		SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
 		
-		for (Inner inner : this.innersPendentes) {
-			origem = String.valueOf(inner.getNumInner());
-			tipo = inner.getTipo();
-			data = Integer.parseInt(YMD.format(inner.getData()));
-			hora = Integer.parseInt(HMS.format(inner.getData()));;
-			codigo = Integer.parseInt(inner.getCartao());
+		for (Bilhete bilhete : this.bilhetesPendentes) {
+			origem = bilhete.getOrigem();
+			tipo = bilhete.getTipo();
+			data = Integer.parseInt(YMD.format(bilhete.getData()));
+			hora = Integer.parseInt(HMS.format(bilhete.getData()));;
+			codigo = bilhete.getCodigo();
 			
 			status = cs.sendData(origem, tipo, data, hora, codigo);
-			inner.setStatus(status.getCodigo());
-			innerDao.update(inner);
+			bilhete.setStatus(status.getCodigo());
+			bilheteDao.update(bilhete);
 		}
 		printGD();
 	}
 
-	public List<Inner> getInners() {
-		return inners;
+	public List<Bilhete> getBilhetes() {
+		return bilhetes;
 	}
 	
-	public void setInners(List<Inner> inners) {
-		this.inners = inners;
+	public void setBilhetes(List<Bilhete> bilhetes) {
+		this.bilhetes = bilhetes;
 	}
 	
-	public List<Inner> getInnersPendentes() {
-		return innersPendentes;
+	public List<Bilhete> getBilhetesPendentes() {
+		return bilhetesPendentes;
 	}
 	
 	private void printSM() {

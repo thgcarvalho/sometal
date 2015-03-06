@@ -28,11 +28,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import br.com.grandev.acesso.dao.InnerDao;
-import br.com.grandev.acesso.model.Inner;
+import br.com.grandev.acesso.dao.BilheteDao;
+import br.com.grandev.acesso.model.Bilhete;
+import br.com.grandev.acesso.model.Status;
 import br.com.grandev.acesso.service.Service;
 import br.com.grandev.acesso.util.ControleDeRegistros;
-import br.com.grandev.acesso.model.Status;
 
 public class ControleDeRegistrosSE implements Runnable {
    // Connect status constants
@@ -124,22 +124,22 @@ public class ControleDeRegistrosSE implements Runnable {
 		int data;
 		int hora;
 		int codigo;
-		InnerDao innerDao = new InnerDao();
+		BilheteDao innerDao = new BilheteDao();
         String sendResp;
         Status status = Status.NAOENVIADO;
 		SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
-		//SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
+		SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
 		
-		ControleDeRegistros cdr = new ControleDeRegistros(new InnerDao());
-		List<Inner> innersPendentes = cdr.getInnersPendentes();
+		ControleDeRegistros cdr = new ControleDeRegistros(new BilheteDao());
+		List<Bilhete> bilhetesPendentes = cdr.getBilhetesPendentes();
 		
 		if (helo()) {
-			for (Inner inner : innersPendentes) {
-				origem = String.valueOf(inner.getNumInner());
-				tipo = inner.getTipo();
-				data = Integer.parseInt(YMD.format(inner.getData()));
-				hora = 121212;// Integer.parseInt(HMS.format(inner.getData()));;
-				codigo = Integer.parseInt(inner.getCartao());
+			for (Bilhete bilhete : bilhetesPendentes) {
+				origem = bilhete.getOrigem();
+				tipo = bilhete.getTipo();
+				data = Integer.parseInt(YMD.format(bilhete.getData()));
+				hora = Integer.parseInt(HMS.format(bilhete.getData()));;
+				codigo = bilhete.getCodigo();
 
 				// Send the string
 				out.print("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
@@ -180,8 +180,8 @@ public class ControleDeRegistrosSE implements Runnable {
 							break;
 						}
 					}
-					inner.setStatus(status.getCodigo());
-					innerDao.update(inner);
+					bilhete.setStatus(status.getCodigo());
+					innerDao.update(bilhete);
 					appendToChatBox("INFO: " + "UPDATE " + status + "\n");
 				} catch (IOException exp) {
 					appendToChatBox("EXP: " + exp.getMessage() + "\n");

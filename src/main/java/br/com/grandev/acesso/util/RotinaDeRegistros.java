@@ -3,7 +3,7 @@ package br.com.grandev.acesso.util;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import br.com.grandev.acesso.dao.InnerDao;
+import br.com.grandev.acesso.dao.BilheteDao;
 
 public class RotinaDeRegistros {
 
@@ -16,7 +16,7 @@ public class RotinaDeRegistros {
 			TimerTask tarefa = new TimerTask() {
 				public void run() {
 					try {
-						ControleDeRegistros cdr = new ControleDeRegistros(new InnerDao());
+						ControleDeRegistros cdr = new ControleDeRegistros(new BilheteDao());
 						cdr.enviar();
 					} catch (Exception e) {
 						e.printStackTrace();
