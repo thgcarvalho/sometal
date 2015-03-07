@@ -16,6 +16,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -28,11 +29,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import br.com.grandev.acesso.dao.BilheteDao;
+import br.com.grandev.acesso.dao.ManipuladorDeArquivo;
 import br.com.grandev.acesso.model.Bilhete;
-import br.com.grandev.acesso.model.Status;
 import br.com.grandev.acesso.service.Service;
-import br.com.grandev.acesso.util.ControleDeRegistros;
 
 public class ControleDeRegistrosSE implements Runnable {
    // Connect status constants
@@ -79,13 +78,12 @@ public class ControleDeRegistrosSE implements Runnable {
    public static BufferedReader in = null;
    public static PrintWriter out = null;
    
-   private static boolean blDebug = true;
+   private static boolean blDebug = false;
    
    public static boolean helo() {
 	   boolean helo_200 = false;
 	   String heloResp;
 		try {
-			//sendString("HELO " + "Empresa" + " " + InetAddress.getLocalHost().getHostName() + "\n");
 			out.print("HELO " + "Empresa" + " " + InetAddress.getLocalHost().getHostName() + "\n");
 			out.flush();
 
@@ -121,77 +119,97 @@ public class ControleDeRegistrosSE implements Runnable {
    public static void send() {
 		String origem;
 		String tipo;
-		int data;
-		int hora;
+		String data;
+		String hora;
 		int codigo;
-		BilheteDao innerDao = new BilheteDao();
         String sendResp;
-        Status status = Status.NAOENVIADO;
-		SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
+        //Status status = Status.NAOENVIADO;
+        boolean erro = false;
+		SimpleDateFormat DMY = new SimpleDateFormat("dd/MM/yy");
+		SimpleDateFormat HM = new SimpleDateFormat("HH:mm");
 		
-		ControleDeRegistros cdr = new ControleDeRegistros(new BilheteDao());
-		List<Bilhete> bilhetesPendentes = cdr.getBilhetesPendentes();
-		
+		ManipuladorDeArquivo mda = new ManipuladorDeArquivo();
+		boolean temBilhete = false;
 		if (helo()) {
-			for (Bilhete bilhete : bilhetesPendentes) {
-				origem = bilhete.getOrigem();
-				tipo = bilhete.getTipo();
-				data = Integer.parseInt(YMD.format(bilhete.getData()));
-				hora = Integer.parseInt(HMS.format(bilhete.getData()));;
-				codigo = bilhete.getCodigo();
+			try {
+				List<Bilhete> bilhetes = mda.read();
+				temBilhete = !bilhetes.isEmpty();
+				for (Bilhete bilhete : mda.read()) {
+					
+					origem = bilhete.getOrigem();
+					tipo = bilhete.getTipo();
+					data = DMY.format(bilhete.getData());
+					hora = HM.format(bilhete.getHora());;
+					codigo = bilhete.getCodigo();
 
-				// Send the string
-				out.print("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
-				out.flush();
-				appendToChatBox("OUT: " + "SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
+					// Send the string
+					out.print("SAVEDATA " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
+					out.flush();
 
-				try {
-					while ((sendResp = in.readLine()) != null) {
-						if (blDebug) {
-							appendToChatBox("DEBUG: " + "SendResp " + sendResp + "\n");
-						}
-						if (sendResp.substring(0, 3).equals("200")) {
+					try {
+						while ((sendResp = in.readLine()) != null) {
 							if (blDebug) {
-								appendToChatBox("DEBUG: " + sendResp + "\n");
+								appendToChatBox("DEBUG: " + "SendResp " + sendResp + "\n");
 							}
-							status = Status.ENVIADO;
-							break;
-						}
-						if (sendResp.substring(0, 3).equals("500")) {
-							if (blDebug) {
-								appendToChatBox("DEBUG: " + sendResp+ "\n");
+							if (sendResp.substring(0, 3).equals("200")) {
+								if (blDebug) {
+									appendToChatBox("DEBUG: " + sendResp + "\n");
+								}
+								//status = Status.ENVIADO;
+								appendToChatBox("ENVIADO: " + origem + " " + tipo + " " + data + " " + hora + " " + codigo + "\n");
+								break;
 							}
-							status = Status.FALHA;
-							break;
-						}
-						if (sendResp.substring(0, 3).equals("501")) {
-							if (blDebug) {
-								appendToChatBox("DEBUG: " + sendResp + "\n");
+							if (sendResp.substring(0, 3).equals("500")) {
+								if (blDebug) {
+									appendToChatBox("DEBUG: " + sendResp+ "\n");
+								}
+								erro = true;
+								//status = Status.FALHA;
+								break;
 							}
-							status = Status.FALHA;
-							break;
-						}
-						if (sendResp.substring(0, 3).equals("502")) {
-							if (blDebug) {
-								appendToChatBox("DEBUG: " + sendResp + "\n");
+							if (sendResp.substring(0, 3).equals("501")) {
+								if (blDebug) {
+									appendToChatBox("DEBUG: " + sendResp + "\n");
+								}
+								erro = true;
+								//status = Status.FALHA;
+								break;
 							}
-							status = Status.FALHA;
-							break;
+							if (sendResp.substring(0, 3).equals("502")) {
+								if (blDebug) {
+									appendToChatBox("DEBUG: " + sendResp + "\n");
+								}
+								erro = true;
+								//status = Status.FALHA;
+								break;
+							}
 						}
+						// appendToChatBox("INFO: " + "STATUS = " + status + "\n");
+					} catch (IOException exp) {
+						appendToChatBox("EXP: " + exp.getMessage() + "\n");
+						exp.printStackTrace();
 					}
-					bilhete.setStatus(status.getCodigo());
-					innerDao.update(bilhete);
-					appendToChatBox("INFO: " + "UPDATE " + status + "\n");
-				} catch (IOException exp) {
-					appendToChatBox("EXP: " + exp.getMessage() + "\n");
-					exp.printStackTrace();
-				}
+				} // for
+				if (erro) {
+					appendToChatBox("ERRO!\n");
+				} else if (temBilhete) {
+					mda.clean();
+				} 
+			} catch (NumberFormatException e) {
+				appendToChatBox("ERRO: " + e.getMessage() + "\n");
+				e.printStackTrace();
+			} catch (IOException e) {
+				appendToChatBox("ERRO: " + e.getMessage() + "\n");
+				e.printStackTrace();
+			} catch (ParseException e) {
+				appendToChatBox("ERRO: " + e.getMessage() + "\n");
+				e.printStackTrace();
 			}
 		} else {
 			appendToChatBox("OUT: " + "HELO NOT 200" + "\n");
 		}
-		changeStatusTS(NULL, true);
+		changeStatusTS(DISCONNECTED, true);
+		//changeStatusTS(NULL, true);
 	}
    
 

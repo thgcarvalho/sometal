@@ -1,7 +1,6 @@
 package br.com.grandev.acesso.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,13 +24,13 @@ public class Registro implements Serializable {
 	
 	private String origem;
 	private String tipo;
-	private Date data;
-	private Date hora;
-	private int codigo;
+	private String data;
+	private String hora;
+	private String codigo;
 
 	public Registro() {}
 
-	public Registro(String origem, String tipo, Date data, Date hora, int codigo) {
+	public Registro(String origem, String tipo, String data, String hora, String codigo) {
 		this.origem = origem;
 		this.tipo = tipo;
 		this.data = data;
@@ -55,27 +54,27 @@ public class Registro implements Serializable {
 		this.tipo = tipo;
 	}
 
-	public Date getData() {
+	public String getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 
-	public Date getHora() {
+	public String getHora() {
 		return hora;
 	}
 
-	public void setHora(Date hora) {
+	public void setHora(String hora) {
 		this.hora = hora;
 	}
 
-	public int getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 

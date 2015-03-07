@@ -338,8 +338,6 @@ public class ServerSocket {
 			String hora;
 			String codigo;
 			Date oDate = null;
-			SimpleDateFormat YMD = new SimpleDateFormat("yyyyMMdd");
-			SimpleDateFormat HMS = new SimpleDateFormat("HHmmss");
 			
 			if (strarrTokens.length != 6) {
 				pw.write("501 invalid syntax: " + IDENTIFIER_SAVEDATA + "\n");
@@ -372,20 +370,20 @@ public class ServerSocket {
 				Registro registro = new Registro();
 				registro.setOrigem(origem);
 				registro.setTipo(tipo);
-				registro.setData(YMD.parse(data));
-				registro.setHora(HMS.parse(hora));
-				registro.setCodigo(Integer.parseInt(codigo));
+				registro.setData(data);
+				registro.setHora(hora);
+				registro.setCodigo(codigo);
 				if (registroDao.insert(registro)) {
 					pw.write("200 OK\n");
 					pw.flush();
 				} else {
-					pw.write("501 record was not saved\n");
+					pw.write("501 Registro não foi salvo.\n");
 					pw.flush();
 				}
 			} catch (Exception excp) {
 				DisplayMessage.display(LOGNAME, sdfHMS.format(new Date()) + "Exception connecting sql:");
 				excp.printStackTrace();
-				pw.write("501 exception: " + excp.getMessage() + "\n");
+				pw.write("501 erro: " + excp.getMessage() + "\n");
 				pw.flush();
 				return (false);
 			}

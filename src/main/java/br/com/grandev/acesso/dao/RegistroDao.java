@@ -13,12 +13,12 @@ public class RegistroDao {
 		PreparedStatement ps = null;
 		boolean saved = false;
 		try {
-			ps = conn.prepareStatement("insert into registro (origen, tipo, codigo) values(?,?,?)");
+			ps = conn.prepareStatement("insert into registro (origen, tipo, data, hora, codigo) values(?,?,?,?,?)");
 			ps.setString(1, registro.getOrigem());
 			ps.setString(2, registro.getTipo());
-			ps.setInt(3, registro.getCodigo());
-//			ps.setDate(x, (Date) registro.getData());
-//			ps.setDate(x, (Date) registro.getHora());
+			ps.setString(3, registro.getData());
+			ps.setString(4, registro.getHora());
+			ps.setString(5, registro.getCodigo());
 			int i = ps.executeUpdate();
 			if (i != 0) {
 				System.out.println("Inserted");
